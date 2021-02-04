@@ -7,12 +7,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model ProcessTemplate {
-  id    String @id @default(uuid())
-  title String
-
-  phases Phase[]
-}
+//  ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄
+// ▐░░▌     ▐░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░▌
+// ▐░▌░▌   ▐░▐░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░▌
+// ▐░▌▐░▌ ▐░▌▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌
+// ▐░▌ ▐░▐░▌ ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌
+// ▐░▌  ▐░▌  ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌
+// ▐░▌   ▀   ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░▌
+// ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌
+// ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄▄▄
+// ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+//  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀
 
 model Phase {
   id    String @id @default(uuid())
@@ -24,12 +29,36 @@ model Phase {
   processTemplateId String
 }
 
+model ProcessTemplate {
+  id    String @id @default(uuid())
+  title String
+
+  phases Phase[]
+}
+
+model Profession {
+  id    String @id @default(uuid())
+  title String
+
+  tasks Task[]
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  title String
+
+  tasks Task[]
+}
+
 model Task {
   id          String  @id @default(uuid())
   title       String
   description String
   global      Boolean @default(true)
-  
-  phase       Phase   @relation(fields: [phaseId], references: [id])
-  phaseId     String
+
+  phase   Phase  @relation(fields: [phaseId], references: [id])
+  phaseId String
+
+  professions Profession[]
+  tags        Tag[]
 }

@@ -32,6 +32,7 @@ model Phase {
 model ProcessTemplate {
   id    String @id @default(uuid())
   title String
+  slug  String @unique
 
   phases Phase[]
 }

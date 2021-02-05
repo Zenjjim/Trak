@@ -1,4 +1,7 @@
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import Layout from 'components/Layout';
 import React, { useEffect } from 'react';
+import theme from 'theme';
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -7,7 +10,14 @@ function MyApp({ Component, pageProps }) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
-  return <Component {...pageProps} />;
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </ThemeProvider>
+  );
 }
 
 export default MyApp;

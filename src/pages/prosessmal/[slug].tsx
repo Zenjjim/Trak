@@ -5,6 +5,7 @@ import Typo from 'components/Typo';
 import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
+import { IPhase, IProcessTemplate, ITask } from 'utils/types';
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   return {
@@ -74,7 +75,7 @@ const ProcessTemplate = ({ processTemplates }: InferGetStaticPropsType<typeof ge
 
   const classes = useStyles();
 
-  const processTemplate = processTemplates.find((processTemplate) => processTemplate.slug === slug);
+  const processTemplate: IProcessTemplate = processTemplates.find((processTemplate) => processTemplate.slug === slug);
 
   return (
     <div className={classes.root}>
@@ -84,7 +85,7 @@ const ProcessTemplate = ({ processTemplates }: InferGetStaticPropsType<typeof ge
         </Typo>
         <Typo className={classes.template_title}>{processTemplate.title}</Typo>
       </div>
-      {processTemplate.phases.map((phase) => (
+      {processTemplate.phases.map((phase: IPhase) => (
         <Phase key={phase.id} phase={phase} />
       ))}
       <AddButton onClick={() => undefined} text='Legg til fase' />
@@ -94,7 +95,7 @@ const ProcessTemplate = ({ processTemplates }: InferGetStaticPropsType<typeof ge
 
 export default ProcessTemplate;
 
-const Phase = ({ phase }) => {
+const Phase = ({ phase }: { phase: IPhase }) => {
   const classes = useStyles();
   return (
     <div>
@@ -109,7 +110,7 @@ const Phase = ({ phase }) => {
   );
 };
 
-const TemplateTable = ({ tasks }) => {
+const TemplateTable = ({ tasks }: { tasks: ITask[] }) => {
   const classes = useStyles();
   return (
     <Table aria-label='Prosessmal tabel' className={classes.table}>
@@ -128,7 +129,7 @@ const TemplateTable = ({ tasks }) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {tasks.map((task) => (
+        {tasks.map((task: ITask) => (
           <TableRow className={classes.hideLastBorder} key={task.id}>
             <TableCell>{task.title}</TableCell>
             <TableCell>{task.description}</TableCell>

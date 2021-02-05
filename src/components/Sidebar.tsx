@@ -5,7 +5,7 @@ import React from 'react';
 import theme from 'theme';
 const sidebarWidth = 200;
 
-const urls = [
+const urls: LinkGroupProps[] = [
   {
     title: 'Mine oppgaver',
     links: [
@@ -113,8 +113,8 @@ const useStyles = makeStyles({
 
 type LinkData = {
   title: string;
-  url: string;
-  divider: boolean;
+  link: string;
+  divider?: boolean;
 };
 
 type LinkGroupProps = {

@@ -178,7 +178,7 @@ const LoggedInUserCard = () => {
       padding={theme.spacing(1)}>
       <Box flexGrow={1}>
         <Badge badgeContent={4} className={classes.badge} color='error'>
-          <Avatar alt='E.K' src='/dummy_avatar.png' />
+          <Avatar alt='M.S' src='/dummy_avatar.png' />
         </Badge>
       </Box>
       <Box flexGrow={4}>

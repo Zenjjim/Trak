@@ -41,7 +41,8 @@ model Profession {
   id    String @id @default(uuid())
   title String
 
-  tasks Task[]
+  tasks    Task[]
+  employee Employee[]
 }
 
 model Tag {
@@ -60,6 +61,40 @@ model Task {
   phase   Phase  @relation(fields: [phaseId], references: [id])
   phaseId String
 
-  professions Profession[]
-  tags        Tag[]
+  professions   Profession[]
+  tags          Tag[]
+  employee_Task Employee_Task[]
+}
+
+model Employee {
+  id                 Int             @id @default(autoincrement())
+  first_name         String
+  last_name          String
+  title              String?
+  phone              String
+  email              String
+  birth_date         DateTime
+  date_of_employment DateTime?
+  termination_date   DateTime?
+  image_url          String?
+  slack              String?
+  professionId       String
+  profession         Profession      @relation(fields: [professionId], references: [id])
+  hr_manager_id      Int?
+  hr_manager         Employee?       @relation(fields: [hr_manager_id], references: [id])
+  employees          Employee[]      @relation("EmployeeToEmployee")
+  employee_Task      Employee_Task[] @relation("tasks")
+  responsible        Employee_Task[] @relation("responsible_tasks")
+}
+
+model Employee_Task {
+  id            String    @id @default(uuid())
+  task          Task?     @relation(fields: [taskId], references: [id])
+  taskId        String?
+  employee      Employee? @relation("tasks", fields: [employeeId], references: [id])
+  completed     Boolean   @default(false)
+  responsible   Employee? @relation("responsible_tasks", fields: [responsibleId], references: [id])
+  employeeId    Int?
+  responsibleId Int?
+  year          DateTime
 }

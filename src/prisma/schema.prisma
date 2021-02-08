@@ -71,7 +71,6 @@ model Employee {
   first_name         String
   last_name          String
   title              String?
-  phone              String
   email              String
   birth_date         DateTime
   date_of_employment DateTime?

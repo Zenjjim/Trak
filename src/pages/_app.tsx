@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import Layout from 'components/Layout';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import theme from 'theme';
 
 function MyApp({ Component, pageProps }) {

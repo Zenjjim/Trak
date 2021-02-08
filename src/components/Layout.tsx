@@ -1,7 +1,5 @@
 import { Box } from '@material-ui/core';
-import React from 'react';
-
-import Sidebar from './Sidebar';
+import Sidebar from 'components/Sidebar';
 type LayoutProps = {
   children: JSX.Element;
 };

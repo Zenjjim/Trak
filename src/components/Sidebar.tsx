@@ -1,5 +1,6 @@
 import { Avatar, Badge, Box, Divider, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import classNames from 'classnames';
 import Typo from 'components/Typo';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -70,7 +71,7 @@ const LoggedInUserCard = ({ fullName, image }: LoggedInUserCardProps) => {
       alignItems='center'
       bgcolor={theme.palette.background.paper}
       boxShadow={'0px 4px 4px rgba(0,0,0,0.25)'}
-      className={`${classes.gutterBottom} ${classes.badge}`}
+      className={classNames(classes.gutterBottom, classes.badge)}
       display='flex'
       height='70px'
       mx={'-' + theme.spacing(2)}

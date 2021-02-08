@@ -1,6 +1,7 @@
-import { Avatar, IconButton, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Avatar, Button, IconButton, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
 import AddButton from 'components/AddButton';
+import Modal from 'components/Modal';
 import Typo from 'components/Typo';
 import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -105,12 +106,12 @@ const Phase = ({ phase }: { phase: IPhase }) => {
           <EditIcon />
         </IconButton>
       </div>
-      <TemplateTable tasks={phase.tasks} />
+      <TemplateTable faseTitle={phase.title} tasks={phase.tasks} />
     </div>
   );
 };
 
-const TemplateTable = ({ tasks }: { tasks: ITask[] }) => {
+const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string }) => {
   const classes = useStyles();
   return (
     <Table aria-label='Prosessmal tabel' className={classes.table}>
@@ -149,9 +150,34 @@ const TemplateTable = ({ tasks }: { tasks: ITask[] }) => {
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
             <AddButton onClick={() => undefined} text='Legg til oppgave' />
+            <CreateTaskModal faseTitle={faseTitle} />
           </TableCell>
         </TableRow>
       </TableBody>
     </Table>
+  );
+};
+
+const CreateTaskModal = ({ faseTitle }) => {
+  return (
+    <Modal
+      buttonGroup={[
+        <Button key={'avbryt'} onClick={() => undefined}>
+          Avbryt
+        </Button>,
+        <Button key={'create'} onClick={() => undefined}>
+          Lag oppgave
+        </Button>,
+      ]}
+      header={'Lag ny oppgave'}
+      onClose={() => undefined}
+      open={true}
+      subheader={
+        <>
+          til <b>Fase {faseTitle}</b>
+        </>
+      }>
+      <div>Hallo</div>
+    </Modal>
   );
 };

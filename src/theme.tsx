@@ -21,7 +21,7 @@ const theme = createMuiTheme({
       paper: '#EADEF4',
     },
     text: {
-      primary: '#2f2f2f',
+      primary: '#2F2F2F',
       secondary: '#F2F2F2',
       disabled: '#6A6A6A',
     },
@@ -41,5 +41,16 @@ const theme = createMuiTheme({
     },
   },
 });
+
+theme.components = {
+  ...theme.components,
+  MuiDialog: {
+    styleOverrides: {
+      root: {
+        color: theme.palette.text.primary,
+      },
+    },
+  },
+};
 
 export default theme;

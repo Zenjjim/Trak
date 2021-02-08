@@ -51,6 +51,59 @@ theme.components = {
       },
     },
   },
+  MuiDialogContent: {
+    styleOverrides: {
+      root: {
+        paddingTop: 16,
+      },
+    },
+  },
+  MuiInputLabel: {
+    styleOverrides: {
+      root: {
+        color: theme.palette.text.disabled,
+        top: '-15px !important',
+        marginLeft: 6,
+        '&$focused': {
+          marginLeft: 0,
+          color: theme.palette.secondary.main,
+        },
+      },
+      shrink: {
+        marginLeft: 0,
+      },
+    },
+  },
+  MuiInput: {
+    styleOverrides: {
+      formControl: {
+        'label + &': {
+          marginTop: 0,
+        },
+      },
+      root: {},
+      underline: {
+        '&:after': {
+          borderBottom: `2px solid ${theme.palette.secondary.main}`,
+        },
+      },
+    },
+  },
+  MuiInputBase: {
+    styleOverrides: {
+      input: {
+        marginLeft: 6,
+        marginRight: 6,
+      },
+    },
+  },
+  MuiTextField: {
+    styleOverrides: {
+      root: {
+        backgroundColor: theme.palette.background.default,
+      },
+    },
+  },
 };
 
 export default theme;

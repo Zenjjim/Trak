@@ -2,6 +2,7 @@ import { Avatar, Button, IconButton, makeStyles, Table, TableBody, TableCell, Ta
 import { Edit as EditIcon } from '@material-ui/icons';
 import AddButton from 'components/AddButton';
 import Modal from 'components/Modal';
+import TextField from 'components/TextField';
 import Typo from 'components/Typo';
 import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -67,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
     marginRight: theme.spacing(1),
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateRows: 'auto',
+    rowGap: 32,
   },
 }));
 
@@ -159,6 +165,7 @@ const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string
 };
 
 const CreateTaskModal = ({ faseTitle }) => {
+  const classes = useStyles();
   return (
     <Modal
       buttonGroup={[
@@ -177,7 +184,11 @@ const CreateTaskModal = ({ faseTitle }) => {
           til <b>Fase {faseTitle}</b>
         </>
       }>
-      <div>Hallo</div>
+      <div className={classes.grid}>
+        <TextField label='Oppgavetittel' name='title' required />
+        <TextField label='Oppgavebeskrivelse' maxrows={4} multiline name='description' rows={4} />
+        <TextField label='Oppgaveansvarlig' name='responsible' />
+      </div>
     </Modal>
   );
 };

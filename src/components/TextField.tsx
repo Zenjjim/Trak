@@ -7,7 +7,7 @@ type TextFieldProps = MUITextFieldProps &
     name: string;
   };
 
-const TextField = ({ register, name, errors = {}, rules = {}, ...args }: any) => {
+const TextField = ({ register, name, errors = {}, rules = {}, ...args }: TextFieldProps) => {
   return (
     <MuiTextField
       error={Boolean(errors[name])}

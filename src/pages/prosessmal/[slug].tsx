@@ -12,9 +12,15 @@ import { useForm } from 'react-hook-form';
 import { IPhase, IProcessTemplate, ITask } from 'utils/types';
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  const processTemplates = await prisma.processTemplate.findMany();
+
   return {
-    paths: [],
-    fallback: 'blocking',
+    paths: processTemplates.map((processTemplate) => ({
+      params: {
+        slug: processTemplate.slug,
+      },
+    })),
+    fallback: false,
   };
 };
 

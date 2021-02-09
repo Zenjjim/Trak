@@ -33,3 +33,21 @@ export type ITask = {
   professions?: IProfession[];
   tags?: ITag[];
 };
+
+export type IEmployee = {
+  firstName: string;
+  lastName: string;
+  title?: string;
+  email: string;
+  birthDate: Date;
+  dateOfEmployment?: Date;
+  terminationDate?: Date;
+  imageUrl?: string;
+  slack?: string;
+  profession: IProfession;
+  hrManager: IEmployee;
+  employees: IEmployee[];
+  // TODO
+  // Do something else than this
+  employeesTask: undefined;
+};

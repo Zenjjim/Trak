@@ -78,7 +78,7 @@ const LoggedInUserCard = ({ fullName, image }: LoggedInUserCardProps) => {
       padding={theme.spacing(1)}>
       <Box flexGrow={1}>
         <Badge badgeContent={4} color='error'>
-          <Avatar alt={'sef'} src={image ? image : '/dummy_avatar.png'} />
+          <Avatar alt={'Logged in user photo'} src={image ? image : '/dummy_avatar.png'} />
         </Badge>
       </Box>
       <Box flexGrow={4}>

@@ -22,8 +22,8 @@ type ModalProps = {
 const Modal = ({ header, subheader, buttonGroup, open, onClose, onSubmit, children }: ModalProps) => {
   const classes = useStyles();
   return (
-    <Dialog aria-labelledby='modal' fullWidth onBackdropClick={onClose} onClose={onClose} open={open}>
-      <form onSubmit={onSubmit}>
+    <Dialog aria-labelledby='modal' fullWidth onClose={onClose} open={open}>
+      <form noValidate onSubmit={onSubmit}>
         {header && (
           <DialogTitle id='modal-title'>
             <Typo variant='h1'>{header}</Typo>

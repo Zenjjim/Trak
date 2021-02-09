@@ -7,6 +7,8 @@ import Typo from 'components/Typo';
 import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { IPhase, IProcessTemplate, ITask } from 'utils/types';
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
@@ -118,6 +120,7 @@ const Phase = ({ phase }: { phase: IPhase }) => {
 };
 
 const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string }) => {
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
     <Table aria-label='Prosessmal tabel' className={classes.table}>
@@ -155,8 +158,8 @@ const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string
         ))}
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
-            <AddButton onClick={() => undefined} text='Legg til oppgave' />
-            <CreateTaskModal faseTitle={faseTitle} />
+            <AddButton onClick={() => setModalIsOpen(true)} text='Legg til oppgave' />
+            <CreateTaskModal closeModal={() => setModalIsOpen(false)} faseTitle={faseTitle} modalIsOpen={modalIsOpen} />
           </TableCell>
         </TableRow>
       </TableBody>
@@ -164,30 +167,36 @@ const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string
   );
 };
 
-const CreateTaskModal = ({ faseTitle }) => {
+const CreateTaskModal = ({ faseTitle, modalIsOpen, closeModal }: { faseTitle: string; modalIsOpen: boolean; closeModal: () => void }) => {
   const classes = useStyles();
+
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = handleSubmit((data) => data);
+
   return (
     <Modal
       buttonGroup={[
-        <Button key={'avbryt'} onClick={() => undefined}>
+        <Button key={'avbryt'} onClick={closeModal}>
           Avbryt
         </Button>,
-        <Button key={'create'} onClick={() => undefined}>
+        <Button key={'create'} onClick={() => undefined} type='submit'>
           Lag oppgave
         </Button>,
       ]}
       header={'Lag ny oppgave'}
-      onClose={() => undefined}
-      open={true}
+      onClose={closeModal}
+      onSubmit={onSubmit}
+      open={modalIsOpen}
       subheader={
         <>
           til <b>Fase {faseTitle}</b>
         </>
       }>
       <div className={classes.grid}>
-        <TextField label='Oppgavetittel' name='title' required />
-        <TextField label='Oppgavebeskrivelse' maxrows={4} multiline name='description' rows={4} />
-        <TextField label='Oppgaveansvarlig' name='responsible' />
+        <TextField label='Oppgavetittel' name='title' register={register} required />
+        <TextField label='Oppgavebeskrivelse' maxRows={4} multiline name='description' register={register} rows={4} />
+        <TextField label='Oppgaveansvarlig' name='responsible' register={register} />
       </div>
     </Modal>
   );

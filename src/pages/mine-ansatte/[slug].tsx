@@ -5,9 +5,55 @@ import SearchIcon from '@material-ui/icons/Search';
 import TuneIcon from '@material-ui/icons/Tune';
 import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
+import prisma from 'lib/prisma';
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import theme from 'theme';
+
+const LOGGED_IN_USER = 1;
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  const processTemplates = await prisma.processTemplate.findMany();
+
+  return {
+    paths: processTemplates.map((processTemplate) => ({
+      params: {
+        slug: processTemplate.slug,
+      },
+    })),
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const myEmployees = await prisma.employee.findMany({
+    where: {
+      id: LOGGED_IN_USER,
+    },
+    include: {
+      employees: {
+        include: {
+          employee_Task: {
+            include: {
+              task: {
+                include: {
+                  phase: {
+                    include: {
+                      processTemplate: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  return { props: { myEmployees } };
+};
+
 const useStyles = makeStyles({
   root: {
     marginLeft: '30px',
@@ -89,7 +135,7 @@ const PhaseCard = ({ title, amount }: PhaseCardProps) => {
   );
 };
 
-const MyEmployees = () => {
+const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const classes = useStyles();
   const router = useRouter();
   const { slug } = router.query;

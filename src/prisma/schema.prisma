@@ -23,6 +23,8 @@ model Phase {
   id    String @id @default(uuid())
   title String
 
+  order Int
+
   tasks Task[]
 
   processTemplate   ProcessTemplate @relation(fields: [processTemplateId], references: [id])

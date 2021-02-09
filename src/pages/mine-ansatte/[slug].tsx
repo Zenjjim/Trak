@@ -26,7 +26,7 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const myEmployees = await prisma.employee.findMany({
     where: {
       id: LOGGED_IN_USER,
@@ -35,6 +35,23 @@ export const getStaticProps: GetStaticProps = async () => {
       employees: {
         include: {
           employee_Task: {
+            where: {
+              task: {
+                phase: {
+                  processTemplate: {
+                    slug: params.slug.toString(),
+                  },
+                },
+              },
+            },
+            orderBy: {
+              task: {
+                phase: {
+                  order: 'asc',
+                },
+              },
+            },
+
             include: {
               task: {
                 include: {
@@ -51,6 +68,7 @@ export const getStaticProps: GetStaticProps = async () => {
       },
     },
   });
+
   return { props: { myEmployees } };
 };
 

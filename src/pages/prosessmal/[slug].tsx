@@ -170,7 +170,7 @@ const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string
 const CreateTaskModal = ({ faseTitle, modalIsOpen, closeModal }: { faseTitle: string; modalIsOpen: boolean; closeModal: () => void }) => {
   const classes = useStyles();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = handleSubmit((data) => data);
 
@@ -194,9 +194,9 @@ const CreateTaskModal = ({ faseTitle, modalIsOpen, closeModal }: { faseTitle: st
         </>
       }>
       <div className={classes.grid}>
-        <TextField label='Oppgavetittel' name='title' register={register} required />
-        <TextField label='Oppgavebeskrivelse' maxRows={4} multiline name='description' register={register} rows={4} />
-        <TextField label='Oppgaveansvarlig' name='responsible' register={register} />
+        <TextField errors={errors} label='Oppgavetittel' name='title' register={register} required />
+        <TextField errors={errors} label='Oppgavebeskrivelse' maxRows={4} multiline name='description' register={register} rows={4} />
+        <TextField errors={errors} label='Oppgaveansvarlig' name='responsible' register={register} />
       </div>
     </Modal>
   );

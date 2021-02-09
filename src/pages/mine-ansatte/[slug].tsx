@@ -59,7 +59,7 @@ const useStyles = makeStyles({
     marginLeft: '30px',
     marginTop: '60px',
   },
-  section: {
+  pointer: {
     cursor: 'pointer',
   },
   avatar: {
@@ -74,7 +74,7 @@ type UserRowProps = {
   finishedTasks: number;
   tasksAmount: number;
   profession: string;
-  image_responisble: string;
+  image_responisble?: string;
   responsible: string;
 };
 
@@ -83,7 +83,7 @@ const UserRow = ({ image, name, finishedTasks, tasksAmount, profession, image_re
   return (
     <TableRow>
       <TableCell>
-        <Box alignItems='center' display='flex' flexDirection='row'>
+        <Box alignItems='flex-end' className={classes.pointer} display='flex' flexDirection='row'>
           <Avatar alt={'Logged in user photo'} className={classes.avatar} src={image ? image : '/dummy_avatar.png'} />
           <Typo variant='body2'>{name}</Typo>
         </Box>
@@ -97,7 +97,7 @@ const UserRow = ({ image, name, finishedTasks, tasksAmount, profession, image_re
         <Typo variant='body2'>{profession}</Typo>
       </TableCell>
       <TableCell>
-        <Box alignItems='center' display='flex' flexDirection='row'>
+        <Box alignItems='flex-end' display='flex' flexDirection='row'>
           <Avatar alt={'Logged in user photo'} className={classes.avatar} src={image_responisble ? image_responisble : '/dummy_avatar.png'} />
           <Typo variant='body2'>{responsible}</Typo>
         </Box>
@@ -109,15 +109,20 @@ const UserRow = ({ image, name, finishedTasks, tasksAmount, profession, image_re
 type PhaseCardProps = {
   title: string;
   amount: number;
+  employees: UserRowProps[];
 };
-const PhaseCard = ({ title, amount }: PhaseCardProps) => {
+const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
   const classes = useStyles();
   const [hidden, setIsHidden] = useState(false);
   return (
     <>
-      <Typo className={classes.section} onClick={() => setIsHidden(!hidden)} variant='h2'>
-        {title} (<b>{amount}</b>) {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-      </Typo>
+      <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' onClick={() => setIsHidden(!hidden)}>
+        <Typo variant='h2'>
+          {title} (<b>{amount}</b>)
+        </Typo>
+        {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+      </Box>
+
       <Box display={hidden ? 'none' : 'block'}>
         <Table aria-label='Mine ansatte tabell'>
           <TableHead>
@@ -128,7 +133,19 @@ const PhaseCard = ({ title, amount }: PhaseCardProps) => {
               <TableCell size='small'>Ansvarlig</TableCell>
             </TableRow>
           </TableHead>
-          <UserRow finishedTasks={2} image_responisble='noe' name='Ola Halvorsen' profession='Teknolog' responsible='Bern Harald' tasksAmount={12} />
+          {employees.map((employee) => {
+            return (
+              <UserRow
+                finishedTasks={employee.finishedTasks}
+                image_responisble={employee.image_responisble}
+                key={employee.name}
+                name={employee.name}
+                profession={employee.profession}
+                responsible={employee.responsible}
+                tasksAmount={employee.tasksAmount}
+              />
+            );
+          })}
         </Table>
       </Box>
     </>
@@ -139,25 +156,116 @@ const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticPr
   const classes = useStyles();
   const router = useRouter();
   const { slug } = router.query;
+
+  //  TODO
+  // Based on slug do the GET-request to mine-employees
+  const phases = [
+    {
+      title: 'Før oppstart',
+      amount: 2,
+      employees: [
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+      ],
+    },
+    {
+      title: 'Før første arbeidsdag',
+      amount: 5,
+      employees: [
+        {
+          name: 'Ola Halvorsen ',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+        {
+          name: 'Ola Halvorsen',
+          finishedTasks: 2,
+          tasksAmount: 12,
+          profession: 'Teknolog',
+          responsible: 'Bernt Harald',
+        },
+      ],
+    },
+  ];
+  const renamedSlug = renameSlug(slug);
   return (
-    <Box className={classes.root}>
-      <Box>
-        <Typo variant='h1'>Mine ansatte</Typo>
-        <Typo variant='h2'>{slug}</Typo>
-      </Box>
-      <Box display='flex' justifyContent='flex-end'>
-        <Box alignItems='center' display='flex' flexDirection='row' padding={theme.spacing(2)}>
-          <SearchIcon />
-          <Typo variant='body2'>Søk</Typo>
+    <>
+      <Head>
+        <title>Mine ansatte - {renamedSlug}</title>
+      </Head>
+      <Box className={classes.root}>
+        <Box>
+          <Typo variant='h1'>Mine ansatte</Typo>
+          <Typo variant='h2'>{renamedSlug}</Typo>
         </Box>
-        <Box alignItems='center' display='flex' flexDirection='row' padding={theme.spacing(2)}>
-          <TuneIcon />
-          <Typo variant='body2'>Filter</Typo>
+        <Box display='flex' justifyContent='flex-end'>
+          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
+            <SearchIcon />
+            <Typo variant='body2'>Søk</Typo>
+          </Box>
+          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
+            <TuneIcon />
+            <Typo variant='body2'>Filter</Typo>
+          </Box>
         </Box>
+        {phases.map((phase) => {
+          return (
+            <Box key={phase.title} mb={theme.spacing(2)}>
+              <PhaseCard amount={phase.amount} employees={phase.employees} title={phase.title} />
+            </Box>
+          );
+        })}
       </Box>
-      <PhaseCard amount={2} title='Ved signering' />
-      <PhaseCard amount={4} title='Før oppstart' />
-    </Box>
+    </>
   );
 };
 

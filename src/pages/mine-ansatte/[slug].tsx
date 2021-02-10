@@ -100,7 +100,6 @@ const useStyles = makeStyles({
 const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const classes = useStyles();
   const router = useRouter();
-  const { slug } = router.query;
   const processTemplate = myEmployees[0];
   return (
     <>

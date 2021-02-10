@@ -1,7 +1,6 @@
 // https://github.com/prisma/prisma/issues/1983
 
 import { PrismaClient } from '@prisma/client';
-import { formatDateInObject } from 'utils/utilFunctions';
 
 const prismaClientPropertyName = `__prevent-name-collision__prisma`;
 type GlobalThisWithPrismaClient = typeof globalThis & {
@@ -21,10 +20,5 @@ const getPrismaClient = () => {
 };
 
 const prisma = getPrismaClient();
-
-prisma.$use(async (params, next) => {
-  const result = await next(params);
-  return formatDateInObject(result);
-});
 
 export default prisma;

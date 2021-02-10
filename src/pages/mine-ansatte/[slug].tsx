@@ -27,37 +27,48 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const myEmployees = await prisma.employee.findMany({
+  const myEmployees = await prisma.processTemplate.findMany({
     where: {
-      id: LOGGED_IN_USER,
+      slug: params.slug.toString(),
     },
     include: {
-      employees: {
-        include: {
-          employee_Task: {
-            where: {
-              task: {
-                phase: {
-                  processTemplate: {
-                    slug: params.slug.toString(),
+      phases: {
+        orderBy: {
+          order: 'asc',
+        },
+        select: {
+          id: true,
+          title: true,
+          tasks: {
+            select: {
+              employee_Task: {
+                where: {
+                  employee: {
+                    hr_manager: {
+                      id: LOGGED_IN_USER,
+                    },
                   },
                 },
-              },
-            },
-            orderBy: {
-              task: {
-                phase: {
-                  order: 'asc',
-                },
-              },
-            },
-
-            include: {
-              task: {
                 include: {
-                  phase: {
-                    include: {
-                      processTemplate: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      first_name: true,
+                      last_name: true,
+                      image_url: true,
+                      profession: {
+                        select: {
+                          title: true,
+                        },
+                      },
+                      hr_manager: {
+                        select: {
+                          id: true,
+                          first_name: true,
+                          last_name: true,
+                          image_url: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -85,6 +96,43 @@ const useStyles = makeStyles({
     height: '25px',
   },
 });
+
+const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const classes = useStyles();
+  const router = useRouter();
+  const { slug } = router.query;
+  const processTemplate = myEmployees[0];
+  return (
+    <>
+      <Head>
+        <title>Mine ansatte - {processTemplate.title}</title>
+      </Head>
+      <Box className={classes.root}>
+        <Box>
+          <Typo variant='h1'>Mine ansatte</Typo>
+          <Typo variant='h2'>{processTemplate.title}</Typo>
+        </Box>
+        <Box display='flex' justifyContent='flex-end'>
+          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
+            <SearchIcon />
+            <Typo variant='body2'>Søk</Typo>
+          </Box>
+          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
+            <TuneIcon />
+            <Typo variant='body2'>Filter</Typo>
+          </Box>
+        </Box>
+        {processTemplate.phases.map((phase) => {
+          return (
+            <Box key={phase.title} mb={theme.spacing(2)}>
+              <PhaseCard amount={1} employees={[]} title={phase.title} />
+            </Box>
+          );
+        })}
+      </Box>
+    </>
+  );
+};
 
 type UserRowProps = {
   image?: string;
@@ -165,123 +213,6 @@ const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
             );
           })}
         </Table>
-      </Box>
-    </>
-  );
-};
-
-const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const classes = useStyles();
-  const router = useRouter();
-  const { slug } = router.query;
-
-  //  TODO
-  // Based on slug do the GET-request to mine-employees
-  const phases = [
-    {
-      title: 'Før oppstart',
-      amount: 2,
-      employees: [
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-      ],
-    },
-    {
-      title: 'Før første arbeidsdag',
-      amount: 5,
-      employees: [
-        {
-          name: 'Ola Halvorsen ',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-        {
-          name: 'Ola Halvorsen',
-          finishedTasks: 2,
-          tasksAmount: 12,
-          profession: 'Teknolog',
-          responsible: 'Bernt Harald',
-        },
-      ],
-    },
-  ];
-  const renamedSlug = renameSlug(slug);
-  return (
-    <>
-      <Head>
-        <title>Mine ansatte - {renamedSlug}</title>
-      </Head>
-      <Box className={classes.root}>
-        <Box>
-          <Typo variant='h1'>Mine ansatte</Typo>
-          <Typo variant='h2'>{renamedSlug}</Typo>
-        </Box>
-        <Box display='flex' justifyContent='flex-end'>
-          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
-            <SearchIcon />
-            <Typo variant='body2'>Søk</Typo>
-          </Box>
-          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
-            <TuneIcon />
-            <Typo variant='body2'>Filter</Typo>
-          </Box>
-        </Box>
-        {phases.map((phase) => {
-          return (
-            <Box key={phase.title} mb={theme.spacing(2)}>
-              <PhaseCard amount={phase.amount} employees={phase.employees} title={phase.title} />
-            </Box>
-          );
-        })}
       </Box>
     </>
   );

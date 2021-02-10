@@ -114,12 +114,12 @@ const Phase = ({ phase }: { phase: IPhase }) => {
           <EditIcon />
         </IconButton>
       </div>
-      <TemplateTable faseTitle={phase.title} tasks={phase.tasks} />
+      <TemplateTable phaseTitle={phase.title} tasks={phase.tasks} />
     </div>
   );
 };
 
-const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string }) => {
+const TemplateTable = ({ tasks, phaseTitle }: { tasks: ITask[]; phaseTitle: string }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
@@ -159,7 +159,7 @@ const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
             <AddButton onClick={() => setModalIsOpen(true)} text='Legg til oppgave' />
-            <CreateTaskModal closeModal={() => setModalIsOpen(false)} faseTitle={faseTitle} modalIsOpen={modalIsOpen} />
+            <CreateTaskModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} phaseTitle={phaseTitle} />
           </TableCell>
         </TableRow>
       </TableBody>
@@ -167,7 +167,7 @@ const TemplateTable = ({ tasks, faseTitle }: { tasks: ITask[]; faseTitle: string
   );
 };
 
-const CreateTaskModal = ({ faseTitle, modalIsOpen, closeModal }: { faseTitle: string; modalIsOpen: boolean; closeModal: () => void }) => {
+const CreateTaskModal = ({ phaseTitle, modalIsOpen, closeModal }: { phaseTitle: string; modalIsOpen: boolean; closeModal: () => void }) => {
   const classes = useStyles();
 
   const { register, handleSubmit, errors } = useForm();
@@ -190,7 +190,7 @@ const CreateTaskModal = ({ faseTitle, modalIsOpen, closeModal }: { faseTitle: st
       open={modalIsOpen}
       subheader={
         <>
-          til <b>Fase {faseTitle}</b>
+          til <b>Fase {phaseTitle}</b>
         </>
       }>
       <div className={classes.grid}>

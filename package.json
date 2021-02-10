@@ -47,11 +47,13 @@
     "react-hook-form": "^6.15.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.13",
     "@types/node": "^14.14.22",
     "@types/react": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
     "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-superjson-next": "^0.2.1",
     "eslint": "^7.19.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.2.0",

@@ -4,12 +4,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SearchIcon from '@material-ui/icons/Search';
 import TuneIcon from '@material-ui/icons/Tune';
 import { makeStyles } from '@material-ui/styles';
+import classNames from 'classnames';
 import Typo from 'components/Typo';
 import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
-import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { useState } from 'react';
 import theme from 'theme';
+import { IEmployee, IEmployeeTask, IPhase, IProfession } from 'utils/types';
 
 const LOGGED_IN_USER = 1;
 
@@ -27,7 +29,7 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const myEmployees = await prisma.processTemplate.findMany({
+  const allPhases = await prisma.processTemplate.findMany({
     where: {
       slug: params.slug.toString(),
     },
@@ -41,10 +43,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           title: true,
           tasks: {
             select: {
-              employee_Task: {
+              employeeTask: {
                 where: {
                   employee: {
-                    hr_manager: {
+                    hrManager: {
                       id: LOGGED_IN_USER,
                     },
                   },
@@ -53,20 +55,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                   employee: {
                     select: {
                       id: true,
-                      first_name: true,
-                      last_name: true,
-                      image_url: true,
+                      firstName: true,
+                      lastName: true,
+                      imageUrl: true,
                       profession: {
                         select: {
                           title: true,
                         },
                       },
-                      hr_manager: {
+                      hrManager: {
                         select: {
                           id: true,
-                          first_name: true,
-                          last_name: true,
-                          image_url: true,
+                          firstName: true,
+                          lastName: true,
+                          imageUrl: true,
                         },
                       },
                     },
@@ -80,7 +82,54 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   });
 
-  return { props: { myEmployees } };
+  const myEmployees = await prisma.employee.findMany({
+    where: {
+      hrManagerId: LOGGED_IN_USER,
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      profession: {
+        select: {
+          title: true,
+        },
+      },
+      hrManager: {
+        select: {
+          firstName: true,
+          lastName: true,
+          imageUrl: true,
+        },
+      },
+      employeeTask: {
+        where: {
+          task: {
+            phase: {
+              processTemplate: {
+                slug: params.slug.toString(),
+              },
+            },
+          },
+        },
+        select: {
+          completed: true,
+          year: true,
+          task: {
+            select: {
+              phase: {
+                select: {
+                  title: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return { props: { myEmployees, allPhases } };
 };
 
 const useStyles = makeStyles({
@@ -95,12 +144,49 @@ const useStyles = makeStyles({
     width: '25px',
     height: '25px',
   },
+  centeringRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userRow: {
+    alignItems: 'flex-end',
+    display: 'flex',
+    flexDirection: 'row',
+  },
 });
-
-const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const MyEmployees = ({ myEmployees, allPhases }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const classes = useStyles();
-  const router = useRouter();
-  const processTemplate = myEmployees[0];
+  const processTemplate = allPhases[0];
+  const displayedEmployees = [];
+  const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) => {
+    filteredEmployees.forEach((employee: IEmployee) => {
+      employee['tasksFinished'] = employee.employeeTask.filter(
+        (employeeTask: IEmployeeTask) => employeeTask.completed && employeeTask.task.phase.title === phase.title,
+      ).length;
+      employee['totalTasks'] = employee.employeeTask.filter((employeeTask: IEmployeeTask) => employeeTask.task.phase.title === phase.title).length;
+    });
+  };
+
+  const phases = [
+    ...processTemplate.phases.map((phase: IPhase) => {
+      const employees = myEmployees.filter((employee: IEmployee) =>
+        employee.employeeTask.some((employeeTask: IEmployeeTask) => !employeeTask.completed && employeeTask.task.phase.title === phase.title),
+      );
+      const filteredEmployees = employees.filter((employee: IEmployee) => {
+        if (displayedEmployees.includes(employee.id)) {
+          return false;
+        } else {
+          displayedEmployees.push(employee.id);
+          return true;
+        }
+      });
+      addFinishedTasks(filteredEmployees, phase);
+
+      return { employees: filteredEmployees, title: phase.title, id: phase.id };
+    }),
+  ];
+
   return (
     <>
       <Head>
@@ -112,19 +198,19 @@ const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticPr
           <Typo variant='h2'>{processTemplate.title}</Typo>
         </Box>
         <Box display='flex' justifyContent='flex-end'>
-          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
+          <Box className={classNames(classes.pointer, classes.centeringRow)} padding={theme.spacing(2)} tabIndex={0}>
             <SearchIcon />
             <Typo variant='body2'>Søk</Typo>
           </Box>
-          <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' padding={theme.spacing(2)}>
+          <Box className={classNames(classes.pointer, classes.centeringRow)} padding={theme.spacing(2)}>
             <TuneIcon />
             <Typo variant='body2'>Filter</Typo>
           </Box>
         </Box>
-        {processTemplate.phases.map((phase) => {
+        {phases.map((phase: PhaseCardProps) => {
           return (
-            <Box key={phase.title} mb={theme.spacing(2)}>
-              <PhaseCard amount={1} employees={[]} title={phase.title} />
+            <Box key={phase.id} mb={theme.spacing(2)}>
+              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} title={phase.title} />
             </Box>
           );
         })}
@@ -134,37 +220,42 @@ const MyEmployees = ({ myEmployees }: InferGetStaticPropsType<typeof getStaticPr
 };
 
 type UserRowProps = {
-  image?: string;
-  name: string;
-  finishedTasks: number;
-  tasksAmount: number;
-  profession: string;
-  image_responisble?: string;
-  responsible: string;
+  id: number;
+  firstName: string;
+  lastName: string;
+  profession: IProfession;
+  hrManager: IEmployee;
+  tasksFinished: number;
+  totalTasks: number;
 };
 
-const UserRow = ({ image, name, finishedTasks, tasksAmount, profession, image_responisble, responsible }: UserRowProps) => {
+const UserRow = ({ firstName, lastName, profession, hrManager, tasksFinished, totalTasks }: UserRowProps) => {
   const classes = useStyles();
+  const typoVariant = 'body2';
   return (
     <TableRow>
-      <TableCell>
-        <Box alignItems='flex-end' className={classes.pointer} display='flex' flexDirection='row'>
-          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={image ? image : '/dummy_avatar.png'} />
-          <Typo variant='body2'>{name}</Typo>
-        </Box>
+      <TableCell width='600px'>
+        <div className={classNames(classes.pointer, classes.userRow)} onKeyDown={(e) => (e.key === 'Enter' ? null : null)} tabIndex={0}>
+          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
+          <Typo variant={typoVariant}>
+            {firstName} {lastName}
+          </Typo>
+        </div>
       </TableCell>
-      <TableCell>
-        <Typo variant='body2'>
-          <b>{finishedTasks}</b> av <b>{tasksAmount}</b>
+      <TableCell width='300px'>
+        <Typo variant={typoVariant}>
+          <b>{tasksFinished}</b> av <b>{totalTasks}</b>
         </Typo>
       </TableCell>
-      <TableCell>
-        <Typo variant='body2'>{profession}</Typo>
+      <TableCell width='300px'>
+        <Typo variant={typoVariant}>{profession.title}</Typo>
       </TableCell>
-      <TableCell>
+      <TableCell width='300px'>
         <Box alignItems='flex-end' display='flex' flexDirection='row'>
-          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={image_responisble ? image_responisble : '/dummy_avatar.png'} />
-          <Typo variant='body2'>{responsible}</Typo>
+          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
+          <Typo variant={typoVariant}>
+            {hrManager.firstName} {hrManager.lastName}
+          </Typo>
         </Box>
       </TableCell>
     </TableRow>
@@ -172,6 +263,7 @@ const UserRow = ({ image, name, finishedTasks, tasksAmount, profession, image_re
 };
 
 type PhaseCardProps = {
+  id: string;
   title: string;
   amount: number;
   employees: UserRowProps[];
@@ -181,38 +273,46 @@ const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
   const [hidden, setIsHidden] = useState(false);
   return (
     <>
-      <Box alignItems='center' className={classes.pointer} display='flex' flexDirection='row' onClick={() => setIsHidden(!hidden)}>
+      <div
+        className={classNames(classes.centeringRow, classes.pointer)}
+        onClick={() => setIsHidden(!hidden)}
+        onKeyDown={(e) => (e.key === 'Enter' ? setIsHidden(!hidden) : null)}
+        tabIndex={0}>
         <Typo variant='h2'>
           {title} (<b>{amount}</b>)
         </Typo>
         {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-      </Box>
-
-      <Box display={hidden ? 'none' : 'block'}>
-        <Table aria-label='Mine ansatte tabell'>
-          <TableHead>
-            <TableRow>
-              <TableCell size='small'>Navn</TableCell>
-              <TableCell size='small'>Oppgaver gjennomført</TableCell>
-              <TableCell size='small'>Stilling</TableCell>
-              <TableCell size='small'>Ansvarlig</TableCell>
-            </TableRow>
-          </TableHead>
-          {employees.map((employee) => {
-            return (
-              <UserRow
-                finishedTasks={employee.finishedTasks}
-                image_responisble={employee.image_responisble}
-                key={employee.name}
-                name={employee.name}
-                profession={employee.profession}
-                responsible={employee.responsible}
-                tasksAmount={employee.tasksAmount}
-              />
-            );
-          })}
-        </Table>
-      </Box>
+      </div>
+      {employees.length > 0 ? (
+        <Box display={hidden ? 'none' : 'block'}>
+          <Table aria-label='Mine ansatte tabell'>
+            <TableHead>
+              <TableRow>
+                <TableCell size='small'>Navn</TableCell>
+                <TableCell size='small'>Oppgaver gjennomført</TableCell>
+                <TableCell size='small'>Stilling</TableCell>
+                <TableCell size='small'>Ansvarlig</TableCell>
+              </TableRow>
+            </TableHead>
+            {employees.map((employee) => {
+              return (
+                <UserRow
+                  firstName={employee.firstName}
+                  hrManager={employee.hrManager}
+                  id={employee.id}
+                  key={employee.id}
+                  lastName={employee.lastName}
+                  profession={employee.profession}
+                  tasksFinished={employee.tasksFinished}
+                  totalTasks={employee.totalTasks}
+                />
+              );
+            })}
+          </Table>
+        </Box>
+      ) : (
+        <Typo variant='body2'>Ingen ansatte i denne fasen</Typo>
+      )}
     </>
   );
 };

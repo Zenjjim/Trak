@@ -43,11 +43,11 @@ const LinkGroup = ({ title, links, divider }: section) => {
       <List component='div' disablePadding>
         {links.map((url: link) => {
           return (
-            <ListItem button className={classes.nested} component='a' key={url.title} role='nav'>
-              <Link href={url.link}>
+            <Link href={url.link} key={url.title} passHref>
+              <ListItem button className={classes.nested} component='a' role='nav'>
                 <ListItemText aria-label={url.aria_label} classes={{ secondary: classes.link }} secondary={url.title} />
-              </Link>
-            </ListItem>
+              </ListItem>
+            </Link>
           );
         })}
         {divider ? <Divider /> : null}

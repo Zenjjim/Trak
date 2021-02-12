@@ -30,11 +30,26 @@ export type ITask = {
   description: string;
   global: boolean;
   phaseId: string;
+  phase: IPhase;
   professions?: IProfession[];
   tags?: ITag[];
+  employeeTask: IEmployeeTask[];
+};
+
+export type IEmployeeTask = {
+  id: string;
+  task?: ITask;
+  taskId?: string;
+  employee?: IEmployee;
+  completed: boolean;
+  responsible?: IEmployee;
+  employeeId?: number;
+  responsibleId?: number;
+  year: Date;
 };
 
 export type IEmployee = {
+  id: number;
   firstName: string;
   lastName: string;
   title?: string;
@@ -47,7 +62,5 @@ export type IEmployee = {
   profession: IProfession;
   hrManager: IEmployee;
   employees: IEmployee[];
-  // TODO
-  // Do something else than this
-  employeesTask: undefined;
+  employeeTask: IEmployeeTask[];
 };

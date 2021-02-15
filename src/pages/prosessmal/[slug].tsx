@@ -3,6 +3,7 @@ import { Edit as EditIcon } from '@material-ui/icons';
 import AddButton from 'components/AddButton';
 import EmployeeSelector from 'components/EmployeeSelector';
 import Modal from 'components/Modal';
+import TagSelector from 'components/TagSelector';
 import TextField from 'components/TextField';
 import ToggleButtonGroup from 'components/ToggleButtonGroup';
 import Typo from 'components/Typo';
@@ -238,7 +239,7 @@ const CreateTaskModal = ({ phase, modalIsOpen, closeModal, professions, employee
           }}
         />
         <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
-
+        <TagSelector label='Tags' placeholder='tags' />
         <ToggleButtonGroup control={control} name={'profession'} professions={professions} />
         <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
       </div>

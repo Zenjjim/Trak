@@ -1,8 +1,5 @@
 import { Avatar, Box, Table, TableCell, TableHead, TableRow } from '@material-ui/core';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SearchIcon from '@material-ui/icons/Search';
-import TuneIcon from '@material-ui/icons/Tune';
+import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon, Search as SearchIcon, Tune as TuneIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import classNames from 'classnames';
 import Typo from 'components/Typo';
@@ -11,7 +8,8 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask, IPhase, IProfession } from 'utils/types';
+import { IEmployee, IProfession } from 'utils/types';
+import { getPhasesWithEmployees } from 'utils/utilFunctions';
 
 const LOGGED_IN_USER = 1;
 
@@ -158,34 +156,7 @@ const useStyles = makeStyles({
 const MyEmployees = ({ myEmployees, allPhases }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const classes = useStyles();
   const processTemplate = allPhases[0];
-  const displayedEmployees = [];
-  const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) => {
-    filteredEmployees.forEach((employee: IEmployee) => {
-      employee['tasksFinished'] = employee.employeeTask.filter(
-        (employeeTask: IEmployeeTask) => employeeTask.completed && employeeTask.task.phase.title === phase.title,
-      ).length;
-      employee['totalTasks'] = employee.employeeTask.filter((employeeTask: IEmployeeTask) => employeeTask.task.phase.title === phase.title).length;
-    });
-  };
-
-  const phases = [
-    ...processTemplate.phases.map((phase: IPhase) => {
-      const employees = myEmployees.filter((employee: IEmployee) =>
-        employee.employeeTask.some((employeeTask: IEmployeeTask) => !employeeTask.completed && employeeTask.task.phase.title === phase.title),
-      );
-      const filteredEmployees = employees.filter((employee: IEmployee) => {
-        if (displayedEmployees.includes(employee.id)) {
-          return false;
-        } else {
-          displayedEmployees.push(employee.id);
-          return true;
-        }
-      });
-      addFinishedTasks(filteredEmployees, phase);
-
-      return { employees: filteredEmployees, title: phase.title, id: phase.id };
-    }),
-  ];
+  const phases = getPhasesWithEmployees(processTemplate, myEmployees);
 
   return (
     <>
@@ -218,8 +189,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetStaticPropsType<typeof 
     </>
   );
 };
-
-type UserRowProps = {
+type EmployeeRow = {
   id: number;
   firstName: string;
   lastName: string;
@@ -229,32 +199,36 @@ type UserRowProps = {
   totalTasks: number;
 };
 
-const UserRow = ({ firstName, lastName, profession, hrManager, tasksFinished, totalTasks }: UserRowProps) => {
+type UserRowProps = {
+  employee: EmployeeRow;
+};
+
+const UserRow = ({ employee }: UserRowProps) => {
   const classes = useStyles();
   const typoVariant = 'body2';
   return (
-    <TableRow>
-      <TableCell width='600px'>
-        <div className={classNames(classes.pointer, classes.userRow)} onKeyDown={(e) => (e.key === 'Enter' ? null : null)} tabIndex={0}>
+    <TableRow className={classes.pointer}>
+      <TableCell style={{ width: '37.5rem' }}>
+        <div className={classes.userRow} onKeyDown={(e) => e.key === 'Enter' && null} tabIndex={0}>
           <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
           <Typo variant={typoVariant}>
-            {firstName} {lastName}
+            {employee.firstName} {employee.lastName}
           </Typo>
         </div>
       </TableCell>
-      <TableCell width='300px'>
+      <TableCell style={{ width: '18.75rem' }}>
         <Typo variant={typoVariant}>
-          <b>{tasksFinished}</b> av <b>{totalTasks}</b>
+          <b>{employee.tasksFinished}</b> av <b>{employee.totalTasks}</b>
         </Typo>
       </TableCell>
-      <TableCell width='300px'>
-        <Typo variant={typoVariant}>{profession.title}</Typo>
+      <TableCell style={{ width: '18.75rem' }}>
+        <Typo variant={typoVariant}>{employee.profession.title}</Typo>
       </TableCell>
-      <TableCell width='300px'>
+      <TableCell style={{ width: '18.75rem' }}>
         <Box alignItems='flex-end' display='flex' flexDirection='row'>
           <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
           <Typo variant={typoVariant}>
-            {hrManager.firstName} {hrManager.lastName}
+            {employee.hrManager.firstName} {employee.hrManager.lastName}
           </Typo>
         </Box>
       </TableCell>
@@ -266,7 +240,7 @@ type PhaseCardProps = {
   id: string;
   title: string;
   amount: number;
-  employees: UserRowProps[];
+  employees: EmployeeRow[];
 };
 const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
   const classes = useStyles();
@@ -276,7 +250,7 @@ const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
       <div
         className={classNames(classes.centeringRow, classes.pointer)}
         onClick={() => setIsHidden(!hidden)}
-        onKeyDown={(e) => (e.key === 'Enter' ? setIsHidden(!hidden) : null)}
+        onKeyDown={(e) => e.key === 'Enter' && setIsHidden(!hidden)}
         tabIndex={0}>
         <Typo variant='h2'>
           {title} (<b>{amount}</b>)
@@ -295,18 +269,7 @@ const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
               </TableRow>
             </TableHead>
             {employees.map((employee) => {
-              return (
-                <UserRow
-                  firstName={employee.firstName}
-                  hrManager={employee.hrManager}
-                  id={employee.id}
-                  key={employee.id}
-                  lastName={employee.lastName}
-                  profession={employee.profession}
-                  tasksFinished={employee.tasksFinished}
-                  totalTasks={employee.totalTasks}
-                />
-              );
+              return <UserRow employee={employee} key={employee.id} />;
             })}
           </Table>
         </Box>

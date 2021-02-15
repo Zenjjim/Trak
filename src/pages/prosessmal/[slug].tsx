@@ -3,13 +3,14 @@ import { Edit as EditIcon } from '@material-ui/icons';
 import AddButton from 'components/AddButton';
 import Modal from 'components/Modal';
 import TextField from 'components/TextField';
+import ToggleButtonGroup from 'components/ToggleButtonGroup';
 import Typo from 'components/Typo';
 import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IPhase, IProcessTemplate, ITask } from 'utils/types';
+import { IPhase, IProcessTemplate, IProfession, ITask } from 'utils/types';
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   return {
@@ -33,7 +34,9 @@ export const getStaticProps: GetStaticProps = async () => {
       },
     },
   });
-  return { props: { processTemplates } };
+
+  const professions = await prisma.profession.findMany();
+  return { props: { processTemplates, professions } };
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -78,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProcessTemplate = ({ processTemplates }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ProcessTemplate = ({ processTemplates, professions }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
   const { slug } = router.query;
 
@@ -95,7 +98,7 @@ const ProcessTemplate = ({ processTemplates }: InferGetStaticPropsType<typeof ge
         <Typo className={classes.template_title}>{processTemplate.title}</Typo>
       </div>
       {processTemplate.phases.map((phase: IPhase) => (
-        <Phase key={phase.id} phase={phase} />
+        <Phase key={phase.id} phase={phase} professions={professions} />
       ))}
       <AddButton onClick={() => undefined} text='Legg til fase' />
     </div>
@@ -104,7 +107,12 @@ const ProcessTemplate = ({ processTemplates }: InferGetStaticPropsType<typeof ge
 
 export default ProcessTemplate;
 
-const Phase = ({ phase }: { phase: IPhase }) => {
+type PhaseProps = {
+  phase: IPhase;
+  professions: IProfession[];
+};
+
+const Phase = ({ phase, professions }: PhaseProps) => {
   const classes = useStyles();
   return (
     <div>
@@ -114,12 +122,12 @@ const Phase = ({ phase }: { phase: IPhase }) => {
           <EditIcon />
         </IconButton>
       </div>
-      <TemplateTable phaseTitle={phase.title} tasks={phase.tasks} />
+      <TemplateTable phase={phase} professions={professions} />
     </div>
   );
 };
 
-const TemplateTable = ({ tasks, phaseTitle }: { tasks: ITask[]; phaseTitle: string }) => {
+const TemplateTable = ({ phase, professions }: PhaseProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
@@ -139,7 +147,7 @@ const TemplateTable = ({ tasks, phaseTitle }: { tasks: ITask[]; phaseTitle: stri
         </TableRow>
       </TableHead>
       <TableBody>
-        {tasks.map((task: ITask) => (
+        {phase.tasks.map((task: ITask) => (
           <TableRow className={classes.hideLastBorder} key={task.id}>
             <TableCell>{task.title}</TableCell>
             <TableCell>{task.description}</TableCell>
@@ -159,7 +167,7 @@ const TemplateTable = ({ tasks, phaseTitle }: { tasks: ITask[]; phaseTitle: stri
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
             <AddButton onClick={() => setModalIsOpen(true)} text='Legg til oppgave' />
-            <CreateTaskModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} phaseTitle={phaseTitle} />
+            <CreateTaskModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} phase={phase} professions={professions} />
           </TableCell>
         </TableRow>
       </TableBody>
@@ -167,17 +175,27 @@ const TemplateTable = ({ tasks, phaseTitle }: { tasks: ITask[]; phaseTitle: stri
   );
 };
 
-const CreateTaskModal = ({ phaseTitle, modalIsOpen, closeModal }: { phaseTitle: string; modalIsOpen: boolean; closeModal: () => void }) => {
+const CreateTaskModal = ({
+  phase,
+  modalIsOpen,
+  closeModal,
+  professions,
+}: {
+  phase: IPhase;
+  modalIsOpen: boolean;
+  closeModal: () => void;
+  professions: IProfession[];
+}) => {
   const classes = useStyles();
 
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, control } = useForm();
 
   const onSubmit = handleSubmit((data) => data);
 
   return (
     <Modal
       buttonGroup={[
-        <Button key={'avbryt'} onClick={closeModal}>
+        <Button key={'avbryt'} onClick={closeModal} type='button'>
           Avbryt
         </Button>,
         <Button key={'create'} onClick={() => undefined} type='submit'>
@@ -190,12 +208,23 @@ const CreateTaskModal = ({ phaseTitle, modalIsOpen, closeModal }: { phaseTitle: 
       open={modalIsOpen}
       subheader={
         <>
-          til <b>Fase {phaseTitle}</b>
+          til <b>Fase {phase.title}</b>
         </>
       }>
       <div className={classes.grid}>
-        <TextField errors={errors} label='Oppgavetittel' name='title' register={register} required />
-        <TextField errors={errors} label='Oppgavebeskrivelse' maxRows={4} multiline name='description' register={register} rows={4} />
+        <TextField
+          errors={errors}
+          label='Oppgavetittel'
+          name='title'
+          register={register}
+          required
+          rules={{
+            required: true,
+          }}
+        />
+        <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
+
+        <ToggleButtonGroup control={control} name={'profession'} professions={professions} />
         <TextField errors={errors} label='Oppgaveansvarlig' name='responsible' register={register} />
       </div>
     </Modal>

@@ -21,22 +21,22 @@ const ToggleButtonGroup = ({ professions, control, name }: ToggleButtonGroupProp
 
 type ToggleButtonGroupComponentProps = {
   professions: IProfession[];
-  value: string | string[];
+  value: string[];
   setValue: (string) => void;
 };
 
 const ToggleButtonGroupComponent = ({ professions, value, setValue }: ToggleButtonGroupComponentProps) => {
   return (
     <Box display='flex'>
-      <Button color={value instanceof Array ? 'secondary' : 'primary'} onClick={() => setValue(professions.map((profession) => profession.id))} type='button'>
+      <Button color={value.length > 1 ? 'secondary' : 'primary'} onClick={() => setValue(professions.map((profession) => profession.id))} type='button'>
         Alle
       </Button>
       {professions.map((profession) => (
         <Button
-          color={value === profession.id ? 'secondary' : 'primary'}
+          color={value.length === 1 && value[0] === profession.id ? 'secondary' : 'primary'}
           id={profession.id}
           key={profession.id}
-          onClick={() => setValue(profession.id)}
+          onClick={() => setValue([profession.id])}
           type='button'>
           {profession.title}
         </Button>

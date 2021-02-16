@@ -104,6 +104,13 @@ theme.components = {
       },
     },
   },
+  MuiAutocomplete: {
+    styleOverrides: {
+      noOptions: {
+        color: theme.palette.text.primary,
+      },
+    },
+  },
 };
 
 export default theme;

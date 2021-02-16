@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import safeJsonStringify from 'safe-json-stringify';
-import { IEmployee, IPhase, IProcessTemplate, IProfession, ITask } from 'utils/types';
+import { IEmployee, IPhase, IProcessTemplate, IProfession, ITag, ITask } from 'utils/types';
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   const processTemplates = await prisma.processTemplate.findMany();
@@ -48,7 +48,13 @@ export const getStaticProps: GetStaticProps = async () => {
   const employees = JSON.parse(safeJsonStringify(await prisma.employee.findMany()));
 
   const professions = await prisma.profession.findMany();
-  return { props: { processTemplates, employees, professions } };
+  const tags = await prisma.tag.findMany({
+    select: {
+      id: true,
+      title: true,
+    },
+  });
+  return { props: { processTemplates, employees, professions, tags } };
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -93,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProcessTemplate = ({ processTemplates, employees, professions }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ProcessTemplate = ({ processTemplates, employees, professions, tags }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
   const { slug } = router.query;
 
@@ -114,7 +120,7 @@ const ProcessTemplate = ({ processTemplates, employees, professions }: InferGetS
           <Typo className={classes.template_title}>{processTemplate.title}</Typo>
         </div>
         {processTemplate.phases.map((phase: IPhase) => (
-          <Phase employees={employees} key={phase.id} phase={phase} professions={professions} />
+          <Phase employees={employees} key={phase.id} phase={phase} professions={professions} tags={tags} />
         ))}
         <AddButton onClick={() => undefined} text='Legg til fase' />
       </div>
@@ -128,9 +134,10 @@ type PhaseProps = {
   phase: IPhase;
   professions: IProfession[];
   employees: IEmployee[];
+  tags: ITag[];
 };
 
-const Phase = ({ phase, professions, employees }: PhaseProps) => {
+const Phase = ({ phase, professions, employees, tags }: PhaseProps) => {
   const classes = useStyles();
   return (
     <div>
@@ -140,12 +147,12 @@ const Phase = ({ phase, professions, employees }: PhaseProps) => {
           <EditIcon />
         </IconButton>
       </div>
-      <TemplateTable employees={employees} phase={phase} professions={professions} />
+      <TemplateTable employees={employees} phase={phase} professions={professions} tags={tags} />
     </div>
   );
 };
 
-const TemplateTable = ({ phase, professions, employees }: PhaseProps) => {
+const TemplateTable = ({ phase, professions, tags, employees }: PhaseProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
@@ -185,7 +192,14 @@ const TemplateTable = ({ phase, professions, employees }: PhaseProps) => {
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
             <AddButton onClick={() => setModalIsOpen(true)} text='Legg til oppgave' />
-            <CreateTaskModal closeModal={() => setModalIsOpen(false)} employees={employees} modalIsOpen={modalIsOpen} phase={phase} professions={professions} />
+            <CreateTaskModal
+              closeModal={() => setModalIsOpen(false)}
+              employees={employees}
+              modalIsOpen={modalIsOpen}
+              phase={phase}
+              professions={professions}
+              tags={tags}
+            />
           </TableCell>
         </TableRow>
       </TableBody>
@@ -198,10 +212,11 @@ type CreateTaskModalProps = {
   modalIsOpen: boolean;
   closeModal: () => void;
   professions: IProfession[];
+  tags: ITag[];
   employees: IEmployee[];
 };
 
-const CreateTaskModal = ({ phase, modalIsOpen, closeModal, professions, employees }: CreateTaskModalProps) => {
+const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tags }: CreateTaskModalProps) => {
   const classes = useStyles();
 
   const { register, handleSubmit, errors, control } = useForm();
@@ -239,7 +254,7 @@ const CreateTaskModal = ({ phase, modalIsOpen, closeModal, professions, employee
           }}
         />
         <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
-        <TagSelector label='Tags' placeholder='tags' />
+        <TagSelector control={control} label='Tags' options={tags} placeholder='tags' />
         <ToggleButtonGroup control={control} name={'profession'} professions={professions} />
         <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
       </div>

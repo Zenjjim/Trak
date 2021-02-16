@@ -1,9 +1,0 @@
-{
-  "presets": [
-    "next/babel",
-    "@babel/preset-env"
-  ],
-  "plugins": [
-    "superjson-next"
-  ]
-}

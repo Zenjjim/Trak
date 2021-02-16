@@ -1,20 +1,17 @@
-name: Build
-
 on:
   pull_request:
-    branches: [ dev ]
-    
+    branches: [dev]
+
+name: Yarn CI
 jobs:
   build:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: 15
-    - run: npm ci
-    - run: npm install prisma --save-dev
-    - run: npx prisma generate
-    - run: npm run build
-
+      - uses: actions/checkout@v2
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build

@@ -7,7 +7,9 @@ jobs:
   build:
     name: Test
     runs-on: ubuntu-latest
+    
     steps:
+      - run: echo $DATABASE_ENV
       - uses: actions/checkout@v2
       - uses: borales/actions-yarn@v2.0.0
         with:

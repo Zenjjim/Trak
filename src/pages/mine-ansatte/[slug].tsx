@@ -284,7 +284,7 @@ type PhaseCardProps = {
 };
 const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
   const classes = useStyles();
-  const [hidden, setIsHidden] = useState(employees.length === 0);
+  const [hidden, setIsHidden] = useState(!employees.length);
   return (
     <>
       <ButtonBase focusRipple onClick={() => setIsHidden(!hidden)}>

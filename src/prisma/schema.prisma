@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 //  ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄
@@ -20,69 +20,61 @@ generator client {
 //  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀
 
 model Phase {
-  id    String @id @default(uuid())
-  title String
-
-  order Int
-
-  tasks Task[]
-
-  processTemplate   ProcessTemplate @relation(fields: [processTemplateId], references: [id])
+  id                String          @id @default(uuid())
+  title             String
   processTemplateId String
+  order             Int
+  processTemplate   ProcessTemplate @relation(fields: [processTemplateId], references: [id])
+  tasks             Task[]
 }
 
 model ProcessTemplate {
-  id    String @id @default(uuid())
-  title String
-  slug  String @unique
-
+  id     String  @id @default(uuid())
+  title  String
+  slug   String  @unique
   phases Phase[]
 }
 
 model Profession {
-  id    String @id @default(uuid())
-  title String
-
-  tasks    Task[]
+  id       String     @id @default(uuid())
+  title    String
   employee Employee[]
+  tasks    Task[]
 }
 
 model Tag {
   id    String @id @default(uuid())
   title String
-
   tasks Task[]
 }
 
 model Task {
-  id          String  @id @default(uuid())
-  title       String
-  description String
-  global      Boolean @default(true)
-
-  phase   Phase  @relation(fields: [phaseId], references: [id])
-  phaseId String
-
+  id           String         @id @default(uuid())
+  title        String
+  description  String
+  global       Boolean        @default(true)
+  phaseId      String
+  phase        Phase          @relation(fields: [phaseId], references: [id])
+  employeeTask EmployeeTask[]
   professions  Profession[]
   tags         Tag[]
-  employeeTask EmployeeTask[]
 }
 
 model Employee {
   id               Int            @id @default(autoincrement())
-  firstName        String
-  lastName         String
   title            String?
   email            String
+  slack            String?
+  professionId     String
+  firstName        String
+  lastName         String
   birthDate        DateTime
   dateOfEmployment DateTime?
   terminationDate  DateTime?
   imageUrl         String?
-  slack            String?
-  professionId     String
-  profession       Profession     @relation(fields: [professionId], references: [id])
   hrManagerId      Int?
-  hrManager        Employee?      @relation(fields: [hrManagerId], references: [id])
+  hrManager        Employee?      @relation("EmployeeToEmployee", fields: [hrManagerId], references: [id])
+  profession       Profession     @relation(fields: [professionId], references: [id])
   employees        Employee[]     @relation("EmployeeToEmployee")
   employeeTask     EmployeeTask[] @relation("tasks")
   responsible      EmployeeTask[] @relation("responsible_tasks")
@@ -90,12 +82,12 @@ model Employee {
 
 model EmployeeTask {
   id            String    @id @default(uuid())
-  task          Task?     @relation(fields: [taskId], references: [id])
   taskId        String?
-  employee      Employee? @relation("tasks", fields: [employeeId], references: [id])
   completed     Boolean   @default(false)
-  responsible   Employee? @relation("responsible_tasks", fields: [responsibleId], references: [id])
   employeeId    Int?
   responsibleId Int?
   year          DateTime
+  employee      Employee? @relation("tasks", fields: [employeeId], references: [id])
+  responsible   Employee? @relation("responsible_tasks", fields: [responsibleId], references: [id])
+  task          Task?     @relation(fields: [taskId], references: [id])
 }

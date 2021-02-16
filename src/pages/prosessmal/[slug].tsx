@@ -175,17 +175,14 @@ const TemplateTable = ({ phase, professions }: PhaseProps) => {
   );
 };
 
-const CreateTaskModal = ({
-  phase,
-  modalIsOpen,
-  closeModal,
-  professions,
-}: {
+type CreateTaskModalProps = {
   phase: IPhase;
   modalIsOpen: boolean;
   closeModal: () => void;
   professions: IProfession[];
-}) => {
+};
+
+const CreateTaskModal = ({ phase, modalIsOpen, closeModal, professions }: CreateTaskModalProps) => {
   const classes = useStyles();
 
   const { register, handleSubmit, errors, control } = useForm();
@@ -208,7 +205,7 @@ const CreateTaskModal = ({
       open={modalIsOpen}
       subheader={
         <>
-          til <b>Fase {phase.title}</b>
+          til <b>{phase.title}</b>
         </>
       }>
       <div className={classes.grid}>

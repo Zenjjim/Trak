@@ -1,10 +1,10 @@
 import { Box, Button } from '@material-ui/core';
-import { Controller } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 import { IProfession } from 'utils/types';
 
 type ToggleButtonGroupProps = {
   professions: IProfession[];
-  control: any;
+  control: Control;
   name: string;
 };
 

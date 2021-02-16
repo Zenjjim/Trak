@@ -14,7 +14,6 @@ jobs:
         with:
           cmd: install
       - uses: borales/actions-yarn@v2.0.0
-        env:
-          DATABASE_ENV: ${{ secrets.DATABASE_ENV }}
         with:
+          github_token: ${{secrets.DATABASE_URL}}
           cmd: build

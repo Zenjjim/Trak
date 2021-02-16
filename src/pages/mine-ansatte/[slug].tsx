@@ -7,6 +7,7 @@ import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
+import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate, IProfession } from 'utils/types';
 
@@ -26,7 +27,7 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const allPhases = await prisma.processTemplate.findMany({
+  const phases = await prisma.processTemplate.findMany({
     where: {
       slug: params.slug.toString(),
     },
@@ -79,7 +80,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   });
 
-  const myEmployees = await prisma.employee.findMany({
+  const employees = await prisma.employee.findMany({
     where: {
       hrManagerId: LOGGED_IN_USER,
     },
@@ -125,6 +126,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       },
     },
   });
+  const allPhases = JSON.parse(safeJsonStringify(phases));
+
+  const myEmployees = JSON.parse(safeJsonStringify(employees));
 
   return { props: { myEmployees, allPhases } };
 };

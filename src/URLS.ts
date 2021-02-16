@@ -31,17 +31,17 @@ export const urls: section[] = [
     links: [
       {
         title: 'Onboarding',
-        link: '/',
+        link: '/mine-ansatte/onboarding',
         aria_label: 'Til mine ansatte på onboarding',
       },
       {
         title: 'Løpende',
-        link: '/',
+        link: '/mine-ansatte/lopende',
         aria_label: 'Til mine ansatte på løpende',
       },
       {
         title: 'Offboarding',
-        link: '/',
+        link: '/mine-ansatte/offboarding',
         aria_label: 'Til mine ansatte på offboarding',
       },
     ],

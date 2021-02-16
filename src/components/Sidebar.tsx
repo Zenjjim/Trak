@@ -43,11 +43,11 @@ const LinkGroup = ({ title, links, divider }: section) => {
       <List component='div' disablePadding>
         {links.map((url: link) => {
           return (
-            <ListItem button className={classes.nested} component='a' key={url.title} role='nav'>
-              <Link href={url.link}>
+            <Link href={url.link} key={url.title} passHref>
+              <ListItem button className={classes.nested} component='a' role='nav'>
                 <ListItemText aria-label={url.aria_label} classes={{ secondary: classes.link }} secondary={url.title} />
-              </Link>
-            </ListItem>
+              </ListItem>
+            </Link>
           );
         })}
         {divider ? <Divider /> : null}
@@ -78,7 +78,7 @@ const LoggedInUserCard = ({ fullName, image }: LoggedInUserCardProps) => {
       padding={theme.spacing(1)}>
       <Box flexGrow={1}>
         <Badge badgeContent={4} color='error'>
-          <Avatar alt={'sef'} src={image ? image : '/dummy_avatar.png'} />
+          <Avatar alt={'Logged in user photo'} src={image ? image : '/dummy_avatar.png'} />
         </Badge>
       </Box>
       <Box flexGrow={4}>

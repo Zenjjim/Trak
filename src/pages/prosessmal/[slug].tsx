@@ -11,12 +11,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-<<<<<<< HEAD
 import { IPhase, IProcessTemplate, IProfession, ITask } from 'utils/types';
 
-=======
-import { IPhase, IProcessTemplate, ITask } from 'utils/types';
->>>>>>> Added first draft
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   const processTemplates = await prisma.processTemplate.findMany();
 
@@ -113,14 +109,10 @@ const ProcessTemplate = ({ processTemplates, professions }: InferGetStaticPropsT
           <Typo className={classes.template_title}>{processTemplate.title}</Typo>
         </div>
         {processTemplate.phases.map((phase: IPhase) => (
-          <Phase key={phase.id} phase={phase} />
+          <Phase key={phase.id} phase={phase} professions={professions} />
         ))}
         <AddButton onClick={() => undefined} text='Legg til fase' />
       </div>
-      {processTemplate.phases.map((phase: IPhase) => (
-        <Phase key={phase.id} phase={phase} professions={professions} />
-      ))}
-      <AddButton onClick={() => undefined} text='Legg til fase' />
     </>
   );
 };

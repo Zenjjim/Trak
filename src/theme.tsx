@@ -109,6 +109,9 @@ theme.components = {
       noOptions: {
         color: theme.palette.text.primary,
       },
+      tag: {
+        backgroundColor: theme.palette.background.paper,
+      },
     },
   },
 };

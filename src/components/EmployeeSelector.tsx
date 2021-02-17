@@ -1,27 +1,41 @@
-import { Autocomplete } from '@material-ui/core';
-import TextField from 'components/TextField';
-import { UseFormMethods } from 'react-hook-form';
+import { Autocomplete, TextField } from '@material-ui/core';
+import { Control, Controller } from 'react-hook-form';
+import { IEmployee } from 'utils/types';
 
 type EmployeeSelectorProps = {
-  employees: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    image_url: string;
-  }[];
+  employees: IEmployee[];
+  control: Control;
   name: string;
   label: string;
-} & Pick<UseFormMethods, 'register' | 'errors'>;
+};
 
-const EmployeeSelector = ({ employees, errors, register, name, label }: EmployeeSelectorProps) => {
+const EmployeeSelector = ({ employees, control, name, label }: EmployeeSelectorProps) => {
   return (
-    <div>
-      <Autocomplete
-        options={employees.map((option) => `${option.first_name} ${option.last_name}`)}
-        popupIcon={<></>}
-        renderInput={(params) => <TextField {...params} errors={errors} label={label} name={name} register={register} />}
-      />
-    </div>
+    <Controller
+      control={control}
+      defaultValue={undefined}
+      name={name}
+      render={({ onChange }) => <EmployeeSelectorComponent employees={employees} label={label} setValue={onChange} />}
+    />
+  );
+};
+
+type EmployeeSelectorComponentProps = {
+  employees: IEmployee[];
+  setValue: (IEmployee) => void;
+  label: string;
+};
+
+const EmployeeSelectorComponent = ({ employees, setValue, label }: EmployeeSelectorComponentProps) => {
+  return (
+    <Autocomplete
+      getOptionLabel={(employee: IEmployee) => `${employee.firstName} ${employee.lastName}`}
+      noOptionsText={'Ingen ansatte funnet'}
+      onChange={(_, employee) => setValue(employee)}
+      options={employees}
+      popupIcon={<></>}
+      renderInput={(params) => <TextField {...params} label={label} variant='standard' />}
+    />
   );
 };
 

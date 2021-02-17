@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["createMany"]
 }
 
 datasource db {
@@ -7,17 +8,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//  ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄
-// ▐░░▌     ▐░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░▌
-// ▐░▌░▌   ▐░▐░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░▌
-// ▐░▌▐░▌ ▐░▌▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌
-// ▐░▌ ▐░▐░▌ ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌
-// ▐░▌  ▐░▌  ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌
-// ▐░▌   ▀   ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░▌
-// ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌
-// ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄▄▄
-// ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
-//  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀
+model Employee {
+  id                      Int            @id @default(autoincrement())
+  title                   String?
+  email                   String
+  slack                   String?
+  professionId            String
+  firstName               String
+  lastName                String
+  birthDate               DateTime
+  dateOfEmployment        DateTime?
+  terminationDate         DateTime?
+  imageUrl                String?
+  hrManagerId             Int?
+  hrManager               Employee?      @relation("EmployeeToEmployee", fields: [hrManagerId], references: [id])
+  profession              Profession     @relation(fields: [professionId], references: [id])
+  employees               Employee[]     @relation("EmployeeToEmployee")
+  employeeTask            EmployeeTask[] @relation("tasks")
+  responsibleEmployeeTask EmployeeTask[] @relation("responsible_employee_tasks")
+  responsibleTask         Task[]         @relation("responsible_tasks")
+}
+
+model EmployeeTask {
+  id            String    @id @default(uuid())
+  taskId        String?
+  completed     Boolean   @default(false)
+  employeeId    Int?
+  responsibleId Int?
+  year          DateTime
+  employee      Employee? @relation("tasks", fields: [employeeId], references: [id])
+  responsible   Employee? @relation("responsible_employee_tasks", fields: [responsibleId], references: [id])
+  task          Task?     @relation(fields: [taskId], references: [id])
+}
 
 model Phase {
   id                String          @id @default(uuid())
@@ -49,45 +71,15 @@ model Tag {
 }
 
 model Task {
-  id           String         @id @default(uuid())
-  title        String
-  description  String
-  global       Boolean        @default(true)
-  phaseId      String
-  phase        Phase          @relation(fields: [phaseId], references: [id])
-  employeeTask EmployeeTask[]
-  professions  Profession[]
-  tags         Tag[]
-}
-
-model Employee {
-  id               Int            @id @default(autoincrement())
-  title            String?
-  email            String
-  slack            String?
-  professionId     String
-  firstName        String
-  lastName         String
-  birthDate        DateTime
-  dateOfEmployment DateTime?
-  terminationDate  DateTime?
-  imageUrl         String?
-  hrManagerId      Int?
-  hrManager        Employee?      @relation("EmployeeToEmployee", fields: [hrManagerId], references: [id])
-  profession       Profession     @relation(fields: [professionId], references: [id])
-  employees        Employee[]     @relation("EmployeeToEmployee")
-  employeeTask     EmployeeTask[] @relation("tasks")
-  responsible      EmployeeTask[] @relation("responsible_tasks")
-}
-
-model EmployeeTask {
-  id            String    @id @default(uuid())
-  taskId        String?
-  completed     Boolean   @default(false)
-  employeeId    Int?
+  id            String         @id @default(uuid())
+  title         String
+  description   String
+  global        Boolean        @default(true)
+  phaseId       String
   responsibleId Int?
-  year          DateTime
-  employee      Employee? @relation("tasks", fields: [employeeId], references: [id])
-  responsible   Employee? @relation("responsible_tasks", fields: [responsibleId], references: [id])
-  task          Task?     @relation(fields: [taskId], references: [id])
+  phase         Phase          @relation(fields: [phaseId], references: [id])
+  responsible   Employee?      @relation("responsible_tasks", fields: [responsibleId], references: [id])
+  employeeTask  EmployeeTask[]
+  professions   Profession[]
+  tags          Tag[]
 }

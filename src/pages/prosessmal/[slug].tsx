@@ -10,9 +10,11 @@ import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { CreateTask } from 'prisma/Task';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IPhase, IProcessTemplate, IProfession, ITask } from 'utils/types';
+import safeJsonStringify from 'safe-json-stringify';
+import { IEmployee, IPhase, IProcessTemplate, IProfession, ITask } from 'utils/types';
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   const processTemplates = await prisma.processTemplate.findMany();
@@ -43,27 +45,7 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   });
 
-  const employees = [
-    {
-      id: 1,
-      first_name: 'ola',
-      last_name: 'halvorsen',
-      image_url: '-',
-    },
-    {
-      id: 2,
-      first_name: 'help',
-      last_name: 'rsen',
-      image_url: '-',
-    },
-    {
-      id: 3,
-      first_name: 'test',
-      last_name: 'rfdsa',
-      image_url: '-',
-    },
-  ];
-  //await prisma.employee.findMany()
+  const employees = JSON.parse(safeJsonStringify(await prisma.employee.findMany()));
 
   const professions = await prisma.profession.findMany();
   return { props: { processTemplates, employees, professions } };
@@ -132,7 +114,7 @@ const ProcessTemplate = ({ processTemplates, employees, professions }: InferGetS
           <Typo className={classes.template_title}>{processTemplate.title}</Typo>
         </div>
         {processTemplate.phases.map((phase: IPhase) => (
-          <Phase key={phase.id} phase={phase} professions={professions} />
+          <Phase employees={employees} key={phase.id} phase={phase} professions={professions} />
         ))}
         <AddButton onClick={() => undefined} text='Legg til fase' />
       </div>
@@ -145,12 +127,7 @@ export default ProcessTemplate;
 type PhaseProps = {
   phase: IPhase;
   professions: IProfession[];
-  employees: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    image_url: string;
-  }[];
+  employees: IEmployee[];
 };
 
 const Phase = ({ phase, professions, employees }: PhaseProps) => {
@@ -221,12 +198,7 @@ type CreateTaskModalProps = {
   modalIsOpen: boolean;
   closeModal: () => void;
   professions: IProfession[];
-  employees: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    image_url: string;
-  }[];
+  employees: IEmployee[];
 };
 
 const CreateTaskModal = ({ phase, modalIsOpen, closeModal, professions, employees }: CreateTaskModalProps) => {
@@ -269,7 +241,7 @@ const CreateTaskModal = ({ phase, modalIsOpen, closeModal, professions, employee
         <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
 
         <ToggleButtonGroup control={control} name={'profession'} professions={professions} />
-        <EmployeeSelector employees={employees} errors={errors} label='Oppgaveansvarlig' name='responsible' register={register} />
+        <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
       </div>
     </Modal>
   );

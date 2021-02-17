@@ -10,7 +10,6 @@ import prisma from 'lib/prisma';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { CreateTask } from 'prisma/Task';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import safeJsonStringify from 'safe-json-stringify';

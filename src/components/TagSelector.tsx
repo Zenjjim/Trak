@@ -6,12 +6,11 @@ import { getUniqueTags } from 'utils/utilFunctions';
 
 export type TagSelectorProps = {
   label: string;
-  placeholder: string;
   control: Control<Record<string, unknown>>;
   options: ITag[];
   name: string;
 };
-const TagSelector = ({ label, options, placeholder, control, name }: TagSelectorProps) => {
+const TagSelector = ({ label, options, control, name }: TagSelectorProps) => {
   // TODO
   // If editing a task this will be updated with that data, otherwise empty
 
@@ -31,7 +30,7 @@ const TagSelector = ({ label, options, placeholder, control, name }: TagSelector
           onChange={(_, newValue) => {
             const updatedTags = newValue.map((tag) => {
               if (typeof tag === 'string') {
-                const newTag: ITag = { id: '', title: tag.toLowerCase() };
+                const newTag: ITag = { id: null, title: tag.toLowerCase() };
                 return newTag;
               } else {
                 return tag;
@@ -42,7 +41,7 @@ const TagSelector = ({ label, options, placeholder, control, name }: TagSelector
             onChange(uniqueTags);
           }}
           options={options}
-          renderInput={(params) => <TextField {...params} variant='standard' {...params} label={label} placeholder={placeholder} />}
+          renderInput={(params) => <TextField {...params} variant='standard' {...params} label={label} />}
           selectOnFocus
         />
       )}

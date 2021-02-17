@@ -48,13 +48,8 @@ export const getStaticProps: GetStaticProps = async () => {
   const employees = JSON.parse(safeJsonStringify(await prisma.employee.findMany()));
 
   const professions = await prisma.profession.findMany();
-  const tags = await prisma.tag.findMany({
-    select: {
-      id: true,
-      title: true,
-    },
-  });
-  return { props: { processTemplates, employees, professions, tags } };
+  const tags = await prisma.tag.findMany();
+  return { props: { processTemplates, professions, employees, tags } };
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -256,7 +251,7 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
         <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
         <ToggleButtonGroup control={control} name={'profession'} professions={professions} />
         <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
-        <TagSelector control={control} label='Tags' name='tags' options={tags} placeholder='tags' />
+        <TagSelector control={control} label='Tags' name='tags' options={tags} />
         <TextField errors={errors} label='Oppgaveansvarlig' name='responsible' register={register} />
       </div>
     </Modal>

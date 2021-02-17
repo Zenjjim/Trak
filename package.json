@@ -45,8 +45,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-hook-form": "^6.15.1",
-    "safe-json-stringify": "^1.2.0",
-    "uuid": "^8.3.2"
+    "safe-json-stringify": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",

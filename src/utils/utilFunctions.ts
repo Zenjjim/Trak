@@ -1,5 +1,8 @@
-import { ITag } from './types';
+import { ITag } from 'utils/types';
 
 export function getUniqueTags(arr: ITag[], key: string): ITag[] {
-  return arr.filter((v, i, a) => a.findIndex((t) => t[key].toLowerCase() === v[key].toLowerCase() && t[key].toLowerCase() === v[key].toLowerCase()) === i);
+  return arr.filter(
+    (tag, index, tagArray) =>
+      tagArray.findIndex((t) => t[key].toLowerCase() === tag[key].toLowerCase() && t[key].toLowerCase() === tag[key].toLowerCase()) === index,
+  );
 }

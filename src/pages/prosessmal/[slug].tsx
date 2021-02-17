@@ -252,7 +252,6 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
         <ToggleButtonGroup control={control} name={'profession'} professions={professions} />
         <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
         <TagSelector control={control} label='Tags' name='tags' options={tags} />
-        <TextField errors={errors} label='Oppgaveansvarlig' name='responsible' register={register} />
       </div>
     </Modal>
   );

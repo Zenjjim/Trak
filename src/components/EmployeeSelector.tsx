@@ -13,7 +13,6 @@ const EmployeeSelector = ({ employees, control, name, label }: EmployeeSelectorP
   return (
     <Controller
       control={control}
-      defaultValue={undefined}
       name={name}
       render={({ onChange }) => <EmployeeSelectorComponent employees={employees} label={label} setValue={onChange} />}
     />

@@ -1,5 +1,6 @@
 import { Avatar, Button, IconButton, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
+import axios from 'axios';
 import AddButton from 'components/AddButton';
 import EmployeeSelector from 'components/EmployeeSelector';
 import Modal from 'components/Modal';
@@ -30,7 +31,7 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const processTemplates = await prisma.processTemplate.findMany({
+  const processTemplatesQuery = await prisma.processTemplate.findMany({
     include: {
       phases: {
         include: {
@@ -38,13 +39,14 @@ export const getStaticProps: GetStaticProps = async () => {
             include: {
               tags: true,
               professions: true,
+              responsible: true,
             },
           },
         },
       },
     },
   });
-
+  const processTemplates = JSON.parse(safeJsonStringify(processTemplatesQuery))
   const employees = JSON.parse(safeJsonStringify(await prisma.employee.findMany()));
 
   const professions = await prisma.profession.findMany();
@@ -150,6 +152,7 @@ const Phase = ({ phase, professions, employees, tags }: PhaseProps) => {
 const TemplateTable = ({ phase, professions, tags, employees }: PhaseProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
+  console.log(phase)
   return (
     <Table aria-label='Prosessmal tabel' className={classes.table}>
       <TableHead>
@@ -172,10 +175,12 @@ const TemplateTable = ({ phase, professions, tags, employees }: PhaseProps) => {
             <TableCell>{task.title}</TableCell>
             <TableCell>{task.description}</TableCell>
             <TableCell>
-              <div className={classes.flexCenter}>
-                <Avatar className={classes.avatarSize}>O</Avatar>
-                Ola Halvorsen
-              </div>
+              {task.responsible &&
+                <div className={classes.flexCenter}>
+                  <Avatar className={classes.avatarSize} src={task.responsible.imageUrl}>X</Avatar>
+                  {`${task.responsible.firstName} ${task.responsible.lastName}`}
+                </div>
+              }
             </TableCell>
             <TableCell>
               <IconButton aria-label='edit'>
@@ -211,12 +216,51 @@ type CreateTaskModalProps = {
   employees: IEmployee[];
 };
 
+type CreateTaskData = {
+  title: string,
+  description?: string,
+  professions?: string[];
+  responsible?: IEmployee;
+  tags?: ITag[]
+}
+
+const postTask = (data: CreateTaskData, phase: IPhase) => {
+  axios.post('/api/task', {
+    title: data.title,
+    description: data.description,
+    global: true,
+    phaseId: phase.id,
+    responsibleId: data.responsible.id,
+    tags: {
+      connectOrCreate: {
+        where: {
+          id: data.tags.map((tag) => ({ id: tag.id }))
+        },
+        create: {
+
+        }
+      }
+    },
+    professions: {
+      connect: data.professions.map((profession) => ({ id: profession }))
+    },
+  })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
 const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tags }: CreateTaskModalProps) => {
   const classes = useStyles();
 
   const { register, handleSubmit, errors, control } = useForm();
 
-  const onSubmit = handleSubmit((data) => data);
+  const onSubmit = handleSubmit((data: CreateTaskData) => {
+    postTask(data, phase)
+  });
 
   return (
     <Modal
@@ -249,9 +293,9 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
           }}
         />
         <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
-        <ToggleButtonGroup control={control} name={'profession'} professions={professions} />
-        <TagSelector control={control} label='Tags' name='tags' options={tags} />
+        <ToggleButtonGroup control={control} name={'professions'} professions={professions} />
         <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
+        <TagSelector control={control} label='Tags' name='tags' options={tags} />
       </div>
     </Modal>
   );

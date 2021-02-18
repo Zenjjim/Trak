@@ -66,6 +66,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
 
+  if (isFallback) {
+    return <div>LOADING</div>
+  }
+
   return (
     <>
       <Head>

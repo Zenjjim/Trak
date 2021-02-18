@@ -4,7 +4,7 @@ import { IEmployee } from 'utils/types';
 
 type EmployeeSelectorProps = {
   employees: IEmployee[];
-  control: Control<Record<string, unknown>>;
+  control: Control;
   name: string;
   label: string;
   employee: IEmployee;

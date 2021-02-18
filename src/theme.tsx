@@ -112,6 +112,11 @@ theme.components = {
       tag: {
         backgroundColor: theme.palette.background.paper,
       },
+      paper: {
+        backgroundColor: theme.palette.background.default,
+        border: `0.6px solid ${theme.palette.common.black} `,
+        fontSize: '1rem',
+      },
     },
   },
 };

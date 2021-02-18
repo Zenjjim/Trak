@@ -48,7 +48,7 @@ const TagSelector = ({ label, options, control, name }: TagSelectorProps) => {
           onChange={(_, newValue) => {
             const updatedTags = newValue.map((tag) => {
               if (typeof tag === 'string') {
-                const newTag: ITag = { id: null, title: tag.toLowerCase() };
+                const newTag: ITag = { id: '', title: tag.toLowerCase() };
                 return newTag;
               } else if (tag.inputValue) {
                 const newTag: ITag = { id: null, title: tag.inputValue.toLowerCase() };

@@ -11,8 +11,8 @@ datasource db {
 model Employee {
   id                      Int            @id @default(autoincrement())
   title                   String?
-  email                   String
-  slack                   String?
+  email                   String         @unique
+  slack                   String?        @unique
   professionId            String
   firstName               String
   lastName                String
@@ -59,14 +59,14 @@ model ProcessTemplate {
 
 model Profession {
   id       String     @id @default(uuid())
-  title    String
+  title    String     @unique
   employee Employee[]
   tasks    Task[]
 }
 
 model Tag {
   id    String @id @default(uuid())
-  title String
+  title String @unique
   tasks Task[]
 }
 

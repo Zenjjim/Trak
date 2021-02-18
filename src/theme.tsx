@@ -114,7 +114,7 @@ theme.components = {
       },
       paper: {
         backgroundColor: theme.palette.background.default,
-        border: `0.6px solid ${theme.palette.common.black} `,
+        border: `0.6px solid ${theme.palette.primary.main} `,
         fontSize: '1rem',
       },
     },

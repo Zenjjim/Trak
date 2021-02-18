@@ -12,7 +12,7 @@ type FilterOptions = {
 
 export type TagSelectorProps = {
   label: string;
-  control: Control<Record<string, unknown>>;
+  control: Control;
   options: FilterOptions[];
   name: string;
   defaultValue: FilterOptions[];

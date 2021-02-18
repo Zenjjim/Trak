@@ -4,7 +4,7 @@ import { IProfession } from 'utils/types';
 
 type ToggleButtonGroupProps = {
   professions: IProfession[];
-  control: Control<Record<string, unknown>>;
+  control: Control;
   name: string;
 };
 

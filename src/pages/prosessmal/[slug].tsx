@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import AddButton from 'components/AddButton';
 import Typo from 'components/Typo';
 import Phase from 'components/views/prosessmal/Phase';
+import fastjson from 'fastjson';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -9,8 +10,11 @@ import { useRouter } from 'next/router';
 import safeJsonStringify from 'safe-json-stringify';
 import { IPhase, IProcessTemplate } from 'utils/types';
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const processTemplatesQuery = await prisma.processTemplate.findMany({
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const processTemplatesQuery = await prisma.processTemplate.findUnique({
+    where: {
+      slug: context.params.slug.toString(),
+    },
     include: {
       phases: {
         include: {
@@ -25,13 +29,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     },
   });
+  const processTemplate = fastjson.stringify(processTemplatesQuery);
+
+  const employeeQuery = await prisma.employee.findMany();
+  const employees = fastjson.stringify(employeeQuery);
+
   const professions = await prisma.profession.findMany();
   const tags = await prisma.tag.findMany();
-
-  const processTemplates = JSON.parse(safeJsonStringify(processTemplatesQuery));
-  const employees = JSON.parse(safeJsonStringify(await prisma.employee.findMany()));
-  return { props: { processTemplates, professions, employees, tags } };
+  return { props: { processTemplate, professions, employees, tags } };
 };
+
 const useStyles = makeStyles({
   root: {
     marginLeft: '30px',
@@ -48,13 +55,11 @@ const useStyles = makeStyles({
   },
 });
 
-const ProcessTemplate = ({ processTemplates, employees, professions, tags }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ProcessTemplate = ({ processTemplate, employees, professions, tags }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { slug } = router.query;
 
   const classes = useStyles();
-
-  const processTemplate: IProcessTemplate = processTemplates.find((processTemplate) => processTemplate.slug === slug);
 
   return (
     <>

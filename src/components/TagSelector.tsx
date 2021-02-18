@@ -19,8 +19,6 @@ export type TagSelectorProps = {
 };
 const TagSelector = ({ label, options, control, name }: TagSelectorProps) => {
   const filter = createFilterOptions<FilterOptions>();
-  // TODO
-  // If editing a task this will be updated with that data, otherwise empty
   const [tags, setTags] = useState<FilterOptions[]>([]);
   return (
     <Controller

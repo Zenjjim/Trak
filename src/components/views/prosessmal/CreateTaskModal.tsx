@@ -61,7 +61,7 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
         <Button key={'avbryt'} onClick={closeModal} type='button'>
           Avbryt
         </Button>,
-        <Button key={'create'} onClick={() => undefined} type='submit'>
+        <Button key={'create'} type='submit'>
           Lag oppgave
         </Button>,
       ]}

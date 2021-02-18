@@ -1,8 +1,5 @@
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
-import Layout from 'components/Layout';
+import ContextProvider from 'pages/ContextProvider';
 import { useEffect } from 'react';
-import theme from 'theme';
-
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
@@ -11,12 +8,9 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </ThemeProvider>
+    <ContextProvider>
+      <Component {...pageProps} />
+    </ContextProvider>
   );
 }
 

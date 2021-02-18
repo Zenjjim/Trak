@@ -1,12 +1,11 @@
-import { Avatar, IconButton, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import AddButton from 'components/AddButton';
+import TaskRow from 'components/views/prosessmal//TaskRow';
+import CreateTaskModal from 'components/views/prosessmal/CreateTaskModal';
 import { useState } from 'react';
 import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
 
-import CreateTaskModal from './CreateTaskModal';
-
-type TemplateTableProps = {
+type PhaseTableProps = {
   phase: IPhase;
   professions: IProfession[];
   employees: IEmployee[];
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TemplateTable = ({ phase, professions, tags, employees }: TemplateTableProps) => {
+const PhaseTable = ({ phase, professions, tags, employees }: PhaseTableProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
@@ -58,29 +57,16 @@ const TemplateTable = ({ phase, professions, tags, employees }: TemplateTablePro
       </TableHead>
       <TableBody>
         {phase.tasks.map((task: ITask) => (
-          <TableRow className={classes.hideLastBorder} key={task.id}>
-            <TableCell>{task.title}</TableCell>
-            <TableCell>{task.description}</TableCell>
-            <TableCell>
-              {task.responsible && (
-                <div className={classes.flexCenter}>
-                  <Avatar className={classes.avatarSize} src={task.responsible.imageUrl}>
-                    X
-                  </Avatar>
-                  {`${task.responsible.firstName} ${task.responsible.lastName}`}
-                </div>
-              )}
-            </TableCell>
-            <TableCell>
-              <IconButton aria-label='edit'>
-                <Edit />
-              </IconButton>
-            </TableCell>
-          </TableRow>
+          <TaskRow employees={employees} key={task.id} phase={phase} professions={professions} tags={tags} task={task} />
         ))}
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
-            <AddButton onClick={() => setModalIsOpen(true)} text='Legg til oppgave' />
+            <AddButton
+              onClick={() => {
+                setModalIsOpen(true);
+              }}
+              text='Legg til oppgave'
+            />
             <CreateTaskModal
               closeModal={() => setModalIsOpen(false)}
               employees={employees}
@@ -96,4 +82,4 @@ const TemplateTable = ({ phase, professions, tags, employees }: TemplateTablePro
   );
 };
 
-export default TemplateTable;
+export default PhaseTable;

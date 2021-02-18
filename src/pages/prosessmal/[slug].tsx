@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core';
 import AddButton from 'components/AddButton';
 import Typo from 'components/Typo';
 import Phase from 'components/views/prosessmal/Phase';
-import fastjson from 'fastjson';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -11,6 +10,7 @@ import safeJsonStringify from 'safe-json-stringify';
 import { IPhase, IProcessTemplate } from 'utils/types';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log("Ree0: " + new Date().getTime())
   const processTemplatesQuery = await prisma.processTemplate.findUnique({
     where: {
       slug: context.params.slug.toString(),
@@ -29,13 +29,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     },
   });
-  const processTemplate = fastjson.stringify(processTemplatesQuery);
-
+  console.log("Ree1: " + new Date().getTime())
   const employeeQuery = await prisma.employee.findMany();
-  const employees = fastjson.stringify(employeeQuery);
-
+  console.log("Ree2: " + new Date().getTime())
   const professions = await prisma.profession.findMany();
+  console.log("Ree3: " + new Date().getTime())
   const tags = await prisma.tag.findMany();
+  console.log("Ree4: " + new Date().getTime())
+
+  const processTemplate = JSON.parse(safeJsonStringify(processTemplatesQuery));
+  console.log("Ree5: " + new Date().getTime())
+  const employees = JSON.parse(safeJsonStringify(employeeQuery));
+  console.log("Ree6: " + new Date().getTime())
+
   return { props: { processTemplate, professions, employees, tags } };
 };
 
@@ -57,9 +63,13 @@ const useStyles = makeStyles({
 
 const ProcessTemplate = ({ processTemplate, employees, professions, tags }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
+  const { isFallback } = router
   const { slug } = router.query;
-
   const classes = useStyles();
+
+  if (isFallback) {
+    return <div>LOADING</div>
+  }
 
   return (
     <>

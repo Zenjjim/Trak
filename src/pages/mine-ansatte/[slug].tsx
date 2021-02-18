@@ -1,32 +1,19 @@
-import { Avatar, Box, ButtonBase, IconButton, Table, TableCell, TableHead, TableRow } from '@material-ui/core';
-import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon, Search as SearchIcon, Tune as TuneIcon } from '@material-ui/icons';
+import { Box, IconButton } from '@material-ui/core';
+import { Search as SearchIcon, Tune as TuneIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import classNames from 'classnames';
 import Typo from 'components/Typo';
+import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCard';
 import prisma from 'lib/prisma';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+import { GetServerSideProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate, IProfession } from 'utils/types';
+import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
 
 const LOGGED_IN_USER = 1;
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  const processTemplates = await prisma.processTemplate.findMany();
-
-  return {
-    paths: processTemplates.map((processTemplate) => ({
-      params: {
-        slug: processTemplate.slug,
-      },
-    })),
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const phases = await prisma.processTemplate.findMany({
     where: {
       slug: params.slug.toString(),
@@ -141,22 +128,10 @@ const useStyles = makeStyles({
   pointer: {
     cursor: 'pointer',
   },
-  avatar: {
-    width: '25px',
-    height: '25px',
-  },
   centeringRow: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  userRow: {
-    alignItems: 'flex-end',
-    display: 'flex',
-    flexDirection: 'row',
-    '&:focus': {
-      outline: `0.1px solid ${theme.palette.text.disabled}`,
-    },
   },
 });
 export const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) => {
@@ -189,7 +164,7 @@ export const getPhasesWithEmployees = (processTemplate: IProcessTemplate, myEmpl
     }),
   ];
 };
-const MyEmployees = ({ myEmployees, allPhases }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const MyEmployees = ({ myEmployees, allPhases }: InferGetStaticPropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
   const processTemplate = allPhases[0];
   const phases = getPhasesWithEmployees(processTemplate, myEmployees);
@@ -225,94 +200,6 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetStaticPropsType<typeof 
             </Box>
           );
         })}
-      </Box>
-    </>
-  );
-};
-type EmployeeRow = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  profession: IProfession;
-  hrManager: IEmployee;
-  tasksFinished: number;
-  totalTasks: number;
-};
-
-type UserRowProps = {
-  employee: EmployeeRow;
-};
-
-const UserRow = ({ employee }: UserRowProps) => {
-  const classes = useStyles();
-  const typoVariant = 'body2';
-  return (
-    <TableRow className={classes.pointer} hover>
-      <TableCell>
-        <div className={classes.userRow} tabIndex={0}>
-          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
-          <Typo variant={typoVariant}>
-            {employee.firstName} {employee.lastName}
-          </Typo>
-        </div>
-      </TableCell>
-      <TableCell>
-        <Typo variant={typoVariant}>
-          <b>{employee.tasksFinished}</b> av <b>{employee.totalTasks}</b>
-        </Typo>
-      </TableCell>
-      <TableCell>
-        <Typo variant={typoVariant}>{employee.profession.title}</Typo>
-      </TableCell>
-      <TableCell>
-        <Box alignItems='flex-end' display='flex' flexDirection='row'>
-          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
-          <Typo variant={typoVariant}>
-            {employee.hrManager.firstName} {employee.hrManager.lastName}
-          </Typo>
-        </Box>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-type PhaseCardProps = {
-  id: string;
-  title: string;
-  amount: number;
-  employees: EmployeeRow[];
-};
-const PhaseCard = ({ title, amount, employees }: PhaseCardProps) => {
-  const classes = useStyles();
-  const [hidden, setIsHidden] = useState(!employees.length);
-  return (
-    <>
-      <ButtonBase focusRipple onClick={() => setIsHidden(!hidden)}>
-        <div className={classNames(classes.centeringRow, classes.pointer)}>
-          <Typo variant='h2'>
-            {title} (<b>{amount}</b>)
-          </Typo>
-          {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-        </div>
-      </ButtonBase>
-      <Box display={hidden ? 'none' : 'block'}>
-        {employees.length > 0 ? (
-          <Table aria-label='Mine ansatte tabell'>
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: '37.5rem' }}>Navn</TableCell>
-                <TableCell style={{ width: '18.75rem' }}>Oppgaver gjennomført</TableCell>
-                <TableCell style={{ width: '18.75rem' }}>Stilling</TableCell>
-                <TableCell style={{ width: '18.75rem' }}>Ansvarlig</TableCell>
-              </TableRow>
-            </TableHead>
-            {employees.map((employee) => {
-              return <UserRow employee={employee} key={employee.id} />;
-            })}
-          </Table>
-        ) : (
-          <Typo variant='body2'>Ingen ansatte i denne fasen</Typo>
-        )}
       </Box>
     </>
   );

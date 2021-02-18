@@ -1,12 +1,15 @@
 import { makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import AddButton from 'components/AddButton';
 import TaskRow from 'components/views/prosessmal//TaskRow';
-import TaskModal from 'components/views/prosessmal/TaskModal';
+import CreateTaskModal from 'components/views/prosessmal/CreateTaskModal';
 import { useState } from 'react';
-import { IPhase, ITask } from 'utils/types';
+import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
 
 type PhaseTableProps = {
   phase: IPhase;
+  professions: IProfession[];
+  employees: IEmployee[];
+  tags: ITag[];
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PhaseTable = ({ phase }: PhaseTableProps) => {
+const PhaseTable = ({ phase, professions, tags, employees }: PhaseTableProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
@@ -54,7 +57,7 @@ const PhaseTable = ({ phase }: PhaseTableProps) => {
       </TableHead>
       <TableBody>
         {phase.tasks.map((task: ITask) => (
-          <TaskRow key={task.id} phase={phase} task={task} />
+          <TaskRow employees={employees} key={task.id} phase={phase} professions={professions} tags={tags} task={task} />
         ))}
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
@@ -64,7 +67,14 @@ const PhaseTable = ({ phase }: PhaseTableProps) => {
               }}
               text='Legg til oppgave'
             />
-            {modalIsOpen && <TaskModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} phase={phase} />}
+            <CreateTaskModal
+              closeModal={() => setModalIsOpen(false)}
+              employees={employees}
+              modalIsOpen={modalIsOpen}
+              phase={phase}
+              professions={professions}
+              tags={tags}
+            />
           </TableCell>
         </TableRow>
       </TableBody>

@@ -4,15 +4,17 @@ import { IEmployee } from 'utils/types';
 
 type EmployeeSelectorProps = {
   employees: IEmployee[];
-  control: Control;
+  control: Control<Record<string, unknown>>;
   name: string;
   label: string;
+  employee: IEmployee;
 };
 
-const EmployeeSelector = ({ employees, control, name, label }: EmployeeSelectorProps) => {
+const EmployeeSelector = ({ employees, control, name, label, employee }: EmployeeSelectorProps) => {
   return (
     <Controller
       control={control}
+      defaultValue={employee}
       name={name}
       render={({ onChange, value }) => <EmployeeSelectorComponent employees={employees} label={label} setValue={onChange} value={value} />}
     />

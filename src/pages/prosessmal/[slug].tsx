@@ -6,43 +6,44 @@ import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import safeJsonStringify from 'safe-json-stringify';
-import { IPhase, IProcessTemplate } from 'utils/types';
+import { IPhase } from 'utils/types';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log("Ree0: " + new Date().getTime())
-  const processTemplatesQuery = await prisma.processTemplate.findUnique({
+  const processTemplate = await prisma.processTemplate.findUnique({
     where: {
       slug: context.params.slug.toString(),
     },
     include: {
       phases: {
-        include: {
+        select: {
+          id: true,
+          order: true,
+          title: true,
           tasks: {
-            include: {
+            where: {
+              global: true,
+            },
+            select: {
+              id: true,
+              title: true,
+              description: true,
               tags: true,
               professions: true,
-              responsible: true,
+              responsible: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                  imageUrl: true,
+                },
+              },
             },
           },
         },
       },
     },
   });
-  console.log("Ree1: " + new Date().getTime())
-  const employeeQuery = await prisma.employee.findMany();
-  console.log("Ree2: " + new Date().getTime())
-  const professions = await prisma.profession.findMany();
-  console.log("Ree3: " + new Date().getTime())
-  const tags = await prisma.tag.findMany();
-  console.log("Ree4: " + new Date().getTime())
-
-  const processTemplate = JSON.parse(safeJsonStringify(processTemplatesQuery));
-  console.log("Ree5: " + new Date().getTime())
-  const employees = JSON.parse(safeJsonStringify(employeeQuery));
-  console.log("Ree6: " + new Date().getTime())
-
-  return { props: { processTemplate, professions, employees, tags } };
+  return { props: { processTemplate } };
 };
 
 const useStyles = makeStyles({
@@ -61,14 +62,18 @@ const useStyles = makeStyles({
   },
 });
 
-const ProcessTemplate = ({ processTemplate, employees, professions, tags }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
-  const { isFallback } = router
+  const { isFallback } = router;
   const { slug } = router.query;
   const classes = useStyles();
 
+  const employees = [];
+  const professions = [];
+  const tags = [];
+
   if (isFallback) {
-    return <div>LOADING</div>
+    return <div>LOADING</div>;
   }
 
   return (

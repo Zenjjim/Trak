@@ -66,8 +66,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
 
+  const employees = [];
+  const professions = [];
+  const tags = [];
+
   if (isFallback) {
-    return <div>LOADING</div>
+    return <div>LOADING</div>;
   }
 
   return (

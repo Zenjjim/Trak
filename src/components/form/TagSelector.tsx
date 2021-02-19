@@ -47,7 +47,7 @@ const TagSelectorComponent = ({ label, options, value, setValue }: TagSelectorCo
         const filtered = filter(options, params);
         if (!filtered.length && params.inputValue !== '') {
           filtered.push({
-            id: null,
+            id: '',
             inputValue: params.inputValue,
             title: `Legg til "${params.inputValue}"`,
           });

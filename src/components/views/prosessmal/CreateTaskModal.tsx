@@ -59,49 +59,20 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
       phaseId: phase.id,
       global: true,
     };
-    showProgressbar(true);
     if (task) {
-      axios
-        .put(`/api/task/${task.id}`, data)
-        .then(() => {
-          closeModal();
-          router.replace(router.asPath);
-          showSnackbar('Oppgave oppdatert', 'success');
-        })
-        .catch((error) => {
-          showSnackbar('Noe gikk feil', 'error');
-          // eslint-disable-next-line no-console
-          console.error(error);
-        })
-        .finally(() => {
-          showProgressbar(false);
-        });
+      CRUDBuilder(axios.put(`/api/task/${task.id}`, data), 'Oppgave opprettet');
     } else {
-      axios
-        .post('/api/task', data)
-        .then(() => {
-          closeModal();
-          router.replace(router.asPath);
-          showSnackbar('Oppgave opprettet', 'success');
-        })
-        .catch((error) => {
-          showSnackbar('Noe gikk feil', 'error');
-          // eslint-disable-next-line no-console
-          console.error(error);
-        })
-        .finally(() => {
-          showProgressbar(false);
-        });
+      CRUDBuilder(axios.post('/api/task', data), 'Oppgave oppdatert');
     }
   });
 
-  const deleteTask = () => {
-    axios
-      .delete(`/api/task/${task.id}`)
+  const CRUDBuilder = (axiosFunc, text) => {
+    showProgressbar(true);
+    axiosFunc
       .then(() => {
         closeModal();
         router.replace(router.asPath);
-        showSnackbar('Oppgave slettet', 'success');
+        showSnackbar(text, 'success');
       })
       .catch((error) => {
         showSnackbar('Noe gikk feil', 'error');
@@ -118,7 +89,12 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
       Avbryt
     </Button>,
     task && (
-      <Button className={classes.error} color='inherit' key={'delete'} onClick={deleteTask} type='button'>
+      <Button
+        className={classes.error}
+        color='inherit'
+        key={'delete'}
+        onClick={() => CRUDBuilder(axios.delete(`/api/task/${task.id}`), 'Oppgave slettet')}
+        type='button'>
         Slett
       </Button>
     ),

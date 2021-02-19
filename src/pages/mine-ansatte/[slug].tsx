@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Typo from 'components/Typo';
 import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCard';
 import prisma from 'lib/prisma';
-import { GetServerSideProps, InferGetStaticPropsType } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
@@ -164,7 +164,7 @@ export const getPhasesWithEmployees = (processTemplate: IProcessTemplate, myEmpl
     }),
   ];
 };
-const MyEmployees = ({ myEmployees, allPhases }: InferGetStaticPropsType<typeof getServerSideProps>) => {
+const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
   const processTemplate = allPhases[0];
   const phases = getPhasesWithEmployees(processTemplate, myEmployees);

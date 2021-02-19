@@ -19,7 +19,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix .",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "db": "docker run --name trak -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres"
   },
   "husky": {
     "hooks": {

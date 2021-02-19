@@ -73,7 +73,7 @@ model Tag {
 model Task {
   id            String         @id @default(uuid())
   title         String
-  description   String
+  description   String?
   global        Boolean        @default(true)
   phaseId       String
   responsibleId Int?

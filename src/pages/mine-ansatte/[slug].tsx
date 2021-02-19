@@ -12,9 +12,8 @@ import theme from 'theme';
 import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
 
 const LOGGED_IN_USER = 1;
-
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const phases = await prisma.processTemplate.findMany({
+  const phases = prisma.processTemplate.findMany({
     where: {
       slug: params.slug.toString(),
     },
@@ -67,7 +66,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     },
   });
 
-  const employees = await prisma.employee.findMany({
+  const employees = prisma.employee.findMany({
     where: {
       hrManagerId: LOGGED_IN_USER,
     },
@@ -113,11 +112,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       },
     },
   });
-  const allPhases = JSON.parse(safeJsonStringify(phases));
+  const data = await Promise.all([phases, employees]);
 
-  const myEmployees = JSON.parse(safeJsonStringify(employees));
+  const allPhases = JSON.parse(safeJsonStringify(data[0]));
+  const myEmployees = JSON.parse(safeJsonStringify(data[1]));
 
-  return { props: { myEmployees, allPhases } };
+  return { props: { allPhases, myEmployees } };
 };
 
 const useStyles = makeStyles({

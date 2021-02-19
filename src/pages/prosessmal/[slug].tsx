@@ -5,16 +5,18 @@ import Phase from 'components/views/prosessmal/Phase';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { IPhase } from 'utils/types';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const processTemplate = await prisma.processTemplate.findUnique({
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const processTemplate = prisma.processTemplate.findUnique({
     where: {
-      slug: context.params.slug.toString(),
+      slug: params.slug.toString(),
     },
     include: {
       phases: {
+        orderBy: {
+          order: 'asc',
+        },
         select: {
           id: true,
           order: true,
@@ -43,7 +45,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     },
   });
-  return { props: { processTemplate } };
+  const employees = prisma.employee.findMany({
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      imageUrl: true,
+    },
+  });
+  const professions = prisma.profession.findMany();
+  const tags = prisma.tag.findMany();
+
+  const data = await Promise.all([processTemplate, employees, professions, tags]);
+
+  return { props: { data } };
 };
 
 const useStyles = makeStyles({
@@ -62,33 +77,24 @@ const useStyles = makeStyles({
   },
 });
 
-const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const router = useRouter();
-  const { isFallback } = router;
-  const { slug } = router.query;
+const ProcessTemplate = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
 
-  const employees = [];
-  const professions = [];
-  const tags = [];
-
-  if (isFallback) {
-    return <div>LOADING</div>;
-  }
+  const [processTemplate, employees, professions, tags] = data;
 
   return (
     <>
       <Head>
-        <title>Prosessmal - {slug}</title>
+        <title>Prosessmal - {processTemplate?.title}</title>
       </Head>
       <div className={classes.root}>
         <div className={classes.header}>
           <Typo className={classes.title} variant='h1'>
             Prosessmal
           </Typo>
-          <Typo className={classes.template_title}>{processTemplate.title}</Typo>
+          <Typo className={classes.template_title}>{processTemplate?.title}</Typo>
         </div>
-        {processTemplate.phases.map((phase: IPhase) => (
+        {processTemplate?.phases.map((phase: IPhase) => (
           <Phase employees={employees} key={phase.id} phase={phase} professions={professions} tags={tags} />
         ))}
         <AddButton onClick={() => undefined} text='Legg til fase' />

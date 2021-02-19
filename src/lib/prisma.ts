@@ -13,7 +13,7 @@ const getPrismaClient = () => {
   } else {
     const newGlobalThis = globalThis as GlobalThisWithPrismaClient;
     if (!newGlobalThis[prismaClientPropertyName]) {
-      newGlobalThis[prismaClientPropertyName] = new PrismaClient();
+      newGlobalThis[prismaClientPropertyName] = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] });
     }
     return newGlobalThis[prismaClientPropertyName];
   }

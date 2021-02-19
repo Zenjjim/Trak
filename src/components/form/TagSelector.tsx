@@ -1,4 +1,4 @@
-import { Autocomplete, createFilterOptions, TextField } from '@material-ui/core';
+import { Autocomplete, Chip, createFilterOptions, TextField } from '@material-ui/core';
 import { Control, Controller } from 'react-hook-form';
 import { ITag, ITask } from 'utils/types';
 import { getUniqueTags } from 'utils/utilFunctions';
@@ -45,15 +45,16 @@ const TagSelectorComponent = ({ label, options, value, setValue }: TagSelectorCo
       defaultValue={value}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
-        if (!filtered.length && params.inputValue !== '') {
+        if (!filtered.length && params.inputValue) {
           filtered.push({
             id: '',
-            inputValue: params.inputValue,
+            inputValue: params.inputValue.toLowerCase(),
             title: `Legg til "${params.inputValue}"`,
           });
         }
         return filtered;
       }}
+      filterSelectedOptions
       freeSolo
       getOptionLabel={(option) => {
         return option.title;
@@ -78,6 +79,9 @@ const TagSelectorComponent = ({ label, options, value, setValue }: TagSelectorCo
       }}
       options={options}
       renderInput={(params) => <TextField {...params} variant='standard' {...params} label={label} />}
+      renderTags={(value, getTagProps) => {
+        return value.map((option, index) => <Chip {...getTagProps({ index })} key={index} label={option.inputValue || option.title} />);
+      }}
       selectOnFocus
     />
   );

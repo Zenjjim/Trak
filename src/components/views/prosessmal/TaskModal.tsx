@@ -5,13 +5,15 @@ import TagSelector from 'components/form/TagSelector';
 import TextField from 'components/form/TextField';
 import ToggleButtonGroup from 'components/form/ToggleButtonGroup';
 import Modal from 'components/Modal';
+import Typo from 'components/Typo';
 import useProgressbar from 'context/Progressbar';
 import useSnackbar from 'context/Snackbar';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
 
-type CreateTaskModalProps = {
+type TaskModalProps = {
   phase: IPhase;
   modalIsOpen: boolean;
   closeModal: () => void;
@@ -21,7 +23,7 @@ type CreateTaskModalProps = {
   task?: ITask;
 };
 
-type CreateTaskData = {
+type TaskData = {
   title: string;
   description?: string;
   professions?: string[];
@@ -40,11 +42,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tags, task = undefined }: CreateTaskModalProps) => {
+const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tags, task = undefined }: TaskModalProps) => {
   const classes = useStyles();
   const router = useRouter();
   const showSnackbar = useSnackbar();
   const showProgressbar = useProgressbar();
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
   const { register, handleSubmit, errors, control } = useForm({
     defaultValues: {
       title: task?.title,
@@ -53,7 +56,23 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
     },
   });
 
-  const onSubmit = handleSubmit((formData: CreateTaskData) => {
+  const CRUDBuilder = (axiosFunc: Promise<unknown>, text: string) => {
+    showProgressbar(true);
+    axiosFunc
+      .then(() => {
+        closeModal();
+        router.replace(router.asPath).finally(() => {
+          showProgressbar(false);
+          showSnackbar(text, 'success');
+        });
+      })
+      .catch((error) => {
+        showProgressbar(false);
+        showSnackbar(error, 'error');
+      });
+  };
+
+  const onSubmit = handleSubmit((formData: TaskData) => {
     const data = {
       data: formData,
       phaseId: phase.id,
@@ -66,42 +85,34 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
     }
   });
 
-  const CRUDBuilder = (axiosFunc, text) => {
-    showProgressbar(true);
-    axiosFunc
-      .then(() => {
-        closeModal();
-        router.replace(router.asPath);
-        showSnackbar(text, 'success');
-      })
-      .catch((error) => {
-        showSnackbar('Noe gikk feil', 'error');
-        // eslint-disable-next-line no-console
-        console.error(error);
-      })
-      .finally(() => {
-        showProgressbar(false);
-      });
-  };
-
-  const buttonGroup = [
-    <Button key={'avbryt'} onClick={closeModal} type='button'>
-      Avbryt
-    </Button>,
-    task && (
-      <Button
-        className={classes.error}
-        color='inherit'
-        key={'delete'}
-        onClick={() => CRUDBuilder(axios.delete(`/api/task/${task.id}`), 'Oppgave slettet')}
-        type='button'>
-        Slett
-      </Button>
-    ),
-    <Button key={'create'} type='submit'>
-      {task ? 'Oppdater' : 'Opprett'}
-    </Button>,
-  ];
+  const buttonGroup = confirmDelete
+    ? [
+        <Typo key={'text'}>Er du sikker?</Typo>,
+        <Button key={'cancel'} onClick={() => setConfirmDelete(false)} type='button'>
+          Avbryt
+        </Button>,
+        <Button
+          className={classes.error}
+          color='inherit'
+          key={'delete'}
+          onClick={() => CRUDBuilder(axios.delete(`/api/task/${task.id}`), 'Oppgave slettet')}
+          type='button'>
+          Slett
+        </Button>,
+      ]
+    : [
+        <Button key={'cancel'} onClick={closeModal} type='button'>
+          Avbryt
+        </Button>,
+        task && (
+          <Button className={classes.error} color='inherit' key={'delete'} onClick={() => setConfirmDelete(true)} type='button'>
+            Slett
+          </Button>
+        ),
+        <Button key={'create'} type='submit'>
+          {task ? 'Oppdater' : 'Opprett'}
+        </Button>,
+      ];
 
   return (
     <Modal
@@ -135,4 +146,4 @@ const CreateTaskModal = ({ employees, phase, modalIsOpen, closeModal, profession
   );
 };
 
-export default CreateTaskModal;
+export default TaskModal;

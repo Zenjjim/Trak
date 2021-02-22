@@ -1,6 +1,6 @@
 import { Avatar, IconButton, makeStyles, TableCell, TableRow } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
-import CreateTaskModal from 'components/views/prosessmal/CreateTaskModal';
+import TaskModal from 'components/views/prosessmal/TaskModal';
 import { useState } from 'react';
 import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
 
@@ -64,7 +64,7 @@ const TaskRow = ({ task, phase, professions, tags, employees }: TaskProps) => {
           }}>
           <Edit />
         </IconButton>
-        <CreateTaskModal
+        <TaskModal
           closeModal={() => setModalIsOpen(false)}
           employees={employees}
           modalIsOpen={modalIsOpen}

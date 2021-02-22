@@ -1,7 +1,6 @@
 import { Autocomplete, Chip, createFilterOptions, TextField } from '@material-ui/core';
 import { Control, Controller } from 'react-hook-form';
 import { ITag, ITask } from 'utils/types';
-import { getUniqueTags } from 'utils/utilFunctions';
 
 type FilterOptions = {
   id: string;
@@ -86,5 +85,12 @@ const TagSelectorComponent = ({ label, options, value, setValue }: TagSelectorCo
     />
   );
 };
+
+function getUniqueTags(arr: ITag[], key: string): ITag[] {
+  return arr.filter(
+    (tag, index, tagArray) =>
+      tagArray.findIndex((t) => t[key].toLowerCase() === tag[key].toLowerCase() && t[key].toLowerCase() === tag[key].toLowerCase()) === index,
+  );
+}
 
 export default TagSelector;

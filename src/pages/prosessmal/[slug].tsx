@@ -6,6 +6,7 @@ import { TaskModalProvider } from 'context/TaskModal';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { IPhase } from 'utils/types';
 
@@ -66,12 +67,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
 const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
-  const fetcher = (url) => fetch(url).then((res) => res.json());
+  const router = useRouter();
+  const { slug } = router.query;
 
   const showProgressbar = useProgressbar();
 
   showProgressbar(true);
-  const { data, error } = useSWR('/api/prosessmals/', fetcher);
+  const { data, error } = useSWR(`/api/prosessmals/${slug}`, fetcher);
 
   if (!data) {
     return <div>Loading...</div>;

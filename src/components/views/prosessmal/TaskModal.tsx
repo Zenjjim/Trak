@@ -79,9 +79,9 @@ const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tag
       global: true,
     };
     if (task) {
-      CRUDBuilder(axios.put(`/api/task/${task.id}`, data), 'Oppgave opprettet');
+      CRUDBuilder(axios.put(`/api/tasks/${task.id}`, data), 'Oppgave opprettet');
     } else {
-      CRUDBuilder(axios.post('/api/task', data), 'Oppgave oppdatert');
+      CRUDBuilder(axios.post('/api/tasks', data), 'Oppgave oppdatert');
     }
   });
 
@@ -95,7 +95,7 @@ const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tag
           className={classes.error}
           color='inherit'
           key={'delete'}
-          onClick={() => CRUDBuilder(axios.delete(`/api/task/${task.id}`), 'Oppgave slettet')}
+          onClick={() => CRUDBuilder(axios.delete(`/api/tasks/${task.id}`), 'Oppgave slettet')}
           type='button'>
           Slett
         </Button>,

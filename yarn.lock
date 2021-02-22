@@ -1996,11 +1996,6 @@ fast-levenshtein@^2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fastjson@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/fastjson/-/fastjson-2.0.0.tgz#ed838d509f809f3e8461036c4b9f9873216b614c"
-  integrity sha512-W+9XzWha3OzA0xbiWvABjkmvLTd5pL9SXbf/C/Y+UoRDuP6SqwIn6F/ydplRaW/434Yhb36Bd2CZq//uMeUYQw==
-
 fastq@^1.6.0:
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.10.1.tgz"

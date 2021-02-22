@@ -1,5 +1,6 @@
 import { Avatar, Box, makeStyles, TableCell, TableRow } from '@material-ui/core';
 import Typo from 'components/Typo';
+import { useRouter } from 'next/router';
 import theme from 'theme';
 import { IEmployee, IProfession } from 'utils/types';
 
@@ -37,9 +38,10 @@ type UserRowProps = {
 const UserRow = ({ employee }: UserRowProps) => {
   const classes = useStyles();
   const typoVariant = 'body2';
+  const router = useRouter();
   return (
     <TableRow className={classes.pointer} hover>
-      <TableCell>
+      <TableCell onClick={() => router.push(`/ansatt/${employee.id}`)}>
         <div className={classes.userRow} tabIndex={0}>
           <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
           <Typo variant={typoVariant}>

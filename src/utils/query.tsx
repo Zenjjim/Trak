@@ -1,4 +1,6 @@
-export const taskQuery = (data, phaseId, global) => {
+import { ITask } from 'utils/types';
+
+export const taskQuery = (data: ITask, phaseId: string, global: boolean) => {
   return {
     title: data.title,
     description: data.description,

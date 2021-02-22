@@ -1,7 +1,7 @@
 import { makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import AddButton from 'components/AddButton';
 import TaskRow from 'components/views/prosessmal//TaskRow';
-import CreateTaskModal from 'components/views/prosessmal/CreateTaskModal';
+import TaskModal from 'components/views/prosessmal/TaskModal';
 import { useState } from 'react';
 import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
 
@@ -67,7 +67,7 @@ const PhaseTable = ({ phase, professions, tags, employees }: PhaseTableProps) =>
               }}
               text='Legg til oppgave'
             />
-            <CreateTaskModal
+            <TaskModal
               closeModal={() => setModalIsOpen(false)}
               employees={employees}
               modalIsOpen={modalIsOpen}

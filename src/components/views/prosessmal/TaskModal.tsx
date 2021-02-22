@@ -8,17 +8,19 @@ import Modal from 'components/Modal';
 import Typo from 'components/Typo';
 import useProgressbar from 'context/Progressbar';
 import useSnackbar from 'context/Snackbar';
-import { useTaskModal } from 'context/TaskModal';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IEmployee, IPhase, ITag, ITask } from 'utils/types';
+import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
 
 type TaskModalProps = {
   phase: IPhase;
   modalIsOpen: boolean;
   closeModal: () => void;
-  task_id?: string;
+  professions: IProfession[];
+  tags: ITag[];
+  employees: IEmployee[];
+  task?: ITask;
 };
 
 type TaskData = {
@@ -40,46 +42,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: TaskModalProps) => {
+const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tags, task = undefined }: TaskModalProps) => {
   const classes = useStyles();
   const router = useRouter();
   const showSnackbar = useSnackbar();
   const showProgressbar = useProgressbar();
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
-
-  const { professions, tags, employees } = useTaskModal();
-  const [task, setTask] = useState<ITask | undefined>(undefined);
-  const { register, handleSubmit, errors, control, reset } = useForm({
-    reValidateMode: 'onChange',
-    defaultValues: useMemo(
-      () => ({
-        title: task?.title,
-        description: task?.description,
-        professions: task?.professions,
-        tags: task?.tags,
-        responsible: task?.responsible,
-      }),
-      [task],
-    ),
-  });
-
-  useEffect(() => {
-    if (task_id) {
-      axios.get(`/api/tasks/${task_id}`).then((res) => {
-        setTask(res.data);
-      });
-    }
-  }, [task_id]);
-
-  useEffect(() => {
-    reset({
+  const { register, handleSubmit, errors, control } = useForm({
+    defaultValues: {
       title: task?.title,
       description: task?.description,
-      professions: task?.professions,
-      tags: task?.tags,
-      responsible: task?.responsible,
-    });
-  }, [task]);
+      professions: task?.professions?.map((profession) => profession.id),
+    },
+  });
 
   const CRUDBuilder = (axiosFunc: Promise<unknown>, text: string) => {
     showProgressbar(true);
@@ -93,7 +68,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
       })
       .catch((error) => {
         showProgressbar(false);
-        showSnackbar(error.response.data.message, 'error');
+        showSnackbar(error, 'error');
       });
   };
 
@@ -103,10 +78,10 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
       phaseId: phase.id,
       global: true,
     };
-    if (task_id) {
-      CRUDBuilder(axios.put(`/api/tasks/${task_id}`, data), 'Oppgave opprettet');
+    if (task) {
+      CRUDBuilder(axios.put(`/api/task/${task.id}`, data), 'Oppgave opprettet');
     } else {
-      CRUDBuilder(axios.post('/api/tasks', data), 'Oppgave oppdatert');
+      CRUDBuilder(axios.post('/api/task', data), 'Oppgave oppdatert');
     }
   });
 
@@ -120,7 +95,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
           className={classes.error}
           color='inherit'
           key={'delete'}
-          onClick={() => CRUDBuilder(axios.delete(`/api/tasks/${task_id}`), 'Oppgave slettet')}
+          onClick={() => CRUDBuilder(axios.delete(`/api/task/${task.id}`), 'Oppgave slettet')}
           type='button'>
           Slett
         </Button>,
@@ -129,13 +104,13 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
         <Button key={'cancel'} onClick={closeModal} type='button'>
           Avbryt
         </Button>,
-        task_id && (
+        task && (
           <Button className={classes.error} color='inherit' key={'delete'} onClick={() => setConfirmDelete(true)} type='button'>
             Slett
           </Button>
         ),
         <Button key={'create'} type='submit'>
-          {task_id ? 'Oppdater' : 'Opprett'}
+          {task ? 'Oppdater' : 'Opprett'}
         </Button>,
       ];
 
@@ -164,8 +139,8 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
         />
         <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
         <ToggleButtonGroup control={control} name={'professions'} professions={professions} />
-        <TagSelector control={control} label='Tags' name='tags' options={tags} />
-        <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
+        <TagSelector control={control} defaultValue={task?.tags} label='Tags' name='tags' options={tags} />
+        <EmployeeSelector control={control} employee={task?.responsible} employees={employees} label='Oppgaveansvarlig' name='responsible' />
       </div>
     </Modal>
   );

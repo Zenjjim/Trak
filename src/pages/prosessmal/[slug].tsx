@@ -4,6 +4,7 @@ import Typo from 'components/Typo';
 import Phase from 'components/views/prosessmal/Phase';
 import useProgressbar from 'context/Progressbar';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { IPhase } from 'utils/types';
 
@@ -23,14 +24,16 @@ const useStyles = makeStyles({
   },
 });
 
-const ProcessTemplate = () => {
+const fetcher = (url) => fetch(url).then((res) => res.json());
+const ProcessTemplate = (props) => {
   const classes = useStyles();
-  const fetcher = (url) => fetch(url).then((res) => res.json());
+  const router = useRouter();
+  const { slug } = router.query;
 
   const showProgressbar = useProgressbar();
 
   showProgressbar(true);
-  const { data, error } = useSWR('/api/prosessmals/', fetcher);
+  const { data, error } = useSWR(`/api/prosessmals/${slug}`, fetcher);
 
   if (!data) {
     return <div>Loading...</div>;

@@ -2,64 +2,11 @@ import { makeStyles } from '@material-ui/core';
 import AddButton from 'components/AddButton';
 import Typo from 'components/Typo';
 import Phase from 'components/views/prosessmal/Phase';
-import prisma from 'lib/prisma';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import useProgressbar from 'context/Progressbar';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
 import { IPhase } from 'utils/types';
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const processTemplate = prisma.processTemplate.findUnique({
-    where: {
-      slug: params.slug.toString(),
-    },
-    include: {
-      phases: {
-        orderBy: {
-          order: 'asc',
-        },
-        select: {
-          id: true,
-          order: true,
-          title: true,
-          tasks: {
-            where: {
-              global: true,
-            },
-            select: {
-              id: true,
-              title: true,
-              description: true,
-              tags: true,
-              professions: true,
-              responsible: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
-                  imageUrl: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-  const employees = prisma.employee.findMany({
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      imageUrl: true,
-    },
-  });
-  const professions = prisma.profession.findMany();
-  const tags = prisma.tag.findMany();
-
-  const data = await Promise.all([processTemplate, employees, professions, tags]);
-
-  return { props: { data } };
-};
 
 const useStyles = makeStyles({
   root: {
@@ -77,25 +24,40 @@ const useStyles = makeStyles({
   },
 });
 
-const ProcessTemplate = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const fetcher = (url) => fetch(url).then((res) => res.json());
+const ProcessTemplate = (props) => {
   const classes = useStyles();
+  const router = useRouter();
+  const { slug } = router.query;
 
-  const [processTemplate, employees, professions, tags] = data;
+  const showProgressbar = useProgressbar();
+
+  showProgressbar(true);
+  const { data, error } = useSWR(`/api/prosessmals/${slug}`, fetcher);
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+  showProgressbar(false);
+
+  if (error) {
+    return <div>failed to load</div>;
+  }
 
   return (
     <>
       <Head>
-        <title>Prosessmal - {processTemplate?.title}</title>
+        <title>Prosessmal - {data?.title}</title>
       </Head>
       <div className={classes.root}>
         <div className={classes.header}>
           <Typo className={classes.title} variant='h1'>
             Prosessmal
           </Typo>
-          <Typo className={classes.template_title}>{processTemplate?.title}</Typo>
+          <Typo className={classes.template_title}>{data?.title}</Typo>
         </div>
-        {processTemplate?.phases.map((phase: IPhase) => (
-          <Phase employees={employees} key={phase.id} phase={phase} professions={professions} tags={tags} />
+        {data?.phases.map((phase: IPhase) => (
+          <Phase employees={[]} key={phase.id} phase={phase} professions={[]} tags={[]} />
         ))}
         <AddButton onClick={() => undefined} text='Legg til fase' />
       </div>

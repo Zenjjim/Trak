@@ -29,6 +29,6 @@ export const taskQuery = (data: any, phaseId: string, global: boolean) => ({
     })),
   },
   professions: {
-    connect: data.professions.map((profession: IProfession) => ({ id: profession })),
+    connect: data.professions.map((profession: IProfession) => ({ id: profession.id })),
   },
 });

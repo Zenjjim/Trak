@@ -7,6 +7,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { task_id },
   } = req;
+<<<<<<< HEAD
   if (req.method === 'GET') {
     GET(res, task_id);
   } else if (req.method === 'PUT') {
@@ -60,6 +61,14 @@ const PUT = async (req, res, task_id) => {
     body: { data, phaseId, global },
   } = req;
   try {
+=======
+  if (req.method === 'PUT') {
+    const {
+      body: { data, phaseId, global },
+    }: {
+      body: { data: ITask; phaseId: string; global: boolean };
+    } = req;
+>>>>>>> refactor(prosessmal): update query and  react hook form for performance and clearer code
     const getTask = await prisma.task.findUnique({
       where: {
         id: task_id.toString(),

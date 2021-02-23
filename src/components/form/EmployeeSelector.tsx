@@ -7,14 +7,12 @@ type EmployeeSelectorProps = {
   control: Control;
   name: string;
   label: string;
-  employee: IEmployee;
 };
 
-const EmployeeSelector = ({ employees, control, name, label, employee }: EmployeeSelectorProps) => {
+const EmployeeSelector = ({ employees, control, name, label }: EmployeeSelectorProps) => {
   return (
     <Controller
       control={control}
-      defaultValue={employee}
       name={name}
       render={({ onChange, value }) => <EmployeeSelectorComponent employees={employees} label={label} setValue={onChange} value={value} />}
     />

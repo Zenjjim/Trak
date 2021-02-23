@@ -6,8 +6,6 @@ import { TaskModalProvider } from 'context/TaskModal';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import { IPhase } from 'utils/types';
 
 const useStyles = makeStyles({
@@ -75,14 +73,11 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
   showProgressbar(true);
   const { data, error } = useSWR(`/api/prosessmals/${slug}`, fetcher);
 
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-  showProgressbar(false);
+  return { props: { processTemplate } };
+};
 
-  if (error) {
-    return <div>failed to load</div>;
-  }
+const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const classes = useStyles();
 
   return (
     <>
@@ -94,7 +89,7 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
           <Typo className={classes.title} variant='h1'>
             Prosessmal
           </Typo>
-          <Typo className={classes.template_title}>{data?.title}</Typo>
+          <Typo className={classes.template_title}>{processTemplate?.title}</Typo>
         </div>
         <TaskModalProvider>
           {processTemplate?.phases.map((phase: IPhase) => (

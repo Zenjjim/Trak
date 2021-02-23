@@ -8,11 +8,11 @@ type ToggleButtonGroupProps = {
   name: string;
 };
 
-const ToggleButtonGroup = ({ professions, control, name }: ToggleButtonGroupProps) => {
+const ToggleButtonGroup = ({ professions = [], control, name }: ToggleButtonGroupProps) => {
   return (
     <Controller
       control={control}
-      defaultValue={professions.map((profession) => profession.id)}
+      defaultValue={professions}
       name={name}
       render={({ value, onChange }) => <ToggleButtonGroupComponent professions={professions} setValue={onChange} value={value} />}
     />
@@ -21,22 +21,22 @@ const ToggleButtonGroup = ({ professions, control, name }: ToggleButtonGroupProp
 
 type ToggleButtonGroupComponentProps = {
   professions: IProfession[];
-  value: string[];
-  setValue: (string) => void;
+  value: IProfession[];
+  setValue: (IProfession) => void;
 };
 
-const ToggleButtonGroupComponent = ({ professions, value, setValue }: ToggleButtonGroupComponentProps) => {
+const ToggleButtonGroupComponent = ({ professions, value = [], setValue }: ToggleButtonGroupComponentProps) => {
   return (
     <Box display='flex'>
-      <Button color={value.length > 1 ? 'secondary' : 'primary'} onClick={() => setValue(professions.map((profession) => profession.id))} type='button'>
+      <Button color={value.length > 1 ? 'secondary' : 'primary'} onClick={() => setValue(professions)} type='button'>
         Alle
       </Button>
       {professions.map((profession) => (
         <Button
-          color={value.length === 1 && value[0] === profession.id ? 'secondary' : 'primary'}
+          color={value.length === 1 && value[0].id === profession.id ? 'secondary' : 'primary'}
           id={profession.id}
           key={profession.id}
-          onClick={() => setValue([profession.id])}
+          onClick={() => setValue([profession])}
           type='button'>
           {profession.title}
         </Button>

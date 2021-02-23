@@ -2,14 +2,11 @@ import { Avatar, IconButton, makeStyles, TableCell, TableRow } from '@material-u
 import { Edit } from '@material-ui/icons';
 import TaskModal from 'components/views/prosessmal/TaskModal';
 import { useState } from 'react';
-import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
+import { IPhase, ITask } from 'utils/types';
 
 type TaskProps = {
   task: ITask;
   phase: IPhase;
-  professions: IProfession[];
-  employees: IEmployee[];
-  tags: ITag[];
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskRow = ({ task, phase, professions, tags, employees }: TaskProps) => {
+const TaskRow = ({ task, phase }: TaskProps) => {
   const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   if (!task) {
@@ -64,15 +61,7 @@ const TaskRow = ({ task, phase, professions, tags, employees }: TaskProps) => {
           }}>
           <Edit />
         </IconButton>
-        <TaskModal
-          closeModal={() => setModalIsOpen(false)}
-          employees={employees}
-          modalIsOpen={modalIsOpen}
-          phase={phase}
-          professions={professions}
-          tags={tags}
-          task={task}
-        />
+        {modalIsOpen && <TaskModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} phase={phase} task_id={task.id} />}
       </TableCell>
     </TableRow>
   );

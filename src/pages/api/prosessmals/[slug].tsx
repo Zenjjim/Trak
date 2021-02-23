@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { taskQuery } from 'utils/query';
-import { ITask } from 'utils/types';
 const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {

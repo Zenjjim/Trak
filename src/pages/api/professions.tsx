@@ -4,8 +4,12 @@ const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const professions = prisma.profession.findMany();
-
+    const professions = await prisma.profession.findMany({
+      select: {
+        title: true,
+        id: true,
+      },
+    });
     res.json(professions);
   }
 }

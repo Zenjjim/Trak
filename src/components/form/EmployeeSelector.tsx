@@ -7,14 +7,12 @@ type EmployeeSelectorProps = {
   control: Control;
   name: string;
   label: string;
-  employee: IEmployee;
 };
 
-const EmployeeSelector = ({ employees, control, name, label, employee }: EmployeeSelectorProps) => {
+const EmployeeSelector = ({ employees, control, name, label }: EmployeeSelectorProps) => {
   return (
     <Controller
       control={control}
-      defaultValue={employee}
       name={name}
       render={({ onChange, value }) => <EmployeeSelectorComponent employees={employees} label={label} setValue={onChange} value={value} />}
     />
@@ -28,16 +26,31 @@ type EmployeeSelectorComponentProps = {
   value: IEmployee;
 };
 
-const EmployeeSelectorComponent = ({ employees, setValue, label, value }: EmployeeSelectorComponentProps) => {
+const EmployeeSelectorComponent = ({
+  employees,
+  setValue,
+  label,
+  value = {
+    firstName: '',
+    lastName: '',
+    id: null,
+    email: undefined,
+    birthDate: null,
+    profession: undefined,
+    hrManager: undefined,
+    employees: undefined,
+    employeeTask: undefined,
+  },
+}: EmployeeSelectorComponentProps) => {
   return (
     <Autocomplete
-      defaultValue={value}
-      getOptionLabel={(employee: IEmployee) => `${employee.firstName} ${employee.lastName}`}
+      getOptionLabel={(employee: IEmployee) => `${employee.firstName} ${employee.lastName}`.trim()}
       noOptionsText={'Ingen ansatte funnet'}
       onChange={(_, employee) => setValue(employee)}
       options={employees}
       popupIcon={<></>}
-      renderInput={(params) => <TextField {...params} label={label} variant='standard' />}
+      renderInput={(params) => <TextField {...params} InputLabelProps={{ shrink: true }} label={label} variant='standard' />}
+      value={value}
     />
   );
 };

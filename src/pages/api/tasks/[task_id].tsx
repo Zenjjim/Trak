@@ -11,7 +11,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const {
       body: { data, phaseId, global },
     }: {
-      body: { data: Pick<ITask, 'title' | 'description' | 'responsible' | 'tags'> & { professions: string[] }; phaseId: string; global: boolean };
+      body: { data: ITask; phaseId: string; global: boolean };
     } = req;
     const getTask = await prisma.task.findUnique({
       where: {
@@ -60,12 +60,45 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
         professions: {
           set: [],
-          connect: data.professions.map((profession: string) => ({ id: profession })),
+          connect: data.professions.map((profession) => ({ id: profession.id })),
         },
       },
     });
 
     res.json(updatedTask);
+  } else if (req.method === 'GET') {
+    const task = await prisma.task.findUnique({
+      where: {
+        id: task_id.toString(),
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        phaseId: true,
+        tags: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+        professions: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+        responsible: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
+    res.json(task);
   } else if (req.method === 'DELETE') {
     const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() } });
     res.json(deletedTask);

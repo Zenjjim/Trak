@@ -8,19 +8,17 @@ import Modal from 'components/Modal';
 import Typo from 'components/Typo';
 import useProgressbar from 'context/Progressbar';
 import useSnackbar from 'context/Snackbar';
+import { useTaskModal } from 'context/TaskModal';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
+import { IEmployee, IPhase, ITag, ITask } from 'utils/types';
 
 type TaskModalProps = {
   phase: IPhase;
   modalIsOpen: boolean;
   closeModal: () => void;
-  professions: IProfession[];
-  tags: ITag[];
-  employees: IEmployee[];
-  task?: ITask;
+  task_id?: string;
 };
 
 type TaskData = {
@@ -42,19 +40,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tags, task = undefined }: TaskModalProps) => {
+const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: TaskModalProps) => {
   const classes = useStyles();
   const router = useRouter();
   const showSnackbar = useSnackbar();
   const showProgressbar = useProgressbar();
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
-  const { register, handleSubmit, errors, control } = useForm({
-    defaultValues: {
+
+  const { professions, tags, employees } = useTaskModal();
+  const [task, setTask] = useState<ITask | undefined>(undefined);
+  const { register, handleSubmit, errors, control, reset } = useForm({
+    reValidateMode: 'onChange',
+    defaultValues: useMemo(
+      () => ({
+        title: task?.title,
+        description: task?.description,
+        professions: task?.professions,
+        tags: task?.tags,
+        responsible: task?.responsible,
+      }),
+      [task],
+    ),
+  });
+
+  useEffect(() => {
+    if (task_id) {
+      axios.get(`/api/tasks/${task_id}`).then((res) => {
+        setTask(res.data);
+      });
+    }
+  }, [task_id]);
+
+  useEffect(() => {
+    reset({
       title: task?.title,
       description: task?.description,
-      professions: task?.professions?.map((profession) => profession.id),
-    },
-  });
+      professions: task?.professions,
+      tags: task?.tags,
+      responsible: task?.responsible,
+    });
+  }, [task]);
 
   const CRUDBuilder = (axiosFunc: Promise<unknown>, text: string) => {
     showProgressbar(true);
@@ -78,8 +103,8 @@ const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tag
       phaseId: phase.id,
       global: true,
     };
-    if (task) {
-      CRUDBuilder(axios.put(`/api/tasks/${task.id}`, data), 'Oppgave opprettet');
+    if (task_id) {
+      CRUDBuilder(axios.put(`/api/tasks/${task_id}`, data), 'Oppgave opprettet');
     } else {
       CRUDBuilder(axios.post('/api/tasks', data), 'Oppgave oppdatert');
     }
@@ -95,7 +120,7 @@ const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tag
           className={classes.error}
           color='inherit'
           key={'delete'}
-          onClick={() => CRUDBuilder(axios.delete(`/api/tasks/${task.id}`), 'Oppgave slettet')}
+          onClick={() => CRUDBuilder(axios.delete(`/api/tasks/${task_id}`), 'Oppgave slettet')}
           type='button'>
           Slett
         </Button>,
@@ -104,13 +129,13 @@ const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tag
         <Button key={'cancel'} onClick={closeModal} type='button'>
           Avbryt
         </Button>,
-        task && (
+        task_id && (
           <Button className={classes.error} color='inherit' key={'delete'} onClick={() => setConfirmDelete(true)} type='button'>
             Slett
           </Button>
         ),
         <Button key={'create'} type='submit'>
-          {task ? 'Oppdater' : 'Opprett'}
+          {task_id ? 'Oppdater' : 'Opprett'}
         </Button>,
       ];
 
@@ -139,8 +164,8 @@ const TaskModal = ({ employees, phase, modalIsOpen, closeModal, professions, tag
         />
         <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
         <ToggleButtonGroup control={control} name={'professions'} professions={professions} />
-        <TagSelector control={control} defaultValue={task?.tags} label='Tags' name='tags' options={tags} />
-        <EmployeeSelector control={control} employee={task?.responsible} employees={employees} label='Oppgaveansvarlig' name='responsible' />
+        <TagSelector control={control} label='Tags' name='tags' options={tags} />
+        <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
       </div>
     </Modal>
   );

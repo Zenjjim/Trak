@@ -2,13 +2,10 @@ import { IconButton, makeStyles } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import Typo from 'components/Typo';
 import PhaseTable from 'components/views/prosessmal/PhaseTable';
-import { IEmployee, IPhase, IProfession, ITag } from 'utils/types';
+import { IPhase } from 'utils/types';
 
 type PhaseProps = {
   phase: IPhase;
-  professions: IProfession[];
-  employees: IEmployee[];
-  tags: ITag[];
 };
 
 const useStyles = makeStyles({
@@ -18,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Phase = ({ phase, professions, employees, tags }: PhaseProps) => {
+const Phase = ({ phase }: PhaseProps) => {
   const classes = useStyles();
   return (
     <div>
@@ -28,7 +25,7 @@ const Phase = ({ phase, professions, employees, tags }: PhaseProps) => {
           <Edit />
         </IconButton>
       </div>
-      <PhaseTable employees={employees} phase={phase} professions={professions} tags={tags} />
+      <PhaseTable phase={phase} />
     </div>
   );
 };

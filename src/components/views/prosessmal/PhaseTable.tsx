@@ -3,13 +3,10 @@ import AddButton from 'components/AddButton';
 import TaskRow from 'components/views/prosessmal//TaskRow';
 import TaskModal from 'components/views/prosessmal/TaskModal';
 import { useState } from 'react';
-import { IEmployee, IPhase, IProfession, ITag, ITask } from 'utils/types';
+import { IPhase, ITask } from 'utils/types';
 
 type PhaseTableProps = {
   phase: IPhase;
-  professions: IProfession[];
-  employees: IEmployee[];
-  tags: ITag[];
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PhaseTable = ({ phase, professions, tags, employees }: PhaseTableProps) => {
+const PhaseTable = ({ phase }: PhaseTableProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
@@ -57,7 +54,7 @@ const PhaseTable = ({ phase, professions, tags, employees }: PhaseTableProps) =>
       </TableHead>
       <TableBody>
         {phase.tasks.map((task: ITask) => (
-          <TaskRow employees={employees} key={task.id} phase={phase} professions={professions} tags={tags} task={task} />
+          <TaskRow key={task.id} phase={phase} task={task} />
         ))}
         <TableRow className={classes.hideLastBorder}>
           <TableCell>
@@ -67,14 +64,7 @@ const PhaseTable = ({ phase, professions, tags, employees }: PhaseTableProps) =>
               }}
               text='Legg til oppgave'
             />
-            <TaskModal
-              closeModal={() => setModalIsOpen(false)}
-              employees={employees}
-              modalIsOpen={modalIsOpen}
-              phase={phase}
-              professions={professions}
-              tags={tags}
-            />
+            {modalIsOpen && <TaskModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} phase={phase} />}
           </TableCell>
         </TableRow>
       </TableBody>

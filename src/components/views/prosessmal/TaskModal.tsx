@@ -93,7 +93,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
       })
       .catch((error) => {
         showProgressbar(false);
-        showSnackbar(error, 'error');
+        showSnackbar(error.response.data.message, 'error');
       });
   };
 

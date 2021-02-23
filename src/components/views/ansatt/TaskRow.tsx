@@ -2,8 +2,10 @@ import { Avatar, Box, IconButton } from '@material-ui/core';
 import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon, Info as InfoIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
+import InfoModal from 'components/views/ansatt/InfoModal';
+import { useState } from 'react';
 import theme from 'theme';
-import { IEmployeeTask } from 'utils/types';
+import { IEmployee, IEmployeeTask } from 'utils/types';
 
 const useStyles = makeStyles({
   avatar: {
@@ -18,9 +20,11 @@ const useStyles = makeStyles({
 
 type TaskRowProps = {
   task: IEmployeeTask;
+  employee: IEmployee;
 };
 
-const TaskRow = ({ task }: TaskRowProps) => {
+const TaskRow = ({ task, employee }: TaskRowProps) => {
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
   return (
     <Box display='flex'>
@@ -31,17 +35,19 @@ const TaskRow = ({ task }: TaskRowProps) => {
             <Typo className={classes.completedTask} color='disabled' variant='body2'>
               {task.task.title}
             </Typo>
-            <IconButton onClick={() => alert('Hei')}>
+            <IconButton onClick={() => setModalIsOpen(true)} size='small'>
               <InfoIcon />
             </IconButton>
+            <InfoModal closeModal={() => setModalIsOpen(false)} employee={employee} modalIsOpen={modalIsOpen} task={task} />
           </>
         ) : (
           <>
             <CheckBoxOutlineBlankIcon />
             <Typo variant='body2'>{task.task.title}</Typo>
-            <IconButton onClick={() => alert('Hei')}>
+            <IconButton onClick={() => setModalIsOpen(true)} size='small'>
               <InfoIcon color={'primary'} />
             </IconButton>
+            <InfoModal closeModal={() => setModalIsOpen(false)} employee={employee} modalIsOpen={modalIsOpen} task={task} />
           </>
         )}
       </Box>

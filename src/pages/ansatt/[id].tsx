@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
 import Phase from 'components/views/ansatt/Phase';
 import prisma from 'lib/prisma';
+import _ from 'lodash';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
-
+import { ITask } from 'utils/types';
 const useStyles = makeStyles({
   root: {
     marginLeft: '30px',
@@ -21,10 +21,11 @@ const useStyles = makeStyles({
 });
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id = typeof query.id === 'string' && parseInt(query.id);
+  const { id, year, process } = query;
+  const parsedId = typeof id === 'string' && parseInt(id);
   const employeeQuery = await prisma.employee.findUnique({
     where: {
-      id: id,
+      id: parsedId,
     },
     select: {
       firstName: true,
@@ -36,6 +37,16 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         },
       },
       employeeTask: {
+        where: {
+          year: new Date(year.toString()),
+          task: {
+            phase: {
+              processTemplate: {
+                slug: process.toString(),
+              },
+            },
+          },
+        },
         select: {
           completed: true,
           year: true,
@@ -50,6 +61,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           task: {
             select: {
               title: true,
+              tags: true,
+              description: true,
               phase: {
                 select: {
                   title: true,
@@ -63,46 +76,98 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             },
           },
         },
+        orderBy: {
+          year: 'asc',
+        },
       },
     },
   });
 
+  const processesQuery = await prisma.processTemplate.findMany({
+    where: {
+      phases: {
+        some: {
+          tasks: {
+            some: {
+              employeeTask: {
+                some: {
+                  employeeId: parsedId,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    select: {
+      title: true,
+      slug: true,
+      phases: {
+        select: {
+          tasks: {
+            select: {
+              employeeTask: {
+                select: {
+                  year: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!employeeQuery) {
+    return {
+      notFound: true,
+    };
+  }
   const employee = JSON.parse(safeJsonStringify(employeeQuery));
-
-  return { props: { employee } };
-};
-
-type ProcessSelector = {
-  year: Date;
-  process: 'Onboarding' | 'Offboarding' | 'Løpende';
-};
-
-const Employee = ({ employee }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const classes = useStyles();
-
-  //TODO:
-  // Automate this to select the current process
-  const [choosenProcess] = useState<ProcessSelector>({ year: new Date(2021, 1, 1), process: 'Onboarding' });
-  const tasks = employee.employeeTask.filter(
-    (employeeTask) =>
-      employeeTask.task.phase.processTemplate.title === choosenProcess.process &&
-      new Date(employeeTask.year).getFullYear() === choosenProcess.year.getFullYear(),
-  );
-
-  const phases = tasks.map((element) => {
+  const processes = JSON.parse(safeJsonStringify(processesQuery));
+  const phases = employee.employeeTask.map((element) => {
     return element.task.phase.title;
   });
   const uniquePhases = Array.from(new Set(phases));
-  const noeAnnetKjorDa = uniquePhases.map((unique: string) => {
-    const tasks1 = tasks.filter((task) => task.task.phase.title === unique);
-    const finishedTasks = tasks1.filter((task) => task.completed);
+  const phasesWithTasks = uniquePhases.map((unique: string) => {
+    const tasks = employee.employeeTask.filter((task) => task.task.phase.title === unique);
+    const finishedTasks = employee.employeeTask.filter((task) => task.completed);
     return {
       title: unique,
-      tasks: tasks1,
-      totalTasks: tasks1.length,
+      tasks: tasks,
+      totalTasks: tasks.length,
       finishedTasks: finishedTasks.length,
     };
   });
+
+  const allTasks = processes.map((process) => {
+    const years = process.phases.map((phase) => {
+      return phase.tasks.map((task: ITask) => {
+        return task.employeeTask.filter((employeeTask) => Boolean(employeeTask.year));
+      });
+    });
+    const filteredYears = years.map((year) => {
+      return year.filter((element) => {
+        return element.length !== 0;
+      });
+    });
+    return { title: process.title, years: filteredYears };
+  });
+  const history = allTasks.map((process) => {
+    const years = _.flattenDeep(process.years);
+    const uniqeYears = _.uniqBy(years, 'year');
+    return { title: process.title, years: uniqeYears };
+  });
+
+  if (!employeeQuery) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return { props: { employee, phasesWithTasks, year, process, history } };
+};
+const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const classes = useStyles();
   return (
     <>
       <Head>
@@ -110,7 +175,7 @@ const Employee = ({ employee }: InferGetServerSidePropsType<typeof getServerSide
       </Head>
       <div className={classes.root}>
         <Box alignItems='flex-end' display='flex'>
-          <Typo variant='h1'>
+          <Typo className={classes.spaceRight} variant='h1'>
             {employee.firstName} {employee.lastName}
           </Typo>
           {employee.hrManager && (
@@ -121,7 +186,7 @@ const Employee = ({ employee }: InferGetServerSidePropsType<typeof getServerSide
         </Box>
         <Box display='flex' justifyContent='space-between' mb={theme.spacing(4)}>
           <Typo variant='body1'>
-            {choosenProcess.year.getFullYear()} {choosenProcess.process}
+            {year} {process}
           </Typo>
           <Box display='flex'>
             <Typo className={classes.spaceRight} variant='body1'>
@@ -133,8 +198,17 @@ const Employee = ({ employee }: InferGetServerSidePropsType<typeof getServerSide
           </Box>
         </Box>
 
-        {noeAnnetKjorDa.map((phase) => {
-          return <Phase key={phase.title} tasks={phase.tasks} tasksFinished={phase.finishedTasks} title={phase.title} totalTasks={phase.totalTasks} />;
+        {phasesWithTasks.map((phase) => {
+          return (
+            <Phase
+              employee={employee}
+              key={phase.title}
+              tasks={phase.tasks}
+              tasksFinished={phase.finishedTasks}
+              title={phase.title}
+              totalTasks={phase.totalTasks}
+            />
+          );
         })}
       </div>
     </>

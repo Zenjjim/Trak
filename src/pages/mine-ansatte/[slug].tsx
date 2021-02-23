@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     include: {
       phases: {
         orderBy: {
-          order: 'asc',
+          createdAt: 'asc',
         },
         select: {
           id: true,

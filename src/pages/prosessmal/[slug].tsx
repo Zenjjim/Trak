@@ -2,10 +2,12 @@ import { makeStyles } from '@material-ui/core';
 import AddButton from 'components/AddButton';
 import Typo from 'components/Typo';
 import Phase from 'components/views/prosessmal/Phase';
+import PhaseModal from 'components/views/prosessmal/PhaseModal';
 import { TaskModalProvider } from 'context/TaskModal';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import { useState } from 'react';
 import { IPhase } from 'utils/types';
 
 const useStyles = makeStyles({
@@ -32,13 +34,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     include: {
       phases: {
         orderBy: {
-          order: 'asc',
+          createdAt: 'asc',
         },
         select: {
           id: true,
-          order: true,
           title: true,
           tasks: {
+            orderBy: {
+              createdAt: 'asc',
+            },
             where: {
               global: true,
             },
@@ -78,6 +82,7 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
 
 const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -93,10 +98,11 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
         </div>
         <TaskModalProvider>
           {processTemplate?.phases.map((phase: IPhase) => (
-            <Phase key={phase.id} phase={phase} />
+            <Phase key={phase.id} phase={phase} processTemplate={processTemplate} />
           ))}
         </TaskModalProvider>
-        <AddButton onClick={() => undefined} text='Legg til fase' />
+        <AddButton onClick={() => setModalIsOpen(true)} text='Legg til fase' />
+        {modalIsOpen && <PhaseModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} processTemplate={processTemplate} />}
       </div>
     </>
   );

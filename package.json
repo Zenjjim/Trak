@@ -18,9 +18,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --fix .",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-    "db": "docker run --name trak -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres"
+    "lint": "eslint --fix --max-warnings=0 .",
+    "format": "prettier --write --pattern './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "fastformat": "pretty-quick --staged './**/*.{js,jsx,ts,tsx,css,md,json}'",
+    "db": "docker run --name trak -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres",
+    "precommit": "yarn fastformat && yarn lint"
   },
   "husky": {
     "hooks": {
@@ -29,7 +31,7 @@
   },
   "lint-staged": {
     "./**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
+      "yarn precommit"
     ]
   },
   "dependencies": {
@@ -70,6 +72,7 @@
     "husky": "^4.3.8",
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "prisma": "^2.16.0",
     "typescript": "^4.1.3"
   },

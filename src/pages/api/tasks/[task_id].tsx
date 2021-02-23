@@ -118,7 +118,7 @@ const PUT = async (req, res, task_id) => {
 };
 const DELETE = async (res, task_id) => {
   try {
-    const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() + '1' } });
+    const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() } });
     res.json(deletedTask);
   } catch (err) {
     res.status(404).send({ message: err.meta.cause });

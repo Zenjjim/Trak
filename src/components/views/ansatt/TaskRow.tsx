@@ -1,6 +1,7 @@
-import { Avatar, Box, IconButton } from '@material-ui/core';
+import { Box, IconButton } from '@material-ui/core';
 import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon, Info as InfoIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
+import AvatarComponent from 'components/AvatarComponent';
 import Typo from 'components/Typo';
 import InfoModal from 'components/views/ansatt/InfoModal';
 import { useState } from 'react';
@@ -29,31 +30,19 @@ const TaskRow = ({ task, employee }: TaskRowProps) => {
   return (
     <Box display='flex'>
       <Box alignItems='center' display='flex' flexGrow={2}>
-        {task.completed ? (
-          <>
-            <CheckBoxIcon />
-            <Typo className={classes.completedTask} color='disabled' variant='body2'>
-              {task.task.title}
-            </Typo>
-            <IconButton onClick={() => setModalIsOpen(true)} size='small'>
-              <InfoIcon />
-            </IconButton>
-          </>
-        ) : (
-          <>
-            <CheckBoxOutlineBlankIcon />
-            <Typo variant='body2'>{task.task.title}</Typo>
-            <IconButton onClick={() => setModalIsOpen(true)} size='small'>
-              <InfoIcon color={'primary'} />
-            </IconButton>
-          </>
-        )}
+        {task.completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+        <Typo className={task.completed && classes.completedTask} color={!task.completed && 'disabled'} variant='body1'>
+          {task.task.title}
+        </Typo>
+        <IconButton onClick={() => setModalIsOpen(true)} size='small'>
+          <InfoIcon color={task.completed ? 'inherit' : 'primary'} />
+        </IconButton>
         <InfoModal closeModal={() => setModalIsOpen(false)} employee={employee} modalIsOpen={modalIsOpen} task={task} />
       </Box>
       {task.responsible && (
         <Box alignItems='center' display='flex' flexDirection='row' flexGrow={1}>
-          <Avatar className={classes.avatar} src={task.responsible.imageUrl || '/dummy_avatar.png'} />
-          <Typo variant='body2'>
+          <AvatarComponent className={classes.avatar} firstName={employee.firstName} image={task.responsible.imageUrl} lastName={employee.lastName} />
+          <Typo variant='body1'>
             {task.responsible.firstName} {task.responsible.lastName}
           </Typo>
         </Box>

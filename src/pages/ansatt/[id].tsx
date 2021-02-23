@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id, year, process } = query;
   const parsedId = typeof id === 'string' && parseInt(id);
-  if (!id || !year || !process) {
+  if (!id || !process || !year) {
     return {
       notFound: true,
     };
@@ -162,9 +162,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return { props: { employee, phasesWithTasks, year, process, history } };
 };
 
-const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Employee = ({ employee, phasesWithTasks, returnedYear, process, history }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
-
+  const year = returnedYear;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

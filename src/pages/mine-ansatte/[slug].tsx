@@ -196,7 +196,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
         {phases.map((phase: PhaseCardProps) => {
           return (
             <Box key={phase.id} mb={theme.spacing(2)}>
-              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} title={phase.title} />
+              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} process={processTemplate.title} title={phase.title} />
             </Box>
           );
         })}

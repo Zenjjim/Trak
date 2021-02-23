@@ -34,13 +34,13 @@ const InfoModal = ({ employee, task, modalIsOpen, closeModal }: InfoModalProps) 
       onSubmit={null}
       open={modalIsOpen}>
       <>
-        <Typo variant='body2'>
+        <Typo variant='body1'>
           <b>Ansvarlig:</b> {task.responsible && `${task.responsible.firstName} ${task.responsible.lastName}`}
         </Typo>
-        <Typo variant='body2'>
+        <Typo variant='body1'>
           <b>Gjelder:</b> {employee.firstName} {employee.lastName}
         </Typo>
-        <Typo className={classes.gutterBottom} variant='body2'>
+        <Typo className={classes.gutterBottom} variant='body1'>
           <b>Prosess:</b> {task.task.phase.title}
         </Typo>
         <Box className={classes.gutterBottom}>

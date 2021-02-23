@@ -33,15 +33,16 @@ export type EmployeeRow = {
 
 type UserRowProps = {
   employee: EmployeeRow;
+  process: string;
 };
 
-const UserRow = ({ employee }: UserRowProps) => {
+const UserRow = ({ employee, process }: UserRowProps) => {
   const classes = useStyles();
   const typoVariant = 'body2';
   const router = useRouter();
   return (
     <TableRow className={classes.pointer} hover>
-      <TableCell onClick={() => router.push(`/ansatt/${employee.id}`)}>
+      <TableCell onClick={() => router.push(`/ansatt/${employee.id}?year=${new Date().getFullYear()}&process=${process}`)}>
         <div className={classes.userRow} tabIndex={0}>
           <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
           <Typo variant={typoVariant}>

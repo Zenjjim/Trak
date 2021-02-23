@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IEmployee, IPhase, ITag, ITask } from 'utils/types';
+import { axiosBuilder } from 'utils/utils';
 
 type TaskModalProps = {
   phase: IPhase;
@@ -81,20 +82,8 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
     });
   }, [task]);
 
-  const CRUDBuilder = (axiosFunc: Promise<unknown>, text: string) => {
-    showProgressbar(true);
-    axiosFunc
-      .then(() => {
-        closeModal();
-        router.replace(router.asPath).finally(() => {
-          showProgressbar(false);
-          showSnackbar(text, 'success');
-        });
-      })
-      .catch((error) => {
-        showProgressbar(false);
-        showSnackbar(error.response.data.message, 'error');
-      });
+  const axiosTaskModal = (axiosFunc: Promise<unknown>, text: string) => {
+    axiosBuilder(axiosFunc, text, router, showProgressbar, showSnackbar, closeModal);
   };
 
   const onSubmit = handleSubmit((formData: TaskData) => {
@@ -104,9 +93,9 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
       global: true,
     };
     if (task_id) {
-      CRUDBuilder(axios.put(`/api/tasks/${task_id}`, data), 'Oppgave opprettet');
+      axiosTaskModal(axios.put(`/api/tasks/${task_id}`, data), 'Oppgave opprettet');
     } else {
-      CRUDBuilder(axios.post('/api/tasks', data), 'Oppgave oppdatert');
+      axiosTaskModal(axios.post('/api/tasks', data), 'Oppgave oppdatert');
     }
   });
 
@@ -120,7 +109,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
           className={classes.error}
           color='inherit'
           key={'delete'}
-          onClick={() => CRUDBuilder(axios.delete(`/api/tasks/${task_id}`), 'Oppgave slettet')}
+          onClick={() => axiosTaskModal(axios.delete(`/api/tasks/${task_id}`), 'Oppgave slettet')}
           type='button'>
           Slett
         </Button>,
@@ -142,7 +131,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
   return (
     <Modal
       buttonGroup={buttonGroup}
-      header={'Lag ny oppgave'}
+      header={task_id ? 'Oppdater oppgave' : 'Lag oppgave'}
       onClose={closeModal}
       onSubmit={onSubmit}
       open={modalIsOpen}

@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IPhase, IProcessTemplate } from 'utils/types';
+import { axiosBuilder } from 'utils/utils';
 
 type PhaseModalProps = {
   processTemplate: IProcessTemplate;
@@ -64,20 +65,8 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
     });
   }, [phase]);
 
-  const CRUDBuilder = (axiosFunc: Promise<unknown>, text: string) => {
-    showProgressbar(true);
-    axiosFunc
-      .then(() => {
-        closeModal();
-        router.replace(router.asPath).finally(() => {
-          showProgressbar(false);
-          showSnackbar(text, 'success');
-        });
-      })
-      .catch((error) => {
-        showProgressbar(false);
-        showSnackbar(error.response.data.message, 'error');
-      });
+  const axiosPhaseModal = (axiosFunc: Promise<unknown>, text: string) => {
+    axiosBuilder(axiosFunc, text, router, showProgressbar, showSnackbar, closeModal);
   };
 
   const onSubmit = handleSubmit((formData: PhaseData) => {
@@ -86,9 +75,9 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
       processTemplateId: processTemplate.id,
     };
     if (phase_id) {
-      CRUDBuilder(axios.put(`/api/phases/${phase_id}`, data), 'Fase opprettet');
+      axiosPhaseModal(axios.put(`/api/phases/${phase_id}`, data), 'Fase opprettet');
     } else {
-      CRUDBuilder(axios.post('/api/phases', data), 'Fase oppdatert');
+      axiosPhaseModal(axios.post('/api/phases', data), 'Fase oppdatert');
     }
   });
 
@@ -102,7 +91,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
           className={classes.error}
           color='inherit'
           key={'delete'}
-          onClick={() => CRUDBuilder(axios.delete(`/api/phases/${phase_id}`), 'Fase slettet')}
+          onClick={() => axiosPhaseModal(axios.delete(`/api/phases/${phase_id}`), 'Fase slettet')}
           type='button'>
           Slett
         </Button>,
@@ -124,7 +113,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
   return (
     <Modal
       buttonGroup={buttonGroup}
-      header={'Lag prosess'}
+      header={phase_id ? 'Oppdater prosess' : 'Lag prosess'}
       onClose={closeModal}
       onSubmit={onSubmit}
       open={modalIsOpen}

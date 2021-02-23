@@ -41,9 +41,9 @@ const TaskRow = ({ task, phase }: TaskProps) => {
   }
   return (
     <TableRow className={classes.hideLastBorder} key={task.id}>
-      <TableCell>{task.title}</TableCell>
-      <TableCell>{task.description}</TableCell>
-      <TableCell>
+      <TableCell style={{ width: '25rem' }}>{task.title}</TableCell>
+      <TableCell style={{ width: '55rem' }}>{task.description}</TableCell>
+      <TableCell style={{ width: '20rem' }}>
         {task.responsible && (
           <div className={classes.flexCenter}>
             <Avatar className={classes.avatarSize} src={task.responsible.imageUrl}>
@@ -53,7 +53,7 @@ const TaskRow = ({ task, phase }: TaskProps) => {
           </div>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell style={{ width: '10rem' }}>
         <IconButton
           aria-label='edit'
           onClick={() => {

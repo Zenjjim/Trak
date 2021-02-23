@@ -69,19 +69,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
 const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
-  const router = useRouter();
-  const { slug } = router.query;
-
-  const showProgressbar = useProgressbar();
-
-  showProgressbar(true);
-  const { data, error } = useSWR(`/api/prosessmals/${slug}`, fetcher);
-
-  return { props: { processTemplate } };
-};
-
-const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   return (

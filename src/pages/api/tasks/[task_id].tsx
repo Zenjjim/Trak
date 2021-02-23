@@ -7,10 +7,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { task_id },
   } = req;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> refactor(api): handle errors in  api
   if (req.method === 'GET') {
     GET(res, task_id);
   } else if (req.method === 'PUT') {
@@ -64,17 +60,6 @@ const PUT = async (req, res, task_id) => {
     body: { data, phaseId, global },
   } = req;
   try {
-<<<<<<< HEAD
-=======
-  if (req.method === 'PUT') {
-    const {
-      body: { data, phaseId, global },
-    }: {
-      body: { data: ITask; phaseId: string; global: boolean };
-    } = req;
->>>>>>> refactor(prosessmal): update query and  react hook form for performance and clearer code
-=======
->>>>>>> refactor(api): handle errors in  api
     const getTask = await prisma.task.findUnique({
       where: {
         id: task_id.toString(),
@@ -133,11 +118,7 @@ const PUT = async (req, res, task_id) => {
 };
 const DELETE = async (res, task_id) => {
   try {
-<<<<<<< HEAD
     const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() } });
-=======
-    const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() + '1' } });
->>>>>>> refactor(api): handle errors in  api
     res.json(deletedTask);
   } catch (err) {
     res.status(404).send({ message: err.meta.cause });

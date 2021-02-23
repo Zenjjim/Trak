@@ -1,18 +1,65 @@
 import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ITag, ITask } from 'utils/types';
+import { ITag } from 'utils/types';
 const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { task_id },
   } = req;
-  if (req.method === 'PUT') {
-    const {
-      body: { data, phaseId, global },
-    }: {
-      body: { data: ITask; phaseId: string; global: boolean };
-    } = req;
+  if (req.method === 'GET') {
+    GET(res, task_id);
+  } else if (req.method === 'PUT') {
+    PUT(req, res, task_id);
+  } else if (req.method === 'DELETE') {
+    DELETE(res, task_id);
+  }
+}
+
+const GET = async (res, task_id) => {
+  try {
+    const task = await prisma.task.findUnique({
+      where: {
+        id: task_id.toString(),
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        phaseId: true,
+        tags: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+        professions: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+        responsible: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
+    res.json(task);
+  } catch (err) {
+    res.status(404).send({ message: err.meta.cause });
+  }
+};
+
+const PUT = async (req, res, task_id) => {
+  const {
+    body: { data, phaseId, global },
+  } = req;
+  try {
     const getTask = await prisma.task.findUnique({
       where: {
         id: task_id.toString(),
@@ -64,43 +111,16 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
-
     res.json(updatedTask);
-  } else if (req.method === 'GET') {
-    const task = await prisma.task.findUnique({
-      where: {
-        id: task_id.toString(),
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        phaseId: true,
-        tags: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
-        professions: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
-        responsible: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            imageUrl: true,
-          },
-        },
-      },
-    });
-    res.json(task);
-  } else if (req.method === 'DELETE') {
-    const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() } });
-    res.json(deletedTask);
+  } catch (err) {
+    res.status(404).send({ message: err.meta.cause });
   }
-}
+};
+const DELETE = async (res, task_id) => {
+  try {
+    const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() + '1' } });
+    res.json(deletedTask);
+  } catch (err) {
+    res.status(404).send({ message: err.meta.cause });
+  }
+};

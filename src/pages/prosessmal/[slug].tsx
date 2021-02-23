@@ -69,7 +69,7 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
   return (
     <>
       <Head>
-        <title>Prosessmal - {processTemplate?.title}</title>
+        <title>Prosessmal {processTemplate && `- ${processTemplate.title}`}</title>
       </Head>
       <div className={classes.root}>
         <div className={classes.header}>

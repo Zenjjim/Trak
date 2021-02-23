@@ -119,6 +119,20 @@ theme.components = {
       },
     },
   },
+  MuiMenuItem: {
+    styleOverrides: {
+      root: {
+        fontSize: '1rem',
+      },
+    },
+  },
+  MuiChip: {
+    styleOverrides: {
+      root: {
+        minWidth: '32px',
+      },
+    },
+  },
 };
 
 export default theme;

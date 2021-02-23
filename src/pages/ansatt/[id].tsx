@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
 import Phase from 'components/views/ansatt/Phase';
@@ -6,9 +6,12 @@ import prisma from 'lib/prisma';
 import _ from 'lodash';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
+import { useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { ITask } from 'utils/types';
+
 const useStyles = makeStyles({
   root: {
     marginLeft: '30px',
@@ -23,11 +26,17 @@ const useStyles = makeStyles({
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id, year, process } = query;
   const parsedId = typeof id === 'string' && parseInt(id);
+  if (!id || !year || !process) {
+    return {
+      notFound: true,
+    };
+  }
   const employeeQuery = await prisma.employee.findUnique({
     where: {
       id: parsedId,
     },
     select: {
+      id: true,
       firstName: true,
       lastName: true,
       hrManager: {
@@ -69,6 +78,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
                   processTemplate: {
                     select: {
                       title: true,
+                      slug: true,
                     },
                   },
                 },
@@ -84,21 +94,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   });
 
   const processesQuery = await prisma.processTemplate.findMany({
-    where: {
-      phases: {
-        some: {
-          tasks: {
-            some: {
-              employeeTask: {
-                some: {
-                  employeeId: parsedId,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     select: {
       title: true,
       slug: true,
@@ -107,6 +102,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           tasks: {
             select: {
               employeeTask: {
+                where: {
+                  employeeId: parsedId,
+                },
                 select: {
                   year: true,
                 },
@@ -124,11 +122,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
   const employee = JSON.parse(safeJsonStringify(employeeQuery));
   const processes = JSON.parse(safeJsonStringify(processesQuery));
-  const phases = employee.employeeTask.map((element) => {
-    return element.task.phase.title;
-  });
-  const uniquePhases = Array.from(new Set(phases));
-  const phasesWithTasks = uniquePhases.map((unique: string) => {
+  const phases = _.uniq(
+    employee.employeeTask.map((element) => {
+      return element.task.phase.title;
+    }),
+  );
+
+  const phasesWithTasks = phases.map((unique: string) => {
     const tasks = employee.employeeTask.filter((task) => task.task.phase.title === unique);
     const finishedTasks = employee.employeeTask.filter((task) => task.completed);
     return {
@@ -150,24 +150,30 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         return element.length !== 0;
       });
     });
-    return { title: process.title, years: filteredYears };
+    return { title: process.title, slug: process.slug, years: filteredYears };
   });
+
   const history = allTasks.map((process) => {
     const years = _.flattenDeep(process.years);
     const uniqeYears = _.uniqBy(years, 'year');
-    return { title: process.title, years: uniqeYears };
+    return { title: process.title, slug: process.slug, years: uniqeYears };
   });
-
-  if (!employeeQuery) {
-    return {
-      notFound: true,
-    };
-  }
 
   return { props: { employee, phasesWithTasks, year, process, history } };
 };
+
 const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <>
       <Head>
@@ -186,15 +192,44 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
         </Box>
         <Box display='flex' justifyContent='space-between' mb={theme.spacing(4)}>
           <Typo variant='body1'>
-            {year} {process}
+            {year} {history.find((element) => element.slug === process)?.title}
           </Typo>
           <Box display='flex'>
-            <Typo className={classes.spaceRight} variant='body1'>
+            <Button aria-controls='filer' aria-haspopup='true' className={classes.spaceRight} color='primary' onClick={() => null}>
               Filer
-            </Typo>
-            <Typo onClick={null} variant='body1'>
+            </Button>
+            <Button
+              aria-controls='historikk meny'
+              aria-haspopup='true'
+              color='primary'
+              disabled={history.every((element) => !element.years.length)}
+              onClick={handleClick}>
               Historikk
-            </Typo>
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              getContentAnchorEl={null}
+              id='history-menu'
+              keepMounted
+              onClose={handleClose}
+              open={Boolean(anchorEl)}>
+              {history.map((process) => {
+                return process.years.map((yearObject) => {
+                  const year = new Date(yearObject.year).getFullYear();
+                  return (
+                    <Link href={`/ansatt/${employee.id}?year=${year}&process=${process.slug}`} key={`${process.title} ${year}`}>
+                      <MenuItem onClick={handleClose}>
+                        {year} {process.title}
+                      </MenuItem>
+                    </Link>
+                  );
+                });
+              })}
+            </Menu>
           </Box>
         </Box>
 

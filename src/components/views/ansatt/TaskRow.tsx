@@ -38,7 +38,6 @@ const TaskRow = ({ task, employee }: TaskRowProps) => {
             <IconButton onClick={() => setModalIsOpen(true)} size='small'>
               <InfoIcon />
             </IconButton>
-            <InfoModal closeModal={() => setModalIsOpen(false)} employee={employee} modalIsOpen={modalIsOpen} task={task} />
           </>
         ) : (
           <>
@@ -47,9 +46,9 @@ const TaskRow = ({ task, employee }: TaskRowProps) => {
             <IconButton onClick={() => setModalIsOpen(true)} size='small'>
               <InfoIcon color={'primary'} />
             </IconButton>
-            <InfoModal closeModal={() => setModalIsOpen(false)} employee={employee} modalIsOpen={modalIsOpen} task={task} />
           </>
         )}
+        <InfoModal closeModal={() => setModalIsOpen(false)} employee={employee} modalIsOpen={modalIsOpen} task={task} />
       </Box>
       {task.responsible && (
         <Box alignItems='center' display='flex' flexDirection='row' flexGrow={1}>

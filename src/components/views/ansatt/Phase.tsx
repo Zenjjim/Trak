@@ -18,12 +18,12 @@ const Phase = ({ title, tasksFinished, totalTasks, tasks }: PhaseProps) => {
     <Box marginBottom={theme.spacing(2)}>
       <Typo variant='h2'>{title}</Typo>
       <Box display='flex'>
-        <Box flexGrow={2} mb={theme.spacing(1)}>
+        <Box flex={2} mb={theme.spacing(1)}>
           <Typo variant='body2'>
             <b>{tasksFinished}</b> av <b>{totalTasks}</b> oppgaver er gjennomført
           </Typo>
         </Box>
-        <Box flexGrow={1}>
+        <Box flex={1}>
           <Typo variant='body2'>Ansvarlig</Typo>
         </Box>
       </Box>

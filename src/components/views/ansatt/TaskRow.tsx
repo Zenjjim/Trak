@@ -29,9 +29,9 @@ const TaskRow = ({ task }: TaskRowProps) => {
 
   return (
     <Box display='flex'>
-      <Box alignItems='center' display='flex' flexGrow={2}>
+      <Box alignItems='center' display='flex' flex={2} maxWidth={theme.spacing(120)}>
         {task.completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
-        <Typo className={task.completed && classes.completedTask} color={!task.completed && 'disabled'} variant='body1'>
+        <Typo className={task.completed && classes.completedTask} color={!task.completed && 'disabled'} noWrap variant='body1'>
           {task.task.title}
         </Typo>
         <IconButton onClick={() => setModalIsOpen(true)} size='small'>
@@ -40,7 +40,7 @@ const TaskRow = ({ task }: TaskRowProps) => {
         <InfoModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} task={task} />
       </Box>
       {task.responsible && (
-        <Box alignItems='center' display='flex' flexDirection='row' flexGrow={1}>
+        <Box alignItems='center' display='flex' flex={1} flexDirection='row'>
           <AvatarComponent
             className={classes.avatar}
             firstName={task.responsible.firstName}

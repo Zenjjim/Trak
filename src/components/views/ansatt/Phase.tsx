@@ -1,10 +1,19 @@
 import { Box } from '@material-ui/core';
+import AlarmIcon from '@material-ui/icons/Alarm';
+import { makeStyles } from '@material-ui/styles';
 import AddButton from 'components/AddButton';
 import Typo from 'components/Typo';
+import moment from 'moment';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
 
 import TaskRow from './TaskRow';
+
+const useStyles = makeStyles({
+  spaceRight: {
+    marginRight: theme.spacing(2),
+  },
+});
 
 type PhaseProps = {
   title: string;
@@ -14,9 +23,18 @@ type PhaseProps = {
 };
 
 const Phase = ({ title, tasksFinished, totalTasks, tasks }: PhaseProps) => {
+  const classes = useStyles();
   return (
     <Box marginBottom={theme.spacing(2)}>
-      <Typo variant='h2'>{title}</Typo>
+      <Box alignItems='center' display='flex'>
+        <Typo className={classes.spaceRight} variant='h2'>
+          {title}
+        </Typo>
+        <AlarmIcon color='secondary' fontSize='small' />
+        <Typo color={theme.palette.secondary.main} variant='body1'>
+          {moment(tasks[0].dueDate).format('DD.MM.YYYY')}
+        </Typo>
+      </Box>
       <Box display='flex'>
         <Box flex={2} mb={theme.spacing(1)}>
           <Typo variant='body2'>

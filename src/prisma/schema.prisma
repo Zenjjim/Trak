@@ -30,15 +30,16 @@ model Employee {
 }
 
 model EmployeeTask {
-  id            String    @id @default(uuid())
-  taskId        String?
-  completed     Boolean   @default(false)
-  employeeId    Int?
-  responsibleId Int?
+  id            String   @id @default(uuid())
+  taskId        String
+  completed     Boolean  @default(false)
+  employeeId    Int
+  responsibleId Int
   year          DateTime
-  employee      Employee? @relation("tasks", fields: [employeeId], references: [id])
-  responsible   Employee? @relation("responsible_employee_tasks", fields: [responsibleId], references: [id])
-  task          Task?     @relation(fields: [taskId], references: [id])
+  dueDate       DateTime
+  employee      Employee @relation("tasks", fields: [employeeId], references: [id])
+  responsible   Employee @relation("responsible_employee_tasks", fields: [responsibleId], references: [id])
+  task          Task     @relation(fields: [taskId], references: [id])
 }
 
 model Phase {

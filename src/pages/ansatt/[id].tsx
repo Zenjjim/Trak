@@ -59,6 +59,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           },
         },
         select: {
+          dueDate: true,
           completed: true,
           year: true,
           responsible: {

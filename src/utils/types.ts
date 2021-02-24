@@ -25,6 +25,7 @@ export type IEmployeeTask = {
   employeeId?: number;
   responsibleId?: number;
   year: Date;
+  dueDate: Date;
 };
 
 export type IPhase = {

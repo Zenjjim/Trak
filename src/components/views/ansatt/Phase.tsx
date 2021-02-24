@@ -26,11 +26,11 @@ const Phase = ({ title, tasksFinished, totalTasks, tasks }: PhaseProps) => {
   const classes = useStyles();
   return (
     <Box marginBottom={theme.spacing(2)}>
-      <Box alignItems='center' display='flex'>
+      <Box alignItems='flex-end' display='flex'>
         <Typo className={classes.spaceRight} variant='h2'>
           {title}
         </Typo>
-        <AlarmIcon color='secondary' fontSize='small' />
+        <AlarmIcon color='secondary' />
         <Typo color={theme.palette.secondary.main} variant='body1'>
           {moment(tasks[0].dueDate).format('DD.MM.YYYY')}
         </Typo>

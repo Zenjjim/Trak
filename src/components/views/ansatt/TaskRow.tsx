@@ -6,7 +6,7 @@ import Typo from 'components/Typo';
 import InfoModal from 'components/views/ansatt/InfoModal';
 import { useState } from 'react';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask } from 'utils/types';
+import { IEmployeeTask } from 'utils/types';
 
 const useStyles = makeStyles({
   avatar: {
@@ -21,12 +21,12 @@ const useStyles = makeStyles({
 
 type TaskRowProps = {
   task: IEmployeeTask;
-  employee: IEmployee;
 };
 
-const TaskRow = ({ task, employee }: TaskRowProps) => {
+const TaskRow = ({ task }: TaskRowProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
+
   return (
     <Box display='flex'>
       <Box alignItems='center' display='flex' flexGrow={2}>
@@ -37,11 +37,16 @@ const TaskRow = ({ task, employee }: TaskRowProps) => {
         <IconButton onClick={() => setModalIsOpen(true)} size='small'>
           <InfoIcon color={task.completed ? 'inherit' : 'primary'} />
         </IconButton>
-        <InfoModal closeModal={() => setModalIsOpen(false)} employee={employee} modalIsOpen={modalIsOpen} task={task} />
+        <InfoModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} task={task} />
       </Box>
       {task.responsible && (
         <Box alignItems='center' display='flex' flexDirection='row' flexGrow={1}>
-          <AvatarComponent className={classes.avatar} firstName={employee.firstName} image={task.responsible.imageUrl} lastName={employee.lastName} />
+          <AvatarComponent
+            className={classes.avatar}
+            firstName={task.responsible.firstName}
+            image={task.responsible.imageUrl}
+            lastName={task.responsible.lastName}
+          />
           <Typo variant='body1'>
             {task.responsible.firstName} {task.responsible.lastName}
           </Typo>

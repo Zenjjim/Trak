@@ -17,7 +17,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     where: {
       slug: params.slug.toString(),
     },
-    include: {
+    select: {
+      slug: true,
       phases: {
         orderBy: {
           createdAt: 'asc',
@@ -196,7 +197,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
         {phases.map((phase: PhaseCardProps) => {
           return (
             <Box key={phase.id} mb={theme.spacing(2)}>
-              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} process={processTemplate.title} title={phase.title} />
+              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
             </Box>
           );
         })}

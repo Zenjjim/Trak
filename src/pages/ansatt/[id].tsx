@@ -7,10 +7,12 @@ import _ from 'lodash';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { ITask } from 'utils/types';
+
+export const EmployeeContext = createContext(undefined);
 
 const useStyles = makeStyles({
   root: {
@@ -162,9 +164,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return { props: { employee, phasesWithTasks, year, process, history } };
 };
 
-const Employee = ({ employee, phasesWithTasks, returnedYear, process, history }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
-  const year = returnedYear;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -232,19 +233,11 @@ const Employee = ({ employee, phasesWithTasks, returnedYear, process, history }:
             </Menu>
           </Box>
         </Box>
-
-        {phasesWithTasks.map((phase) => {
-          return (
-            <Phase
-              employee={employee}
-              key={phase.title}
-              tasks={phase.tasks}
-              tasksFinished={phase.finishedTasks}
-              title={phase.title}
-              totalTasks={phase.totalTasks}
-            />
-          );
-        })}
+        <EmployeeContext.Provider value={{ employee }}>
+          {phasesWithTasks.map((phase) => {
+            return <Phase key={phase.title} tasks={phase.tasks} tasksFinished={phase.finishedTasks} title={phase.title} totalTasks={phase.totalTasks} />;
+          })}
+        </EmployeeContext.Provider>
       </div>
     </>
   );

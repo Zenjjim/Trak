@@ -2,7 +2,7 @@ import { Box } from '@material-ui/core';
 import AddButton from 'components/AddButton';
 import Typo from 'components/Typo';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask } from 'utils/types';
+import { IEmployeeTask } from 'utils/types';
 
 import TaskRow from './TaskRow';
 
@@ -11,10 +11,9 @@ type PhaseProps = {
   tasksFinished: number;
   totalTasks: number;
   tasks: IEmployeeTask[];
-  employee: IEmployee;
 };
 
-const Phase = ({ employee, title, tasksFinished, totalTasks, tasks }: PhaseProps) => {
+const Phase = ({ title, tasksFinished, totalTasks, tasks }: PhaseProps) => {
   return (
     <Box marginBottom={theme.spacing(2)}>
       <Typo variant='h2'>{title}</Typo>
@@ -29,7 +28,7 @@ const Phase = ({ employee, title, tasksFinished, totalTasks, tasks }: PhaseProps
         </Box>
       </Box>
       {tasks.map((task) => {
-        return <TaskRow employee={employee} key={task.taskId} task={task} />;
+        return <TaskRow key={task.taskId} task={task} />;
       })}
       <AddButton onClick={() => undefined} text='Legg til oppgave' />
     </Box>

@@ -1,8 +1,10 @@
 import { Box, Button, Chip, makeStyles } from '@material-ui/core';
 import Modal from 'components/Modal';
 import Typo from 'components/Typo';
+import { EmployeeContext } from 'pages/ansatt/[id]';
+import { useContext } from 'react';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask } from 'utils/types';
+import { IEmployeeTask } from 'utils/types';
 
 const useStyles = makeStyles({
   chip: {
@@ -14,14 +16,14 @@ const useStyles = makeStyles({
 });
 
 type InfoModalProps = {
-  employee: IEmployee;
   task: IEmployeeTask;
   modalIsOpen: boolean;
   closeModal: () => void;
 };
 
-const InfoModal = ({ employee, task, modalIsOpen, closeModal }: InfoModalProps) => {
+const InfoModal = ({ task, modalIsOpen, closeModal }: InfoModalProps) => {
   const classes = useStyles();
+  const { employee } = useContext(EmployeeContext);
   return (
     <Modal
       buttonGroup={[

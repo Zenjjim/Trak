@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 });
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { id, year, process } = query;
+  const { id, år: year, prosess: process } = query;
   const parsedId = typeof id === 'string' && parseInt(id);
   if (!id || !process || !year) {
     return {
@@ -222,7 +222,7 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
                 return process.years.map((yearObject) => {
                   const year = new Date(yearObject.year).getFullYear();
                   return (
-                    <Link href={`/ansatt/${employee.id}?year=${year}&process=${process.slug}`} key={`${process.title} ${year}`}>
+                    <Link href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`} key={`${process.title} ${year}`}>
                       <MenuItem onClick={handleClose}>
                         {year} {process.title}
                       </MenuItem>

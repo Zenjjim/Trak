@@ -43,7 +43,7 @@ const UserRow = ({ employee, slug }: UserRowProps) => {
   const router = useRouter();
   return (
     <TableRow className={classes.pointer} hover>
-      <TableCell onClick={() => router.push(`/ansatt/${employee.id}?year=${new Date(employee.employeeTask[0].year).getFullYear()}&process=${slug}`)}>
+      <TableCell onClick={() => router.push(`/ansatt/${employee.id}?år=${new Date(employee.employeeTask[0].year).getFullYear()}&prosess=${slug}`)}>
         <div className={classes.userRow} tabIndex={0}>
           <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
           <Typo variant={typoVariant}>

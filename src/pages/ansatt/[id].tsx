@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
 import Phase from 'components/views/ansatt/Phase';
 import prisma from 'lib/prisma';
-import _ from 'lodash';
+import { flattenDeep, uniq, uniqBy } from 'lodash';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
   const employee = JSON.parse(safeJsonStringify(employeeQuery));
   const processes = JSON.parse(safeJsonStringify(processesQuery));
-  const phases = _.uniq(
+  const phases = uniq(
     employee.employeeTask.map((element) => {
       return element.task.phase.title;
     }),
@@ -160,8 +160,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   });
 
   const history = allTasks.map((process) => {
-    const years = _.flattenDeep(process.years);
-    const uniqeYears = _.uniqBy(years, 'year');
+    const years = flattenDeep(process.years);
+    const uniqeYears = uniqBy(years, 'year');
     return { title: process.title, slug: process.slug, years: uniqeYears };
   });
 

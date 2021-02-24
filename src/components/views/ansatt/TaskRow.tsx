@@ -29,7 +29,7 @@ const TaskRow = ({ task }: TaskRowProps) => {
 
   return (
     <Box display='flex'>
-      <Box alignItems='center' display='flex' flex={2} maxWidth={theme.spacing(120)}>
+      <Box alignItems='center' display='flex' flex={2}>
         {task.completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
         <Typo className={task.completed && classes.completedTask} color={!task.completed && 'disabled'} noWrap variant='body1'>
           {task.task.title}

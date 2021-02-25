@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/styles';
 import AvatarComponent from 'components/AvatarComponent';
 import Typo from 'components/Typo';
 import InfoModal from 'components/views/ansatt/InfoModal';
-import { useState } from 'react';
+import { EmployeeContext } from 'pages/ansatt/[id]';
+import { useContext, useState } from 'react';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
 
@@ -26,6 +27,7 @@ type TaskRowProps = {
 const TaskRow = ({ task }: TaskRowProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();
+  const { employee } = useContext(EmployeeContext);
 
   return (
     <Box display='flex'>
@@ -39,7 +41,7 @@ const TaskRow = ({ task }: TaskRowProps) => {
         </IconButton>
         <InfoModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} task={task} />
       </Box>
-      {task.responsible && (
+      {task.responsible.id !== employee.hrManager.id && (
         <Box alignItems='center' display='flex' flex={1} flexDirection='row'>
           <AvatarComponent
             className={classes.avatar}

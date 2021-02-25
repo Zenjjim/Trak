@@ -43,6 +43,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       lastName: true,
       hrManager: {
         select: {
+          id: true,
           firstName: true,
           lastName: true,
         },

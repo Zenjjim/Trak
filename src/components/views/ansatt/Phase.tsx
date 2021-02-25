@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import { makeStyles } from '@material-ui/styles';
 import AddButton from 'components/AddButton';
@@ -30,10 +30,9 @@ const Phase = ({ title, tasksFinished, totalTasks, tasks }: PhaseProps) => {
         <Typo className={classes.spaceRight} variant='h2'>
           {title}
         </Typo>
-        <AlarmIcon color='secondary' />
-        <Typo color={theme.palette.secondary.main} variant='body1'>
+        <Button size='medium' startIcon={<AlarmIcon />}>
           {moment(tasks[0].dueDate).format('DD.MM.YYYY')}
-        </Typo>
+        </Button>
       </Box>
       <Box display='flex'>
         <Box flex={2} mb={theme.spacing(1)}>

@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { createContext, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
-import { ITask } from 'utils/types';
+import { IEmployeeTask, ITask } from 'utils/types';
 
 export const EmployeeContext = createContext(undefined);
 
@@ -136,8 +136,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   );
 
   const phasesWithTasks = phases.map((unique: string) => {
-    const tasks = employee.employeeTask.filter((task) => task.task.phase.title === unique);
-    const finishedTasks = employee.employeeTask.filter((task) => task.completed);
+    const tasks = employee.employeeTask.filter((task: IEmployeeTask) => task.task.phase.title === unique);
+
+    const finishedTasks = tasks.filter((task: IEmployeeTask) => task.completed);
     return {
       title: unique,
       tasks: tasks,

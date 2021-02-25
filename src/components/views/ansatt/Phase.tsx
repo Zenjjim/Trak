@@ -26,7 +26,7 @@ const Phase = ({ title, tasksFinished, totalTasks, tasks }: PhaseProps) => {
   const classes = useStyles();
   return (
     <Box marginBottom={theme.spacing(2)}>
-      <Box alignItems='flex-end' display='flex'>
+      <Box alignItems='center' display='flex'>
         <Typo className={classes.spaceRight} variant='h2'>
           {title}
         </Typo>

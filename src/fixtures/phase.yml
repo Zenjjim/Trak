@@ -3,31 +3,41 @@ connectedFields: ['processTemplate']
 items:
   phase1:
     title: 'Før signering'
+    order: 1
     processTemplate: '@processTemplate1'
   phase2:
     title: 'Ved oppstart'
+    order: 2
     processTemplate: '@processTemplate1'
   phase3:
     title: 'Første arbeidsdag'
+    order: 3
     processTemplate: '@processTemplate1'
   phase4:
     title: 'Oppstartssamtale'
+    order: 4
     processTemplate: '@processTemplate1'
   phase5:
     title: 'Kvartal 1'
+    order: 1
     processTemplate: '@processTemplate2'
   phase6:
     title: 'Kvartal 2'
+    order: 2
     processTemplate: '@processTemplate2'
   phase7:
     title: 'Kvartal 3'
+    order: 3
     processTemplate: '@processTemplate2'
   phase8:
     title: 'Kvartal 4'
+    order: 4
     processTemplate: '@processTemplate2'
   phase9:
     title: 'Praktisk før fratredelse'
+    order: 1
     processTemplate: '@processTemplate3'
   phase10:
     title: 'Sluttsamtale'
+    order: 2
     processTemplate: '@processTemplate3'

@@ -21,11 +21,13 @@
     "lint": "eslint --fix --max-warnings=0 .",
     "format": "prettier --write --check --config ./.prettierrc './src/**/*.{js,jsx,ts,tsx,css,md,json}'",
     "fastformat": "pretty-quick --staged './**/*.{js,jsx,ts,tsx,css,md,json}'",
-    "db": "docker run --name trak -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres",
+    "dbcreate": "docker run --name trak -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres",
     "precommit": "yarn fastformat && yarn lint",
-    "heroku-postbuild": "npm run build",
+    "heroku-postbuild": "yarn build",
     "loaddata": "npx fixtures ./src/fixtures",
-    "refreshdatabase": "docker rm -f -v trak && yarn db && sleep 1 && npx prisma db push --preview-feature && yarn loaddata"
+    "dbremove" : "docker rm -f -v trak",
+    "dbpush" : "npx prisma db push --preview-feature",
+    "refreshdatabase": "yarn dbremove && yarn dbcreate && sleep 1 && yarn dbpush && yarn loaddata"
   },
   "husky": {
     "hooks": {

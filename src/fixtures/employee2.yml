@@ -1,0 +1,17 @@
+entity: employee
+connectedFields: ['profession', 'hrManager']
+items:
+  employee{3..5}:
+    firstName: '{{name.firstName}}'
+    lastName: '{{name.lastName}}'
+    email: '{{internet.email}}'
+    birthDate: '{{date.past}}'
+    profession: '@profession1'
+    hrManager: '@employee1'
+  employee{6..8}:
+    firstName: '{{name.firstName}}'
+    lastName: '{{name.lastName}}'
+    email: '{{internet.email}}'
+    birthDate: '{{date.past}}'
+    profession: '@profession2'
+    hrManager: '@employee2'

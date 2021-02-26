@@ -1,0 +1,15 @@
+entity: employee
+connectedFields: ['profession']
+items:
+  employee1:
+    firstName: 'Max'
+    lastName: 'Torre Schau'
+    email: 'max.torre.schau@gmail.com'
+    birthDate: '{{date.past}}'
+    profession: '@profession3'
+  employee2:
+    firstName: 'Zaim'
+    lastName: 'Imran'
+    email: 'zaim.imran@gmail.com'
+    birthDate: '{{date.past}}'
+    profession: '@profession3'

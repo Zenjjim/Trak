@@ -1,0 +1,20 @@
+entity: tag
+items:
+  tag1:
+    title: 'innkjøp'
+  tag2:
+    title: 'møte'
+  tag3:
+    title: 'administrativt'
+  tag4:
+    title: 'samtale'
+  tag5:
+    title: 'teknolog'
+  tag6:
+    title: 'design'
+  tag7:
+    title: 'annet'
+  tag8:
+    title: 'opprettelse'
+  tag9:
+    title: 'lisens'

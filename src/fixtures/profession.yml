@@ -1,0 +1,8 @@
+entity: profession
+items:
+  profession1:
+    title: 'Teknolog'
+  profession2:
+    title: 'Design'
+  profession3:
+    title: 'Annet'

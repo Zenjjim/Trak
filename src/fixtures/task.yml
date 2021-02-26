@@ -1,0 +1,121 @@
+entity: task
+connectedFields: ['phase', 'tags']
+items:
+  task1:
+    title: 'Opprette Google Apps-konto'
+    phase: '@phase1'
+    tags: ['@tag8']
+  task2:
+    title: 'Invitere til Slack'
+    phase: '@phase1'
+    tags: ['@tag8']
+  task3:
+    title: 'Be om CV'
+    description: 'For erfarne ønsker vi primært konsulent-CV. Ellers holder det med vanlig CV'
+    phase: '@phase1'
+    tags: []
+  task4:
+    title: 'Bestill adgangskort'
+    description: 'Send mail om dette til resepsjon.torggt15@toma.no. Husk å oppgi full kontaktinfo for den ansatte'
+    phase: '@phase1'
+    tags: []
+  task5:
+    title: 'Dobbeltsjekk mottatt kontaktinfo'
+    description: 'Vi skal ha mottatt telefonnummer, fødselsnummer, mail og bankkonto'
+    phase: '@phase2'
+    tags: []
+  task6:
+    title: Avklare utstyr
+    description: 'Avklar og bestill datamaskinen den ansatte trenger. Avtal også eventuelle andre gadgets som blir nødvendig'
+    phase: '@phase2'
+    tags: ['@tag1']
+  task7:
+    title: 'Registrere i Tripletex'
+    phase: '@phase2'
+    tags: ['@tag8']
+  task8:
+    title: 'Meld inn i forsikringsavtaler og pensjon'
+    phase: '@phase3'
+    tags: []
+  task9:
+    title: 'Forbered lisenser og programvare'
+    description: 'Adobe (Jon), Sketch (Jon), Microsoft Office (JAJ/Magne), Jetbrain (Magne)'
+    phase: '@phase3'
+    tags: ['@tag9']
+  task10:
+    title: 'Forklar kantinetilgang'
+    phase: '@phase3'
+    tags: []
+  task11:
+    title: 'Forklare kontorrutiner'
+    phase: '@phase4'
+    tags: ['@tag4']
+  task12:
+    title: 'Prosjekt- og forventninger'
+    description: 'Hva slags prosjekter ønsker den ansatte å jobbe med? Hvilke forventninger har den ansatte til Blank?'
+    phase: '@phase4'
+    tags: ['@tag4']
+  task13:
+    title: 'Timeføring og internsystemer'
+    phase: '@phase4'
+    tags: ['@tag4']
+  task14:
+    title: 'Personaltouch (Primært Slack)'
+    phase: '@phase5'
+    tags: ['@tag4']
+  task15:
+    title: 'Fagplan og fagsamtale'
+    phase: '@phase6'
+    tags: ['@tag4']
+  task16:
+    title: 'Personalprat'
+    description: 'Dette skal helst gjøres i møte'
+    phase: '@phase6'
+    tags: ['@tag4']
+  task17:
+    title: 'Lunsj eller middag med engasjement og salg'
+    phase: '@phase6'
+    tags: []
+  task18:
+    title: 'Personaltouch (Primært Slack)'
+    phase: '@phase7'
+    tags: []
+  task19:
+    title: 'Fagplan og fagsamtale'
+    phase: '@phase8'
+    tags: []
+  task20:
+    title: 'Personalprat'
+    phase: '@phase8'
+    tags: []
+  task21:
+    title: 'Lunsj eller middag med engasjement og salg'
+    phase: '@phase8'
+    tags: []
+  task22:
+    title: 'Avklare tidspunkt for sluttsamtale'
+    phase: '@phase9'
+    tags: []
+  task23:
+    title: 'Avklar eventuell markering'
+    phase: '@phase9'
+    tags: []
+  task24:
+    title: 'Avklar utkjøp av utstyr'
+    description: '0-1 år: 80% av pris inkl. mva, 1-2 år: 50% av pris inkl. mva, 2-3 år: 20% av pris inkl. mva, over 3 år: 500 kr'
+    phase: '@phase9'
+    tags: []
+  task25:
+    title: 'Signere "Egenerklæring ved fratredelse"'
+    description: 'Denne må lagres i Tripletex'
+    phase: '@phase10'
+    tags: []
+  task26:
+    title: 'Levere tilbake adgangskort'
+    phase: '@phase10'
+    tags: []
+  task27:
+    title: 'Levere tilbake utstyr'
+    description: 'Gå gjennom utstyrlisten'
+    phase: '@phase10'
+    tags: []

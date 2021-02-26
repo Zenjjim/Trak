@@ -1,0 +1,213 @@
+entity: employeeTask
+connectedFields: ['task', 'employee', 'responsible']
+items:
+  employeeTask{1..4}:
+    task: '@task($current)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-03T00:00:00Z'
+    employee: '@employee3'
+  employeeTask{5..7}:
+    task: '@task($current)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-14T00:00:00Z'
+    employee: '@employee3'
+  employeeTask{8..10}:
+    task: '@task($current)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-21T00:00:00Z'
+    employee: '@employee3'
+  employeeTask{11..13}:
+    task: '@task($current)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-29T00:00:00Z'
+    employee: '@employee3'
+  employeeTask{14..17}:
+    task: '@task($current-13)'
+    responsible: '@employee1'
+    completed: true
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-03T00:00:00Z'
+    employee: '@employee4'
+  employeeTask{18..20}:
+    task: '@task($current-13)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-14T00:00:00Z'
+    employee: '@employee4'
+  employeeTask{21..23}:
+    task: '@task($current-13)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-21T00:00:00Z'
+    employee: '@employee4'
+  employeeTask{24..26}:
+    task: '@task($current-13)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-29T00:00:00Z'
+    employee: '@employee4'
+  employeeTask27:
+    task: '@task14'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-31T00:00:00Z'
+    employee: '@employee3'
+  employeeTask{28..30}:
+    task: '@task($current-13)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-06-30T00:00:00Z'
+    employee: '@employee3'
+  employeeTask31:
+    task: '@task18'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-09-30T00:00:00Z'
+    employee: '@employee3'
+  employeeTask{32..34}:
+    task: '@task($current-13)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-12-31T00:00:00Z'
+    employee: '@employee3'
+  employeeTask35:
+    task: '@task14'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-31T00:00:00Z'
+    employee: '@employee4'
+  employeeTask{36..38}:
+    task: '@task($current-21)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-06-30T00:00:00Z'
+    employee: '@employee4'
+  employeeTask39:
+    task: '@task18'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-09-30T00:00:00Z'
+    employee: '@employee4'
+  employeeTask{40..42}:
+    task: '@task($current-21)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-12-31T00:00:00Z'
+    employee: '@employee4'
+  employeeTask43:
+    task: '@task14'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-31T00:00:00Z'
+    employee: '@employee5'
+  employeeTask{44..46}:
+    task: '@task($current-29)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-06-30T00:00:00Z'
+    employee: '@employee5'
+  employeeTask47:
+    task: '@task18'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-09-30T00:00:00Z'
+    employee: '@employee5'
+  employeeTask{48..50}:
+    task: '@task($current-29)'
+    responsible: '@employee1'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-12-31T00:00:00Z'
+    employee: '@employee5'
+  employeeTask51:
+    task: '@task14'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-31T00:00:00Z'
+    employee: '@employee6'
+  employeeTask{52..54}:
+    task: '@task($current-37)'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-06-30T00:00:00Z'
+    employee: '@employee6'
+  employeeTask55:
+    task: '@task18'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-09-30T00:00:00Z'
+    employee: '@employee6'
+  employeeTask{56..58}:
+    task: '@task($current-37)'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-12-31T00:00:00Z'
+    employee: '@employee6'
+  employeeTask59:
+    task: '@task14'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-03-31T00:00:00Z'
+    employee: '@employee7'
+  employeeTask{60..62}:
+    task: '@task($current-45)'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-06-30T00:00:00Z'
+    employee: '@employee7'
+  employeeTask63:
+    task: '@task18'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-09-30T00:00:00Z'
+    employee: '@employee7'
+  employeeTask{64..66}:
+    task: '@task($current-45)'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-12-31T00:00:00Z'
+    employee: '@employee7'
+  employeeTask67:
+    task: '@task14'
+    responsible: '@employee2'
+    completed: true
+    year: '2020-01-01T00:00:00Z'
+    dueDate: '2020-03-31T00:00:00Z'
+    employee: '@employee8'
+  employeeTask{68..70}:
+    task: '@task($current-53)'
+    responsible: '@employee2'
+    completed: true
+    year: '2020-01-01T00:00:00Z'
+    dueDate: '2020-06-30T00:00:00Z'
+    employee: '@employee8'
+  employeeTask71:
+    task: '@task18'
+    responsible: '@employee2'
+    completed: true
+    year: '2020-01-01T00:00:00Z'
+    dueDate: '2020-09-30T00:00:00Z'
+    employee: '@employee8'
+  employeeTask{72..74}:
+    task: '@task($current-53)'
+    responsible: '@employee2'
+    completed: true
+    year: '2020-01-01T00:00:00Z'
+    dueDate: '2020-12-31T00:00:00Z'
+    employee: '@employee8'
+  employeeTask{75..77}:
+    task: '@task($current-53)'
+    responsible: '@employee2'
+    completed: true
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-04-30T00:00:00Z'
+    employee: '@employee8'
+  employeeTask{78..80}:
+    task: '@task($current-53)'
+    responsible: '@employee2'
+    year: '2021-01-01T00:00:00Z'
+    dueDate: '2021-05-18T00:00:00Z'
+    employee: '@employee8'

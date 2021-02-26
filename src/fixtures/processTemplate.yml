@@ -1,0 +1,11 @@
+entity: processTemplate
+items:
+  processTemplate1:
+    title: 'Onboarding'
+    slug: 'onboarding'
+  processTemplate2:
+    title: 'Løpende'
+    slug: 'lopende'
+  processTemplate3:
+    title: 'Offboarding'
+    slug: 'offboarding'

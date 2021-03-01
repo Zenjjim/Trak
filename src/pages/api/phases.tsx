@@ -17,4 +17,5 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } else {
     res.status(405);
   }
+  prisma.$disconnect();
 }

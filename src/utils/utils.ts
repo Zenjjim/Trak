@@ -30,7 +30,7 @@ export const toggleCheckBox = (
     .put(`/api/employeeTasks/${employeeTask.id}`, {
       completed: !completed,
       dueDate: employeeTask.dueDate,
-      responsibleId: employeeTask.responsibleId,
+      responsibleId: employeeTask.responsible.id,
     })
     .then(() => {
       showSnackbar(`Oppgave markert som ${completed ? 'ikke' : ''} fullført`, 'success');

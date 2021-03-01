@@ -2,7 +2,7 @@ import { createMocks } from 'node-mocks-http';
 import phasesAPI from 'pages/api/phases';
 
 import { processTemplateFactory } from './factories/processTemplates.factory';
-import { randomString } from './utils';
+import { randomString } from './utils/utils';
 
 describe('/api/phases', () => {
   let processTemplate;

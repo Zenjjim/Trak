@@ -1,3 +1,4 @@
+import { Error } from '@material-ui/icons';
 import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const prisma = new PrismaClient();
@@ -75,6 +76,9 @@ const GET = async (res, id) => {
         },
       },
     });
+    if (!employeeTask) {
+      throw new Error();
+    }
     res.status(200).json(employeeTask);
   } catch (err) {
     if (err) {

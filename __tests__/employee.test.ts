@@ -5,7 +5,7 @@ import { employeeFactory } from './factories/employee.factory';
 
 describe('/api/employee', () => {
   beforeAll(() => {
-    employeeFactory(2);
+    employeeFactory();
   });
 
   test('returns all employees', async () => {

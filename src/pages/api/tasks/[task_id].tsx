@@ -58,6 +58,9 @@ const GET = async (res, task_id) => {
         },
       },
     });
+    if (!task) {
+      throw new Error();
+    }
     res.status(200).json(task);
   } catch (err) {
     if (err) {

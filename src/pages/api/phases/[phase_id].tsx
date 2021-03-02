@@ -35,6 +35,9 @@ const GET = async (res, phase_id) => {
         title: true,
       },
     });
+    if (!phase) {
+      throw new Error();
+    }
     res.status(200).json(phase);
   } catch (err) {
     if (err) {

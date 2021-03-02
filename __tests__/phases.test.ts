@@ -24,6 +24,7 @@ describe('/api/phases', () => {
     expect(res._getStatusCode()).toBe(200);
     expect(phase.processTemplateId).toEqual(processTemplate.id);
   });
+
   test('Get created phase', async () => {
     const { req, res } = createMocks({
       method: 'GET',
@@ -37,13 +38,24 @@ describe('/api/phases', () => {
 
   test('Update created phase', async () => {
     const { req, res } = createMocks({
-      method: 'GET',
+      method: 'PUT',
       query: { phase_id: phase.id },
       body: {
         data: {
           title: randomString(),
         },
       },
+    });
+
+    await phasesIdAPI(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+  });
+
+  test('Delete created phase', async () => {
+    const { req, res } = createMocks({
+      method: 'DELETE',
+      query: { phase_id: phase.id },
     });
 
     await phasesIdAPI(req, res);

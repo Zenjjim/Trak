@@ -1,20 +1,25 @@
 import { PrismaClient } from '@prisma/client';
 
-import { randomString } from '../utils/utils';
+import { randomString } from './../utils/utils';
+import { phaseFactory } from './phase.factory';
+
 const prisma = new PrismaClient();
 
-export const taskFactory = async (amount: number) => {
-  const phases = await prisma.phase.findMany();
-  const array = [...Array(amount)].map(() => {
-    return {
-      title: randomString(),
-      phaseId: phases[0].id,
-    };
-  });
+export const taskFactory = async () => {
+  const phase = await phaseFactory();
 
-  const tasks = await prisma.task.createMany({
-    data: array,
+  const task = await prisma.task.create({
+    data: {
+      title: randomString(),
+      description: randomString(),
+      global: false,
+      phase: {
+        connect: {
+          id: phase.id,
+        },
+      },
+    },
   });
   prisma.$disconnect();
-  return tasks;
+  return task;
 };

@@ -1,5 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import phasesAPI from 'pages/api/phases';
+import phasesIdAPI from 'pages/api/phases/[phase_id]';
 
 import { processTemplateFactory } from './factories/processTemplates.factory';
 import { randomString } from './utils/utils';
@@ -9,7 +10,8 @@ describe('/api/phases', () => {
   beforeAll(async () => {
     processTemplate = await processTemplateFactory();
   });
-  test('returns all tags', async () => {
+  let phase;
+  test('Create phase', async () => {
     const { req, res } = createMocks({
       method: 'POST',
       body: {
@@ -17,8 +19,34 @@ describe('/api/phases', () => {
         processTemplateId: processTemplate.id,
       },
     });
-
     await phasesAPI(req, res);
+    phase = JSON.parse(res._getData());
+    expect(res._getStatusCode()).toBe(200);
+    expect(phase.processTemplateId).toEqual(processTemplate.id);
+  });
+  test('Get created phase', async () => {
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: { phase_id: phase.id },
+    });
+
+    await phasesIdAPI(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+  });
+
+  test('Update created phase', async () => {
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: { phase_id: phase.id },
+      body: {
+        data: {
+          title: randomString(),
+        },
+      },
+    });
+
+    await phasesIdAPI(req, res);
 
     expect(res._getStatusCode()).toBe(200);
   });

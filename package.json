@@ -50,6 +50,7 @@
     "@types/lodash": "^4.14.168",
     "@types/material-ui": "^0.21.8",
     "axios": "^0.21.1",
+    "capitalize-first-letter": "^1.0.0",
     "classnames": "^2.2.6",
     "eslint-plugin-json": "^2.1.2",
     "faker": "^5.4.0",

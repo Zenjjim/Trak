@@ -1,4 +1,6 @@
 import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps } from '@material-ui/core';
+
+import Typo from './Typo';
 type AvatarProps = {
   firstName: string;
   lastName: string;
@@ -12,7 +14,7 @@ const getInitials = (firstName: string, lastName: string): string => {
 const Avatar = ({ firstName, lastName, image, ...args }: AvatarProps) => {
   return (
     <MuiAvatar src={image} {...args}>
-      {getInitials(firstName, lastName)}
+      <Typo variant='body2'>{getInitials(firstName, lastName)}</Typo>
     </MuiAvatar>
   );
 };

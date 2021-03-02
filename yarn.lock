@@ -1932,6 +1932,11 @@ caniuse-lite@^1.0.30001181:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001192.tgz#b848ebc0ab230cf313d194a4775a30155d50ae40"
   integrity sha512-63OrUnwJj5T1rUmoyqYTdRWBqFFxZFlyZnRRjDR8NSUQFB6A+j/uBORU/SyJ5WzDLg4SPiZH40hQCBNdZ/jmAw==
 
+capitalize-first-letter@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/capitalize-first-letter/-/capitalize-first-letter-1.0.0.tgz#effb0990cca52966c254c94644182da00da98b14"
+  integrity sha1-7/sJkMylKWbCVMlGRBgtoA2pixQ=
+
 capture-exit@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/capture-exit/-/capture-exit-2.0.0.tgz#fb953bfaebeb781f62898239dabb426d08a509a4"

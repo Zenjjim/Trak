@@ -41,7 +41,10 @@ const TimeSection = ({ section, first }: TimeSectionProps) => {
       <div className={classes.centeringRow}>
         <Typo>
           <b>{section.title}</b>
-          <span className={classes.disabled}>{` - ${section.date}`}</span>
+          <span className={classes.disabled}>
+            {section.title && ' - '}
+            {section.date}
+          </span>
         </Typo>
         <IconButton onClick={() => setOpen(!open)} size='small'>
           {open ? <ExpandLess /> : <ExpandMore />}

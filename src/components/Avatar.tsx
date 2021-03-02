@@ -1,6 +1,5 @@
 import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps } from '@material-ui/core';
-
-import Typo from './Typo';
+import Typo from 'components/Typo';
 type AvatarProps = {
   firstName: string;
   lastName: string;

@@ -1,6 +1,7 @@
 import 'moment/locale/nb';
 
 import { makeStyles } from '@material-ui/core';
+import capitalize from 'capitalize-first-letter';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import TimeSection from 'components/views/mine-oppgaver/TimeSection';
@@ -11,7 +12,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import safeJsonStringify from 'safe-json-stringify';
-import { nextMonth, thisMonth, thisWeek, today, tomorrow } from 'sortof';
+import { thisMonth, thisWeek, today, tomorrow } from 'sortof';
 import { IEmployeeTask } from 'utils/types';
 
 const useStyles = makeStyles({
@@ -89,7 +90,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 export type TimeSectionType = {
-  title: string;
+  title?: string;
   date: string;
   data: IEmployeeTask[];
 };
@@ -108,8 +109,8 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
     const withoutThisWeek = differenceBy(withoutTomorrow, taskThisWeek, 'id');
     const taskThisMonth = thisMonth(withoutThisWeek, 'dueDate');
     const withoutThisMonth = differenceBy(withoutThisWeek, taskThisMonth, 'id');
-    const taskNextMonth = nextMonth(withoutThisMonth, 'dueDate');
-    const withoutNextMonth = differenceBy(withoutThisMonth, taskNextMonth, 'id');
+    const taskNextMonth = thisMonth(withoutThisMonth, 'dueDate', '', (moment().month() + 1) % 12);
+    const taskNextNextMonth = thisMonth(withoutThisMonth, 'dueDate', '', (moment().month() + 2) % 12);
 
     const data = [
       taskToday.length && {
@@ -130,17 +131,16 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
       taskThisMonth.length && {
         title: 'Denne måneden',
         data: taskThisMonth,
-        date: moment(taskThisMonth[0]?.dueDate).format('MMMM'),
+        date: capitalize(moment(taskThisMonth[0]?.dueDate).format('MMMM')),
       },
       taskNextMonth.length && {
         title: 'Neste måned',
         data: taskNextMonth,
-        date: moment(taskNextMonth[0]?.dueDate).format('MMMM'),
+        date: capitalize(moment(taskNextMonth[0]?.dueDate).format('MMMM')),
       },
-      withoutNextMonth.length && {
-        title: 'Resterende',
-        data: withoutNextMonth,
-        date: '',
+      taskNextNextMonth && {
+        data: taskNextNextMonth,
+        date: capitalize(moment(taskNextNextMonth[0]?.dueDate).format('MMMM')),
       },
     ];
 

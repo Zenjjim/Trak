@@ -41,7 +41,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
-    res.json(newTask);
+    res.status(HttpStatusCode.CREATED).json(newTask);
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }

@@ -14,7 +14,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         processTemplateId: processTemplateId,
       },
     });
-    res.json(newPhase);
+    res.status(HttpStatusCode.CREATED).json(newPhase);
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }

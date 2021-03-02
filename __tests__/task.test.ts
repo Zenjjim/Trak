@@ -26,7 +26,7 @@ describe('/api/tasks', () => {
     });
     await tasksAPI(req, res);
     task = JSON.parse(res._getData());
-    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.CREATED);
   });
   test('get one task', async () => {
     const { req, res } = createMocks({

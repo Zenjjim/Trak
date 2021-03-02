@@ -22,7 +22,7 @@ describe('/api/phases', () => {
     });
     await phasesAPI(req, res);
     phase = JSON.parse(res._getData());
-    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.CREATED);
     expect(phase.processTemplateId).toEqual(processTemplate.id);
   });
 

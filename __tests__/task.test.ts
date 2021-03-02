@@ -52,16 +52,4 @@ describe('/api/tasks', () => {
 
     expect(res._getStatusCode()).toBe(StatusCode.SuccessOK);
   });
-  //TODO:
-  // FIX THIS
-  /* test('get a deleted task', async () => {
-    const { req, res } = createMocks({
-      method: 'GET',
-      query: {
-        task_id: 'blælsdkgjsdkjgdskjgnsdn',
-      },
-    });
-    await singleTaskAPI(req, res);
-    expect(res._getStatusCode()).toBe(StatusCode.ClientErrorNotFound);
-  }); */
 });

@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
+import HttpStatusCode from 'http-status-typed';
 import { createMocks } from 'node-mocks-http';
 import tasksAPI from 'pages/api/tasks';
 import singleTaskAPI from 'pages/api/tasks/[task_id]';
-import { StatusCode } from 'status-code-enum';
 
 import { randomString } from './utils/utils';
 
@@ -26,7 +26,7 @@ describe('/api/tasks', () => {
     });
     await tasksAPI(req, res);
     task = JSON.parse(res._getData());
-    expect(res._getStatusCode()).toBe(StatusCode.SuccessOK);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
   test('get one task', async () => {
     const { req, res } = createMocks({
@@ -38,7 +38,7 @@ describe('/api/tasks', () => {
 
     await singleTaskAPI(req, res);
 
-    expect(res._getStatusCode()).toBe(StatusCode.SuccessOK);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
 
   test('delete one task', async () => {
@@ -50,6 +50,6 @@ describe('/api/tasks', () => {
     });
     await singleTaskAPI(req, res);
 
-    expect(res._getStatusCode()).toBe(StatusCode.SuccessOK);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
 });

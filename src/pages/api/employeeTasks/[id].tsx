@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const prisma = new PrismaClient();
+import HttpStatusCode from 'http-status-typed';
 
 export const config = {
   api: {
@@ -17,7 +18,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'PUT') {
     PUT(req, res, id);
   } else {
-    res.status(405);
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
   prisma.$disconnect();
 }
@@ -78,12 +79,12 @@ const GET = async (res, id) => {
     if (!employeeTask) {
       throw new Error();
     }
-    res.status(200).json(employeeTask);
+    res.status(HttpStatusCode.OK).json(employeeTask);
   } catch (err) {
     if (err) {
-      res.status(404).send({ message: err?.meta?.cause });
+      res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });
     } else {
-      res.status(500).send({ message: 'Noe gikk galt med serveren' });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({ message: 'Noe gikk galt med serveren' });
     }
   }
 };
@@ -115,12 +116,12 @@ const PUT = async (req, res, id) => {
         },
       },
     });
-    res.status(200).json(updatedEmployeeTask);
+    res.status(HttpStatusCode.OK).json(updatedEmployeeTask);
   } catch (err) {
     if (err) {
-      res.status(404).send({ message: err?.meta?.cause });
+      res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });
     } else {
-      res.status(500).send({ message: 'Noe gikk galt med serveren' });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({ message: 'Noe gikk galt med serveren' });
     }
   }
 };

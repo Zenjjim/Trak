@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import HttpStatusCode from 'http-status-typed';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { IProfession, ITag } from 'utils/types';
 const prisma = new PrismaClient();
@@ -42,7 +43,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     });
     res.json(newTask);
   } else {
-    res.status(405);
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
   prisma.$disconnect();
 }

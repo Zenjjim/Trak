@@ -1,3 +1,4 @@
+import HttpStatusCode from 'http-status-typed';
 import { createMocks } from 'node-mocks-http';
 import phasesAPI from 'pages/api/phases';
 import phasesIdAPI from 'pages/api/phases/[phase_id]';
@@ -21,7 +22,7 @@ describe('/api/phases', () => {
     });
     await phasesAPI(req, res);
     phase = JSON.parse(res._getData());
-    expect(res._getStatusCode()).toBe(200);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
     expect(phase.processTemplateId).toEqual(processTemplate.id);
   });
 
@@ -33,7 +34,7 @@ describe('/api/phases', () => {
 
     await phasesIdAPI(req, res);
 
-    expect(res._getStatusCode()).toBe(200);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
 
   test('Update created phase', async () => {
@@ -49,7 +50,7 @@ describe('/api/phases', () => {
 
     await phasesIdAPI(req, res);
 
-    expect(res._getStatusCode()).toBe(200);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
 
   test('Delete created phase', async () => {
@@ -60,6 +61,6 @@ describe('/api/phases', () => {
 
     await phasesIdAPI(req, res);
 
-    expect(res._getStatusCode()).toBe(200);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
 });

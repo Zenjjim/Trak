@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import HttpStatusCode from 'http-status-typed';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ITag } from 'utils/types';
 const prisma = new PrismaClient();
@@ -20,7 +21,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'DELETE') {
     DELETE(res, task_id);
   } else {
-    res.status(405);
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
   prisma.$disconnect();
 }
@@ -61,12 +62,12 @@ const GET = async (res, task_id) => {
     if (!task) {
       throw new Error();
     }
-    res.status(200).json(task);
+    res.status(HttpStatusCode.OK).json(task);
   } catch (err) {
     if (err) {
-      res.status(404).send({ message: err?.meta?.cause });
+      res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });
     } else {
-      res.status(500).send({ message: 'Noe gikk galt med serveren' });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({ message: 'Noe gikk galt med serveren' });
     }
   }
 };
@@ -127,24 +128,24 @@ const PUT = async (req, res, task_id) => {
         },
       },
     });
-    res.status(200).json(updatedTask);
+    res.status(HttpStatusCode.OK).json(updatedTask);
   } catch (err) {
     if (err) {
-      res.status(404).send({ message: err?.meta?.cause });
+      res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });
     } else {
-      res.status(500).send({ message: 'Noe gikk galt med serveren' });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({ message: 'Noe gikk galt med serveren' });
     }
   }
 };
 const DELETE = async (res, task_id) => {
   try {
     const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() } });
-    res.status(200).json(deletedTask);
+    res.status(HttpStatusCode.OK).json(deletedTask);
   } catch (err) {
     if (err) {
-      res.status(404).send({ message: err?.meta?.cause });
+      res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });
     } else {
-      res.status(500).send({ message: 'Noe gikk galt med serveren' });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({ message: 'Noe gikk galt med serveren' });
     }
   }
 };

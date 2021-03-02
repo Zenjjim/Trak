@@ -1,3 +1,4 @@
+import HttpStatusCode from 'http-status-typed';
 import { createMocks } from 'node-mocks-http';
 import employeeAPI from 'pages/api/employees';
 
@@ -14,7 +15,7 @@ describe('/api/employee', () => {
     });
 
     await employeeAPI(req, res);
-    expect(res._getStatusCode()).toBe(200);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
     expect(JSON.parse(res._getData()).length).toBeGreaterThanOrEqual(2);
   });
 });

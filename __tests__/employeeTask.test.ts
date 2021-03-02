@@ -1,3 +1,4 @@
+import HttpStatusCode from 'http-status-typed';
 import { createMocks } from 'node-mocks-http';
 import employeeTaskAPI from 'pages/api/employeeTasks/[id]';
 
@@ -18,7 +19,7 @@ describe('/api/employeeTask', () => {
 
       await employeeTaskAPI(req, res);
 
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
     });
   });
 
@@ -34,7 +35,7 @@ describe('/api/employeeTask', () => {
         },
       });
       await employeeTaskAPI(req, res);
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
     });
   });
 });

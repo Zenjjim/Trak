@@ -63,7 +63,6 @@
     "react-hook-form": "^6.15.1",
     "safe-json-stringify": "^1.2.0",
     "sortof": "^0.7.0",
-    "status-code-enum": "^1.0.0",
     "swr": "^0.4.2"
   },
   "devDependencies": {

@@ -111,7 +111,6 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
     const withoutThisMonth = differenceBy(withoutThisWeek, taskThisMonth, 'id');
     const taskNextMonth = thisMonth(withoutThisMonth, 'dueDate', '', (moment().month() + 1) % 12);
     const taskNextNextMonth = thisMonth(withoutThisMonth, 'dueDate', '', (moment().month() + 2) % 12);
-
     const data = [
       taskToday.length && {
         title: 'I dag',
@@ -138,7 +137,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
         data: taskNextMonth,
         date: capitalize(moment(taskNextMonth[0]?.dueDate).format('MMMM')),
       },
-      taskNextNextMonth && {
+      taskNextNextMonth.length && {
         data: taskNextNextMonth,
         date: capitalize(moment(taskNextNextMonth[0]?.dueDate).format('MMMM')),
       },

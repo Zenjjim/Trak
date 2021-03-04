@@ -173,7 +173,7 @@ const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps
             </div>
           )}
         </Box>
-        <Typo variant='body2'>{employeeTask ? <>{employeeTask?.task.description}</> : <Skeleton height={theme.spacing(24)} />}</Typo>
+        <Typo>{employeeTask ? <>{employeeTask?.task.description}</> : <Skeleton height={theme.spacing(24)} />}</Typo>
       </>
     </Modal>
   );

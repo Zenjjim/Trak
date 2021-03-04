@@ -8,7 +8,7 @@ jobs:
   build:
     env:
       DATABASE_URL: ${{secrets.DATABASE_URL}}
-    name: Test
+    name: Build
     runs-on: ubuntu-latest
 
     steps:

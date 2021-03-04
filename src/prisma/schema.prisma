@@ -51,7 +51,6 @@ model Phase {
   processTemplate   ProcessTemplate @relation(fields: [processTemplateId], references: [id])
   tasks             Task[]
 
-  @@unique([processTemplateId, order], name: "processTemplateId_order_unique")
 }
 
 model ProcessTemplate {
@@ -79,10 +78,10 @@ model Task {
   title         String
   description   String?
   global        Boolean        @default(true)
-  phaseId       String
+  phaseId       String?
   responsibleId Int?
   createdAt     DateTime       @default(now())
-  phase         Phase          @relation(fields: [phaseId], references: [id])
+  phase         Phase?         @relation(fields: [phaseId], references: [id])
   responsible   Employee?      @relation("responsible_tasks", fields: [responsibleId], references: [id])
   employeeTask  EmployeeTask[]
   professions   Profession[]

@@ -27,6 +27,7 @@ model Employee {
   employeeTask            EmployeeTask[] @relation("tasks")
   responsibleEmployeeTask EmployeeTask[] @relation("responsible_employee_tasks")
   responsibleTask         Task[]         @relation("responsible_tasks")
+  notification            Notification[] @relation("employee")
 }
 
 model EmployeeTask {
@@ -40,6 +41,15 @@ model EmployeeTask {
   employee      Employee @relation("tasks", fields: [employeeId], references: [id])
   responsible   Employee @relation("responsible_employee_tasks", fields: [responsibleId], references: [id])
   task          Task     @relation(fields: [taskId], references: [id])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  employeeId  Int
+  createdAt   DateTime @default(now())
+  read        Boolean  @default(false)
+  description String
+  employee    Employee @relation("employee", fields: [employeeId], references: [id])
 }
 
 model Phase {

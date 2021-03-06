@@ -13,6 +13,7 @@ export type IEmployee = {
   hrManager: IEmployee;
   employees: IEmployee[];
   employeeTask: IEmployeeTask[];
+  Notification: INotification[];
 };
 
 export type IEmployeeTask = {
@@ -26,6 +27,15 @@ export type IEmployeeTask = {
   responsibleId?: number;
   year: Date;
   dueDate: Date;
+};
+
+export type INotification = {
+  id: string;
+  employeeId: number;
+  createdAt: Date;
+  read: boolean;
+  description: string;
+  employee: IEmployee;
 };
 
 export type IPhase = {

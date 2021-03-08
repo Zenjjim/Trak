@@ -13,7 +13,7 @@ export type IEmployee = {
   hrManager: IEmployee;
   employees: IEmployee[];
   employeeTask: IEmployeeTask[];
-  Notification: INotification[];
+  notifications: INotification[];
 };
 
 export type IEmployeeTask = {

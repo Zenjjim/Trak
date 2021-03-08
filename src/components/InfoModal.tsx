@@ -78,7 +78,7 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
                 qs.stringify({
                   token: SLACK_TOKEN,
                   channel: formData.responsible.slack,
-                  text: `Du har blitt delegert arbeidsoppgaven "${employeeTask.task.title}" av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
+                  text: `Du har blitt delegert arbeidsoppgaven ${employeeTask.task.title} av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
                 }),
               ),
           ],

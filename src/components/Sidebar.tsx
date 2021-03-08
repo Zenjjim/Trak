@@ -1,11 +1,17 @@
-import { Avatar, Badge, Box, Divider, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Avatar, Badge, Box, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/styles';
-import classNames from 'classnames';
+import axios from 'axios';
 import Typo from 'components/Typo';
+import { useUser } from 'context/User';
+import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Dispatch, useState } from 'react';
 import theme from 'theme';
 import urls, { link, section } from 'URLS';
+import { INotification } from 'utils/types';
 
 const SIDEBAR_WIDTH = 190;
 
@@ -31,8 +37,22 @@ const useStyles = makeStyles({
     lineHeight: theme.spacing(0.2),
     color: theme.palette.text.disabled,
   },
-  badge: {
+  pointerCursor: {
     cursor: 'pointer',
+  },
+  icon: {
+    height: '8px',
+    width: '8px',
+    marginRight: theme.spacing(0.5),
+  },
+  marginRight: {
+    marginRight: theme.spacing(1),
+  },
+  notificationBox: {
+    '&::-webkit-scrollbar': {
+      background: 'transparent',
+      width: '0px',
+    },
   },
 });
 const LinkGroup = ({ title, links, divider }: section) => {
@@ -56,53 +76,120 @@ const LinkGroup = ({ title, links, divider }: section) => {
   );
 };
 
-type LoggedInUserCardProps = {
-  fullName: string;
-  image?: string;
+type NotificationProps = {
+  notification: INotification;
 };
 
-const LoggedInUserCard = ({ fullName, image }: LoggedInUserCardProps) => {
+const Notification = ({ notification }: NotificationProps) => {
+  const updateNotification = async () => {
+    await axios.put(`api/notification/${notification.id}`, { data: { read: !notification.read } });
+  };
+  if (!notification.read) {
+    updateNotification();
+  }
+  return (
+    <>
+      <Box p={theme.spacing(1)} style={{ backgroundColor: notification.read ? theme.palette.background.paper : theme.palette.primary.light }}>
+        <Box alignItems='center' display='flex' flexDirection='row'>
+          <Typo style={{ color: notification.read ? theme.palette.text.primary : theme.palette.primary.main }} variant='body2'>
+            {notification.description}
+          </Typo>
+        </Box>
+        <Box display='flex' justifyContent='flex-end'>
+          <Typo variant='body2'>{moment(notification.createdAt).format('DD.MM.YYYY HH:mm')}</Typo>
+        </Box>
+      </Box>
+      <Divider />
+    </>
+  );
+};
+
+type LoggedInUserCardProps = {
+  firstName: string;
+  lastName: string;
+  image?: string;
+  notifications: INotification[];
+  displayNotifications: boolean;
+  setDisplayNotifications: Dispatch<boolean>;
+};
+
+const LoggedInUserCard = ({ firstName, lastName, image, notifications, displayNotifications, setDisplayNotifications }: LoggedInUserCardProps) => {
   const classes = useStyles();
-  const names = fullName.split(' ');
-  const name = names[0] + ' ' + names[1][0] + '.';
+  const name = `${firstName} ${lastName[0]}.`;
+  const unreadNotifications = notifications.filter((notification: INotification) => !notification.read).length;
 
   return (
     <Box
-      alignItems='center'
       bgcolor={theme.palette.background.paper}
       boxShadow={'0px 4px 4px rgba(0,0,0,0.25)'}
-      className={classNames(classes.gutterBottom, classes.badge)}
-      display='flex'
-      height='70px'
+      className={classes.gutterBottom}
+      minHeight={displayNotifications ? '60vh' : '10vh'}
       mx={'-' + theme.spacing(2)}
-      padding={theme.spacing(1)}>
-      <Box flexGrow={1}>
-        <Badge badgeContent={4} color='error'>
-          <Avatar alt={'Logged in user photo'} src={image ? image : '/dummy_avatar.png'} />
-        </Badge>
+      padding={theme.spacing(2)}>
+      <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>
+        <Box flex={3} mb={theme.spacing(1)}>
+          <Badge badgeContent={unreadNotifications} color='error'>
+            <Avatar alt={'Logged in user photo'} src={image ? image : '/dummy_avatar.png'} />
+          </Badge>
+        </Box>
+        <Box alignItems='center' display='flex' flex={4}>
+          <Typo variant='body2'>{name}</Typo>
+        </Box>
       </Box>
-      <Box flexGrow={4}>
-        <Typo variant='body2'>{name}</Typo>
-      </Box>
+
+      {displayNotifications && (
+        <>
+          <Box alignItems='center' className={classes.gutterBottom} display='flex'>
+            <SettingsIcon className={classes.marginRight} />
+            <Typo variant='body2'>Innstillinger</Typo>
+          </Box>
+          <Box className={classes.notificationBox} maxHeight='60vh' mx={'-' + theme.spacing(2)} style={{ overflowX: 'hidden', overflowY: 'auto' }}>
+            {notifications.map((notification: INotification) => {
+              return <Notification key={notification.id} notification={notification} />;
+            })}
+          </Box>
+          <Box alignItems='flex-end' display='flex' flexDirection='column-reverse'>
+            <IconButton onClick={() => setDisplayNotifications(!displayNotifications)}>
+              <ArrowUpwardIcon />
+            </IconButton>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
 
 const Sidebar = () => {
+  const { user } = useUser();
+
   const classes = useStyles();
+
+  const [displayNotifications, setDisplayNotifications] = useState(false);
+  if (!user) {
+    return <Typo>Loading...</Typo>;
+  }
   return (
     <Drawer anchor='left' className={classes.drawer} classes={{ paper: classes.drawerPaper }} variant='permanent'>
       <Box display='flex' flexDirection='column' padding={theme.spacing(2)}>
         <Box className={classes.gutterBottom}>
           <Image height={34} src={'/trak_logo.png'} width={120} />
         </Box>
-        <LoggedInUserCard fullName={'Max Torre Schau'} />
+        <LoggedInUserCard
+          displayNotifications={displayNotifications}
+          firstName={user.firstName}
+          image={user.imageUrl}
+          lastName={user.lastName}
+          notifications={user.notifications}
+          setDisplayNotifications={setDisplayNotifications}
+        />
         <Divider />
-        <List className={classes.listRoot} component='nav'>
-          {urls.map((url) => {
-            return <LinkGroup divider={url.divider} key={url.title} links={url.links} title={url.title} />;
-          })}
-        </List>
+        {!displayNotifications && (
+          <List className={classes.listRoot} component='nav'>
+            {urls.map((url) => {
+              return <LinkGroup divider={url.divider} key={url.title} links={url.links} title={url.title} />;
+            })}
+          </List>
+        )}
       </Box>
     </Drawer>
   );

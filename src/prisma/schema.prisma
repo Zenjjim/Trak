@@ -27,7 +27,7 @@ model Employee {
   employeeTask            EmployeeTask[] @relation("tasks")
   responsibleEmployeeTask EmployeeTask[] @relation("responsible_employee_tasks")
   responsibleTask         Task[]         @relation("responsible_tasks")
-  notification            Notification[] @relation("employee")
+  notifications           Notification[] @relation("employee")
 }
 
 model EmployeeTask {

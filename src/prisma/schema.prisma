@@ -53,14 +53,17 @@ model Notification {
 }
 
 model Phase {
-  id                String          @id @default(uuid())
+  id                String                @id @default(uuid())
   title             String
   processTemplateId String
-  createdAt         DateTime        @default(now())
-  order             Int             @default(1)
-  processTemplate   ProcessTemplate @relation(fields: [processTemplateId], references: [id])
+  createdAt         DateTime              @default(now())
+  order             Int                   @default(1)
+  processTemplate   ProcessTemplate       @relation(fields: [processTemplateId], references: [id])
   tasks             Task[]
-
+  dueDateDayOffset  Int?
+  dueDateOffsetType DUE_DATE_OFFSET_TYPE?
+  cronDate          DateTime?
+  dueDate           DateTime?
 }
 
 model ProcessTemplate {
@@ -96,4 +99,9 @@ model Task {
   employeeTask  EmployeeTask[]
   professions   Profession[]
   tags          Tag[]
+}
+
+enum DUE_DATE_OFFSET_TYPE {
+  DATE_OF_EMPLOYEMENT
+  TERMINATION_DATE
 }

@@ -1,9 +1,7 @@
-import { IEmployee, IPhase } from './../../../utils/types';
 import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const prisma = new PrismaClient();
-
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const phases = await prisma.phase.findMany({
@@ -54,19 +52,18 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       },
     });
     prisma.$disconnect();
-    console.log('RUN');
+    const today = new Date();
     phases.forEach((phase) => {
-      if (phase?.cronDate?.setTime(0) == new Date().setTime(0)) {
+      if (phase?.cronDate?.getDate() === today.getDate() && phase?.cronDate?.getMonth() === today.getMonth()) {
         employees.forEach((employee) => {
           if (!employee?.terminationDate) {
-            createEmployeeTasks(employee, phase);
+            if (employee?.hrManagerId) {
+              createEmployeeTasks(employee, phase);
+            }
           }
         });
-        console.log(phase.cronDate);
-        console.log(phase.title);
       }
     });
-    console.log('STOP');
     res.status(HttpStatusCode.CREATED).end();
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
@@ -74,13 +71,16 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 }
 
 const createEmployeeTasks = async (employee, phase) => {
-  const data = phase?.tasks.map((task) => ({
-    employeeId: employee.id,
-    responsibleId: task.responsibleId || employee.hrManagerId ,
-    year: phase.dueDate,
-    dueDate: phase.dueDate,
-    taskId: task.id,
-  }));
-  console.log(data);
+  const data = phase?.tasks.map((task) => {
+    if (task.professions.map(({ id }) => id).includes(employee.professionId)) {
+      return {
+        employeeId: employee.id,
+        responsibleId: task.responsibleId || employee.hrManagerId,
+        year: phase.dueDate,
+        dueDate: phase.dueDate,
+        taskId: task.id,
+      };
+    }
+  });
   await prisma.employeeTask.createMany({ data: data, skipDuplicates: true });
 };

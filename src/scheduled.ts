@@ -1,6 +1,4 @@
-console.log('CRON');
+// const CRON_SECRET = process.env.CRON_SECRET
+const BASE_URI = 'api/cron/';
 
-const CRON_SECRET = process.env.CRON_SECRET
-const BASE_URI = 'api/cron/'
-
-fetch("URL1")
+fetch(BASE_URI);

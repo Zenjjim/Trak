@@ -45,7 +45,7 @@ export type IPhase = {
   processTemplateId: string;
   processTemplate?: IProcessTemplate;
   tasks?: ITask[];
-  dueDate: 
+  dueDate?: Date;
 };
 
 export type IProcessTemplate = {

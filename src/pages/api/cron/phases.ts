@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
-import { intersectionBy } from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { addDays } from 'utils/utils';
 
@@ -52,6 +51,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                   select: {
                     id: true,
                     title: true,
+                    processTemplate: true,
                   },
                 },
               },
@@ -112,17 +112,32 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+const calculateDueDate = (phase: IPhase, employee: IEmployee) => {
+  if (phase.dueDate) {
+    return phase.dueDate;
+  }
+
+  if (phase.dueDateOffsetType === DUE_DATE_OFFSET_TYPE.TERMINATION_DATE && employee.terminationDate) {
+    return moment(employee.terminationDate).add(phase.dueDateDayOffset, 'days').toDate();
+  }
+
+  //TODO:
+  //Add for onboarding
+};
+
 const createEmployeeTasks = async (employee, phase) => {
+  const year = calculateDueDate(phase, employee);
   const data = phase?.tasks.map((task) => {
     if (task.professions.map(({ id }) => id).includes(employee.professionId)) {
       return {
         employeeId: employee.id,
         responsibleId: task.responsibleId || employee.hrManagerId,
-        year: phase.dueDate,
-        dueDate: phase.dueDate,
+        year: new Date(year.getFullYear().toString()),
+        dueDate: year,
         taskId: task.id,
       };
     }
   });
+
   await prisma.employeeTask.createMany({ data: data, skipDuplicates: true });
 };

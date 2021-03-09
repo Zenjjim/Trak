@@ -46,6 +46,9 @@ export type IPhase = {
   processTemplate?: IProcessTemplate;
   tasks?: ITask[];
   dueDate?: Date;
+  dueDateDayOffset?: number;
+  dueDateOffsetType: DUE_DATE_OFFSET_TYPE;
+  cronDate?: Date;
 };
 
 export type IProcessTemplate = {
@@ -80,3 +83,8 @@ export type ITask = {
   responsible?: IEmployee;
   responsibleId?: number;
 };
+
+export enum DUE_DATE_OFFSET_TYPE {
+  DATE_OF_EMPLOYEMENT = 'DATE_OF_EMPLOYEMENT ',
+  TERMINATION_DATE = 'TERMINATION_DATE',
+}

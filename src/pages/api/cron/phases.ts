@@ -13,7 +13,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         cronDate: true,
         dueDate: true,
         dueDateDayOffset: true,
-        dueDateOffsetType: true,
         processTemplate: {
           select: {
             slug: true,
@@ -77,22 +76,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     });
     prisma.$disconnect();
 
-    // CHECK ONBOARDING
-    employees.forEach((employee) => {
-      if (!employee.hrManagerId) {
-        return;
-      }
-      if (intersectionBy(employee.employeeTask, onboardingEmployeeTasks, 'id').length === 0) {
-        phases.forEach((phase) => {
-          if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
-            phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
-            createEmployeeTasks(employee, phase);
-          }
-        });
-      }
-    });
-
-    // CHECK LØPENDE
     const today = new Date();
     phases.forEach((phase) => {
       if (phase?.cronDate?.getDate() === today.getDate() && phase?.cronDate?.getMonth() === today.getMonth()) {
@@ -106,6 +89,27 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       }
     });
 
+    employees.forEach((employee) => {
+      if (!employee.hrManagerId) {
+        return;
+      }
+      if (!employee.employeeTask.some((employeeTask) => employeeTask.task.phase.processTemplate.slug === 'onboarding')) {
+        phases.forEach((phase) => {
+          if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
+            phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
+            createEmployeeTasks(employee, phase);
+          }
+        });
+      }
+      if (employee.terminationDate && !employee.employeeTask.some((employeeTask) => employeeTask.task.phase.processTemplate.slug === 'offboarding')) {
+        phases.forEach((phase) => {
+          if (phase.processTemplate.slug === 'offboarding') {
+            phase.dueDate = addDays(employee.terminationDate, phase.dueDateDayOffset);
+            createEmployeeTasks(employee, phase);
+          }
+        });
+      }
+    });
     res.status(HttpStatusCode.OK).end();
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
@@ -132,8 +136,8 @@ const createEmployeeTasks = async (employee, phase) => {
       return {
         employeeId: employee.id,
         responsibleId: task.responsibleId || employee.hrManagerId,
-        year: new Date(year.getFullYear().toString()),
-        dueDate: year,
+        year: phase.dueDate.year,
+        dueDate: phase.dueDate,
         taskId: task.id,
       };
     }

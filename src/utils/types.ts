@@ -11,7 +11,6 @@ export type IEmployee = {
   slack?: string;
   profession: IProfession;
   hrManager: IEmployee;
-  hrManagerId: number;
   employees: IEmployee[];
   employeeTask: IEmployeeTask[];
   notifications?: INotification[];
@@ -47,7 +46,6 @@ export type IPhase = {
   tasks?: ITask[];
   dueDate?: Date;
   dueDateDayOffset?: number;
-  dueDateOffsetType: DUE_DATE_OFFSET_TYPE;
   cronDate?: Date;
 };
 
@@ -83,8 +81,3 @@ export type ITask = {
   responsible?: IEmployee;
   responsibleId?: number;
 };
-
-export enum DUE_DATE_OFFSET_TYPE {
-  DATE_OF_EMPLOYEMENT = 'DATE_OF_EMPLOYEMENT ',
-  TERMINATION_DATE = 'TERMINATION_DATE',
-}

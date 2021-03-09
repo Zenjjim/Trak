@@ -5,25 +5,21 @@ items:
     title: 'Før signering'
     order: 1
     processTemplate: '@processTemplate1'
-    dueDateOffsetType: 'DATE_OF_EMPLOYEMENT'
     dueDateDayOffset: -14
   phase2:
     title: 'Ved oppstart'
     order: 2
     processTemplate: '@processTemplate1'
-    dueDateOffsetType: 'DATE_OF_EMPLOYEMENT'
     dueDateDayOffset: -7
   phase3:
     title: 'Første arbeidsdag'
     order: 3
     processTemplate: '@processTemplate1'
-    dueDateOffsetType: 'DATE_OF_EMPLOYEMENT'
     dueDateDayOffset: 0
   phase4:
     title: 'Oppstartssamtale'
     order: 4
     processTemplate: '@processTemplate1'
-    dueDateOffsetType: 'DATE_OF_EMPLOYEMENT'
     dueDateDayOffset: 14
   phase5:
     title: 'Kvartal 1'
@@ -53,11 +49,9 @@ items:
     title: 'Praktisk før fratredelse'
     order: 1
     processTemplate: '@processTemplate3'
-    dueDateOffsetType: 'TERMINATION_DATE'
     dueDateDayOffset: -14
   phase10:
     title: 'Sluttsamtale'
     order: 2
     processTemplate: '@processTemplate3'
-    dueDateOffsetType: 'TERMINATION_DATE'
     dueDateDayOffset: -7

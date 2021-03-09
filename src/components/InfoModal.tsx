@@ -6,6 +6,7 @@ import Modal from 'components/Modal';
 import Typo from 'components/Typo';
 import { DataProvider, useData } from 'context/Data';
 import useSnackbar from 'context/Snackbar';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -136,7 +137,6 @@ const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps
         showSnackbar(error.response.data?.message || 'Noe gikk galt', 'error');
       });
   }, [employee_task_id]);
-
   return (
     <Modal
       buttonGroup={[
@@ -166,6 +166,10 @@ const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps
             <b>Fase:</b>
           </Typo>
           <Typo variant='body1'>{employeeTask ? `${employeeTask?.task.phase.title}` : <Skeleton width={theme.spacing(32)} />}</Typo>
+          <Typo variant='body1'>
+            <b>Forfallsdato:</b>
+          </Typo>
+          <Typo variant='body1'>{employeeTask ? moment(new Date(employeeTask?.dueDate)).format('DD.MM.YYYY') : <Skeleton width={theme.spacing(32)} />}</Typo>
         </div>
         <Box className={classes.gutterBottom}>
           {employeeTask ? (

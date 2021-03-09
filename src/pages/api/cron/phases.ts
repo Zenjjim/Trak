@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
+import { intersectionBy } from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { addDays } from 'utils/utils';
+
 const prisma = new PrismaClient();
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -12,6 +15,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         dueDate: true,
         dueDateDayOffset: true,
         dueDateOffsetType: true,
+        processTemplate: {
+          select: {
+            slug: true,
+          },
+        },
         tasks: {
           where: {
             global: true,
@@ -37,6 +45,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         hrManagerId: true,
         employeeTask: {
           select: {
+            id: true,
             task: {
               select: {
                 phase: {
@@ -51,7 +60,39 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
+
+    const onboardingEmployeeTasks = await prisma.employeeTask.findMany({
+      select: {
+        id: true,
+      },
+      where: {
+        task: {
+          phase: {
+            processTemplate: {
+              slug: 'onboarding',
+            },
+          },
+        },
+      },
+    });
     prisma.$disconnect();
+
+    // CHECK ONBOARDING
+    employees.forEach((employee) => {
+      if (!employee.hrManagerId) {
+        return;
+      }
+      if (intersectionBy(employee.employeeTask, onboardingEmployeeTasks, 'id').length === 0) {
+        phases.forEach((phase) => {
+          if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
+            phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
+            createEmployeeTasks(employee, phase);
+          }
+        });
+      }
+    });
+
+    // CHECK LØPENDE
     const today = new Date();
     phases.forEach((phase) => {
       if (phase?.cronDate?.getDate() === today.getDate() && phase?.cronDate?.getMonth() === today.getMonth()) {
@@ -64,7 +105,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         });
       }
     });
-    res.status(HttpStatusCode.CREATED).end();
+
+    res.status(HttpStatusCode.OK).end();
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }

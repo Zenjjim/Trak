@@ -123,7 +123,7 @@ const LoggedInUserCard = ({ firstName, lastName, image, notifications, displayNo
       bgcolor={theme.palette.background.paper}
       boxShadow={'0px 4px 4px rgba(0,0,0,0.25)'}
       className={classes.gutterBottom}
-      minHeight={displayNotifications ? '60vh' : '10vh'}
+      minHeight={displayNotifications ? '20vh' : '10vh'}
       mx={'-' + theme.spacing(2)}
       padding={theme.spacing(2)}>
       <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>
@@ -140,8 +140,10 @@ const LoggedInUserCard = ({ firstName, lastName, image, notifications, displayNo
       {displayNotifications && (
         <>
           <Box alignItems='center' className={classes.gutterBottom} display='flex'>
-            <SettingsIcon className={classes.marginRight} />
-            <Typo variant='body2'>Innstillinger</Typo>
+            <IconButton disabled onClick={() => null}>
+              <SettingsIcon className={classes.marginRight} />
+              <Typo variant='body2'>Innstillinger</Typo>
+            </IconButton>
           </Box>
           <Box className={classes.notificationBox} maxHeight='60vh' mx={'-' + theme.spacing(2)} style={{ overflowX: 'hidden', overflowY: 'auto' }}>
             {notifications.map((notification: INotification) => {

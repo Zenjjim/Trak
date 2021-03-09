@@ -25,10 +25,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
           text: slackData.text,
         }),
       );
-      res.status(HttpStatusCode.CREATED).json(newNotification);
-    } else {
-      res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
     }
+    res.status(HttpStatusCode.CREATED).json(newNotification);
     prisma.$disconnect();
+  } else {
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
 }

@@ -7,14 +7,10 @@ import Typo from 'components/Typo';
 import { DataProvider, useData } from 'context/Data';
 import useSnackbar from 'context/Snackbar';
 import { useRouter } from 'next/router';
-import qs from 'qs';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
-
-const SLACK_TOKEN = process.env.SLACK_TOKEN;
-
 const useStyles = makeStyles({
   chip: {
     marginRight: theme.spacing(1),
@@ -70,18 +66,13 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
           axios.post('/api/notification', {
             description: `Du har blitt delegert arbeidsoppgaven "${employeeTask.task.title}" av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
             employeeId: formData.responsible?.id,
+            ...(formData.responsible.slack && {
+              slackData: {
+                channel: formData.responsible.slack,
+                text: `Du har blitt delegert arbeidsoppgaven ${employeeTask.task.title} av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
+              },
+            }),
           }),
-          ...[
-            formData.responsible.slack &&
-              axios.post(
-                'https://slack.com/api/chat.postMessage',
-                qs.stringify({
-                  token: SLACK_TOKEN,
-                  channel: formData.responsible.slack,
-                  text: `Du har blitt delegert arbeidsoppgaven ${employeeTask.task.title} av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
-                }),
-              ),
-          ],
         ])
         .then(() => {
           setResponsibleSelector(false);

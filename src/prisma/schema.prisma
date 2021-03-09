@@ -36,7 +36,6 @@ model EmployeeTask {
   completed     Boolean  @default(false)
   employeeId    Int
   responsibleId Int
-  year          DateTime
   dueDate       DateTime
   employee      Employee @relation("tasks", fields: [employeeId], references: [id])
   responsible   Employee @relation("responsible_employee_tasks", fields: [responsibleId], references: [id])

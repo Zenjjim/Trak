@@ -50,7 +50,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       },
       employeeTask: {
         where: {
-          year: new Date(year.toString()),
+          dueDate: {
+            gte: new Date(year.toString()),
+          },
           task: {
             phase: {
               processTemplate: {
@@ -63,7 +65,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           dueDate: true,
           id: true,
           completed: true,
-          year: true,
           responsible: {
             select: {
               firstName: true,
@@ -115,7 +116,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
                   employeeId: parsedId,
                 },
                 select: {
-                  year: true,
+                  dueDate: true,
                 },
               },
             },
@@ -129,6 +130,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       notFound: true,
     };
   }
+
   const employee = JSON.parse(safeJsonStringify(employeeQuery));
   const processes = JSON.parse(safeJsonStringify(processesQuery));
   const phases = uniq(
@@ -139,7 +141,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const phasesWithTasks = phases.map((unique: string) => {
     const tasks = employee.employeeTask.filter((task: IEmployeeTask) => task.task.phase.title === unique);
-
     const finishedTasks = tasks.filter((task: IEmployeeTask) => task.completed);
     return {
       title: unique,
@@ -148,13 +149,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       finishedTasks: finishedTasks.length,
     };
   });
-
   const allTasks = processes.map((process) => {
     const years = process.phases.map((phase) => {
       return phase.tasks.map((task: ITask) => {
-        return task.employeeTask.filter((employeeTask) => Boolean(employeeTask.year));
+        return task.employeeTask.map((employeeTask) => new Date(employeeTask.dueDate).getFullYear());
       });
     });
+
     const filteredYears = years.map((year) => {
       return year.filter((element) => {
         return element.length !== 0;
@@ -165,7 +166,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const history = allTasks.map((process) => {
     const years = flattenDeep(process.years);
-    const uniqeYears = uniqBy(years, 'year');
+    const uniqeYears = uniqBy(years, 'dueDate');
     return { title: process.title, slug: process.slug, years: uniqeYears };
   });
 
@@ -227,8 +228,7 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               onClose={handleClose}
               open={Boolean(anchorEl)}>
               {history.map((process) => {
-                return process.years.map((yearObject) => {
-                  const year = new Date(yearObject.year).getFullYear();
+                return process.years.map((year) => {
                   return (
                     <Link href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`} key={`${process.title} ${year}`}>
                       <MenuItem onClick={handleClose}>

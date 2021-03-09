@@ -26,7 +26,6 @@ export type IEmployeeTask = {
   responsible?: IEmployee;
   employeeId?: number;
   responsibleId?: number;
-  year: Date;
   dueDate: Date;
 };
 

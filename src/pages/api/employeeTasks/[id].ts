@@ -32,7 +32,6 @@ const GET = async (res, id) => {
       select: {
         id: true,
         completed: true,
-        year: true,
         dueDate: true,
         employee: {
           select: {

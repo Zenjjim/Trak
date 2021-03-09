@@ -98,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         },
         select: {
           completed: true,
-          year: true,
+          dueDate: true,
           task: {
             select: {
               phase: {

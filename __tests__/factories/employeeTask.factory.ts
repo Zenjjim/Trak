@@ -13,7 +13,6 @@ export const employeeTaskFactory = async () => {
   const employeeTask = await prisma.employeeTask.create({
     data: {
       completed: false,
-      year: new Date(),
       dueDate: new Date(),
       task: {
         connect: {

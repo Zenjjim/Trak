@@ -11,6 +11,7 @@ export type IEmployee = {
   slack?: string;
   profession: IProfession;
   hrManager: IEmployee;
+  hrManagerId?: number;
   employees: IEmployee[];
   employeeTask: IEmployeeTask[];
   notifications?: INotification[];

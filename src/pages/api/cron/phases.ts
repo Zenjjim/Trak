@@ -60,79 +60,63 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    const onboardingEmployeeTasks = await prisma.employeeTask.findMany({
-      select: {
-        id: true,
-      },
-      where: {
-        task: {
-          phase: {
-            processTemplate: {
-              slug: 'onboarding',
-            },
-          },
-        },
-      },
-    });
     prisma.$disconnect();
 
-    const today = new Date();
-    phases.forEach((phase) => {
-      if (phase?.cronDate?.getDate() === today.getDate() && phase?.cronDate?.getMonth() === today.getMonth()) {
-        employees.forEach((employee) => {
-          if (!employee?.terminationDate) {
-            if (employee?.hrManagerId) {
-              createEmployeeTasks(employee, phase);
-            }
-          }
-        });
-      }
-    });
+    cronDateEmployeeTaskCreator(phases, employees);
+    nonCronDateEmployeeTaskCreator(phases, employees);
 
-    employees.forEach((employee) => {
-      if (!employee.hrManagerId) {
-        return;
-      }
-      if (!employee.employeeTask.some((employeeTask) => employeeTask.task.phase.processTemplate.slug === 'onboarding')) {
-        phases.forEach((phase) => {
-          if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
-            phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
-            createEmployeeTasks(employee, phase);
-          }
-        });
-      }
-      if (employee.terminationDate && !employee.employeeTask.some((employeeTask) => employeeTask.task.phase.processTemplate.slug === 'offboarding')) {
-        phases.forEach((phase) => {
-          if (phase.processTemplate.slug === 'offboarding') {
-            phase.dueDate = addDays(employee.terminationDate, phase.dueDateDayOffset);
-            createEmployeeTasks(employee, phase);
-          }
-        });
-      }
-    });
     res.status(HttpStatusCode.OK).end();
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }
 }
 
-const calculateDueDate = (phase: IPhase, employee: IEmployee) => {
-  if (phase.dueDate) {
-    return phase.dueDate;
-  }
-
-  if (phase.dueDateOffsetType === DUE_DATE_OFFSET_TYPE.TERMINATION_DATE && employee.terminationDate) {
-    return moment(employee.terminationDate).add(phase.dueDateDayOffset, 'days').toDate();
-  }
-
-  //TODO:
-  //Add for onboarding
+const cronDateEmployeeTaskCreator = (phases, employees) => {
+  const today = new Date();
+  phases.forEach((phase) => {
+    if (phase?.cronDate?.getDate() === today.getDate() && phase?.cronDate?.getMonth() === today.getMonth()) {
+      employees.forEach((employee) => {
+        if (!employee?.terminationDate) {
+          if (employee?.hrManagerId) {
+            createEmployeeTasks(employee, phase);
+          }
+        }
+      });
+    }
+  });
 };
+const nonCronDateEmployeeTaskCreator = (phases, employees) =>
+  employees.forEach((employee) => {
+    if (!employeeHasProcessTask(employee, 'onboarding')) {
+      onboardingEmployeeTaskCreator(phases, employee);
+    }
+    if (employee.terminationDate && !employeeHasProcessTask(employee, 'offboarding')) {
+      offboardingEmployeeTaskCreator(phases, employee);
+    }
+  });
+const onboardingEmployeeTaskCreator = (phases, employee) =>
+  phases.forEach((phase) => {
+    if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
+      phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
+      createEmployeeTasks(employee, phase);
+    }
+  });
+const offboardingEmployeeTaskCreator = (phases, employee) =>
+  phases.forEach((phase) => {
+    if (phase.processTemplate.slug === 'offboarding') {
+      phase.dueDate = addDays(employee.terminationDate, phase.dueDateDayOffset);
+      createEmployeeTasks(employee, phase);
+    }
+  });
+const employeeHasProcessTask = (employee, processTitle) =>
+  employee.employeeTask.some((employeeTask) => employeeTask.task.phase.processTemplate.slug === processTitle);
 
 const createEmployeeTasks = async (employee, phase) => {
-  const year = calculateDueDate(phase, employee);
   const data = phase?.tasks.map((task) => {
     if (task.professions.map(({ id }) => id).includes(employee.professionId)) {
+      if (!task.responsibleId && !employee.hrManagerId) {
+        return;
+      }
       return {
         employeeId: employee.id,
         responsibleId: task.responsibleId || employee.hrManagerId,

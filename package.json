@@ -27,7 +27,7 @@
     "heroku-postbuild": "yarn build",
     "loaddata": "npx fixtures ./src/fixtures",
     "deletedb": "docker rm -f -v trak",
-    "push": "prisma db push --preview-feature",
+    "push": "npx prisma db push --preview-feature",
     "fresh": "yarn deletedb && yarn createdb && sleep 1 && yarn push && yarn loaddata"
   },
   "husky": {

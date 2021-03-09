@@ -2,3 +2,4 @@
 const BASE_URI = 'api/cron/';
 
 fetch(BASE_URI);
+export {};

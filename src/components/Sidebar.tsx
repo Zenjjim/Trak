@@ -1,18 +1,19 @@
-import { Avatar, Badge, Box, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
+import { Avatar, Badge, Box, Button, CircularProgress, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
+import classnames from 'classnames';
 import Typo from 'components/Typo';
 import { useUser } from 'context/User';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Dispatch, useState } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
+import ScrollableFeed from 'react-scrollable-feed';
 import theme from 'theme';
 import urls, { link, section } from 'URLS';
 import { INotification } from 'utils/types';
-
 const SIDEBAR_WIDTH = 190;
 
 const useStyles = makeStyles({
@@ -48,10 +49,16 @@ const useStyles = makeStyles({
   marginRight: {
     marginRight: theme.spacing(1),
   },
-  notificationBox: {
+  removeScrollbar: {
     '&::-webkit-scrollbar': {
       background: 'transparent',
       width: '0px',
+    },
+  },
+  showScrollBarOnHover: {
+    overflow: 'hidden',
+    '&:hover': {
+      overflowY: 'auto',
     },
   },
 });
@@ -78,11 +85,22 @@ const LinkGroup = ({ title, links, divider }: section) => {
 
 type NotificationProps = {
   notification: INotification;
+  setNotifications: Dispatch<INotification[]>;
+  notifications: INotification[];
 };
 
-const Notification = ({ notification }: NotificationProps) => {
+const Notification = ({ notification, setNotifications, notifications }: NotificationProps) => {
+  useEffect(() => {
+    return () => {
+      const index = notifications.find((element: INotification) => notification.id === element.id).id;
+      const newArray = [...notifications];
+      newArray[index] = { ...notification, read: true };
+      notification.read = true;
+      setNotifications(newArray);
+    };
+  }, []);
   const updateNotification = async () => {
-    await axios.put(`api/notification/${notification.id}`, { data: { read: !notification.read } });
+    await axios.put(`api/notification/${notification.id}`, { data: { read: true } });
   };
   if (!notification.read) {
     updateNotification();
@@ -108,16 +126,35 @@ type LoggedInUserCardProps = {
   firstName: string;
   lastName: string;
   image?: string;
-  notifications: INotification[];
   displayNotifications: boolean;
   setDisplayNotifications: Dispatch<boolean>;
+  userId: number;
 };
 
-const LoggedInUserCard = ({ firstName, lastName, image, notifications, displayNotifications, setDisplayNotifications }: LoggedInUserCardProps) => {
+const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, setDisplayNotifications, userId }: LoggedInUserCardProps) => {
   const classes = useStyles();
   const name = `${firstName} ${lastName[0]}.`;
-  const unreadNotifications = notifications.filter((notification: INotification) => !notification.read).length;
+  const [offset, setOffset] = useState(0);
+  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [unreadNotifications, setUnreadNotifications] = useState(false);
+  //Rename
+  const LIMIT = 5;
 
+  useEffect(() => {
+    axios.get(`/api/employee/${userId}/notifications?offset=${offset}&limit=${LIMIT}`).then((res) => {
+      setNotifications([...notifications, ...res.data]);
+    });
+  }, [offset]);
+
+  useEffect(() => {
+    axios.get(`/api/employee/${userId}/notifications?read=false`).then((res) => {
+      setUnreadNotifications(res.data);
+    });
+  }, [notifications]);
+
+  if (!notifications) {
+    return <CircularProgress />;
+  }
   return (
     <Box
       bgcolor={theme.palette.background.paper}
@@ -145,11 +182,16 @@ const LoggedInUserCard = ({ firstName, lastName, image, notifications, displayNo
               <Typo variant='body2'>Innstillinger</Typo>
             </IconButton>
           </Box>
-          <Box className={classes.notificationBox} maxHeight='60vh' mx={'-' + theme.spacing(2)} style={{ overflowX: 'hidden', overflowY: 'auto' }}>
-            {notifications.map((notification: INotification) => {
-              return <Notification key={notification.id} notification={notification} />;
-            })}
+          <Box maxHeight='60vh' mx={'-' + theme.spacing(2)} style={{ overflowX: 'hidden', overflowY: 'auto' }}>
+            <ScrollableFeed className={classes.showScrollBarOnHover}>
+              {notifications.map((notification: INotification) => {
+                return <Notification key={notification.id} notification={notification} notifications={notifications} setNotifications={setNotifications} />;
+              })}
+            </ScrollableFeed>
           </Box>
+          <Button color='primary' onClick={() => setOffset(offset + LIMIT)} variant='text'>
+            Last inn flere
+          </Button>
           <Box alignItems='flex-end' display='flex' flexDirection='column-reverse'>
             <IconButton onClick={() => setDisplayNotifications(!displayNotifications)}>
               <ArrowUpwardIcon />
@@ -171,8 +213,8 @@ const Sidebar = () => {
     return <Typo>Loading...</Typo>;
   }
   return (
-    <Drawer anchor='left' className={classes.drawer} classes={{ paper: classes.drawerPaper }} variant='permanent'>
-      <Box display='flex' flexDirection='column' padding={theme.spacing(2)}>
+    <Drawer anchor='left' className={classes.drawer} classes={{ paper: classnames(classes.drawerPaper, classes.removeScrollbar) }} variant='permanent'>
+      <Box className={classes.removeScrollbar} display='flex' flexDirection='column' padding={theme.spacing(2)}>
         <Box className={classes.gutterBottom}>
           <Image height={34} src={'/trak_logo.png'} width={120} />
         </Box>
@@ -181,8 +223,8 @@ const Sidebar = () => {
           firstName={user.firstName}
           image={user.imageUrl}
           lastName={user.lastName}
-          notifications={user.notifications}
           setDisplayNotifications={setDisplayNotifications}
+          userId={user.id}
         />
         <Divider />
         {!displayNotifications && (

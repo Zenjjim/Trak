@@ -13,14 +13,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       where: {
         id: toInteger(id),
       },
-      include: {
-        notifications: {
-          take: 10,
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
-      },
     });
     res.status(HttpStatusCode.OK).json(employee);
   } else {

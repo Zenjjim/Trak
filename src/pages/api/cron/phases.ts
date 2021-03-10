@@ -124,7 +124,6 @@ const createEmployeeTasks = async (employee, phase) => {
       return {
         employeeId: employee.id,
         responsibleId: task.responsibleId || employee.hrManagerId,
-        year: phase.dueDate.year,
         dueDate: phase.dueDate,
         taskId: task.id,
       };

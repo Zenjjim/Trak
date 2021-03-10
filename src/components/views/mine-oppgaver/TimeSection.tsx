@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 
 const TimeSection = ({ section, first }: TimeSectionProps) => {
   const classes = useStyles();
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(section.defaultOpen);
   if (!section) {
     return <></>;
   }
@@ -40,9 +40,9 @@ const TimeSection = ({ section, first }: TimeSectionProps) => {
     <div className={classes.grid}>
       <div className={classes.centeringRow}>
         <Typo>
-          <b>{section.title}</b>
+          <b style={section.error && { color: theme.palette.error.main }}>{section.title}</b>
           <span className={classes.disabled}>
-            {section.title && ' - '}
+            {section.title && section.date && ' - '}
             {section.date}
           </span>
         </Typo>

@@ -36,16 +36,18 @@ moment.locale('nb');
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { fullført: completed } = query;
-
+  const isCompleted = completed.toString() === 'true';
   const myTasksQuery = await prisma.employeeTask.findMany({
     where: {
       responsible: {
         id: LOGGED_IN_USER,
       },
-      completed: completed.toString() === 'true',
-      dueDate: {
-        gte: moment().startOf('day').toDate(),
-      },
+      completed: isCompleted,
+      ...(isCompleted && {
+        dueDate: {
+          gte: moment().startOf('day').toDate(),
+        },
+      }),
     },
     orderBy: {
       dueDate: 'asc',
@@ -91,8 +93,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 export type TimeSectionType = {
   title?: string;
-  date: string;
+  date?: string;
   data: IEmployeeTask[];
+  error?: boolean;
+  defaultOpen?: boolean;
 };
 
 const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -100,7 +104,9 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
   const router = useRouter();
   const { fullført: completed } = router.query;
 
-  const splitIntoTimeSections = (myTasks) => {
+  const splitIntoTimeSections = () => {
+    const todaysDate = moment().startOf('day').toDate();
+    const taskPast = myTasks.filter((task) => moment(task.dueDate).isBefore(todaysDate));
     const taskToday = today(myTasks, 'dueDate');
     const withoutToday = differenceBy(myTasks, taskToday, 'id');
     const taskTomorrow = tomorrow(withoutToday, 'dueDate');
@@ -112,20 +118,29 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
     const taskNextMonth = thisMonth(withoutThisMonth, 'dueDate', '', (moment().month() + 1) % 12);
     const taskNextNextMonth = thisMonth(withoutThisMonth, 'dueDate', '', (moment().month() + 2) % 12);
     const data = [
+      taskPast.length && {
+        title: 'Forfalt',
+        data: taskPast,
+        error: true,
+        defaultOpen: true,
+      },
       taskToday.length && {
         title: 'I dag',
         data: taskToday,
         date: moment(taskToday[0]?.dueDate).format('ddd d MMM'),
+        defaultOpen: true,
       },
       taskTomorrow.length && {
         title: 'I morgen',
         data: taskTomorrow,
         date: moment(taskTomorrow[0]?.dueDate).format('ddd d MMM'),
+        defaultOpen: true,
       },
       taskThisWeek.length && {
         title: 'Denne uken',
         data: taskThisWeek,
         date: `uke ${moment(taskThisWeek[0]?.dueDate).isoWeek()}`,
+        defaultOpen: true,
       },
       taskThisMonth.length && {
         title: 'Denne måneden',
@@ -146,7 +161,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
     return compact(data);
   };
 
-  const timeSections: TimeSectionType[] = splitIntoTimeSections(myTasks);
+  const timeSections: TimeSectionType[] = splitIntoTimeSections();
 
   return (
     <>
@@ -162,9 +177,11 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
         </div>
         <SearchFilter />
         <div>
-          {timeSections.map((section: TimeSectionType, index: number) => (
-            <TimeSection first={index === 0} key={index} section={section} />
-          ))}
+          {timeSections.length === 0 ? (
+            <Typo>Ingen oppgaver</Typo>
+          ) : (
+            timeSections.map((section: TimeSectionType, index: number) => <TimeSection first={index === 0} key={index} section={section} />)
+          )}
         </div>
       </div>
     </>

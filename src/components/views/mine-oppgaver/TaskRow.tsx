@@ -29,11 +29,11 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    width: 'max-content',
+    borderRadius: '4px',
     '&:hover': {
       cursor: 'pointer',
-      width: 'max-content',
       background: theme.palette.text.secondary,
-      borderRadius: '4px',
     },
   },
 });

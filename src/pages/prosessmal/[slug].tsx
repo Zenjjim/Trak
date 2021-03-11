@@ -33,9 +33,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     },
     include: {
       phases: {
-        orderBy: {
-          createdAt: 'asc',
-        },
+        orderBy: [
+          {
+            dueDateDayOffset: 'asc',
+          },
+          {
+            dueDate: 'asc',
+          },
+        ],
         select: {
           id: true,
           title: true,

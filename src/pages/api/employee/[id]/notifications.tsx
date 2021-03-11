@@ -6,35 +6,21 @@ const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const {
-    query: { id, limit, offset, read },
+    query: { id },
   } = req;
   if (req.method === 'GET') {
-    if (read === 'false') {
-      const employee = await prisma.notification.count({
-        where: {
-          employeeId: toInteger(id),
-          read: false,
+    const employee = await prisma.notification.findMany({
+      where: {
+        employeeId: toInteger(id),
+        read: false,
+      },
+      orderBy: [
+        {
+          createdAt: 'asc',
         },
-      });
-      res.status(HttpStatusCode.OK).json(employee);
-    } else {
-      const employee = await prisma.notification.findMany({
-        where: {
-          employeeId: toInteger(id),
-        },
-        orderBy: [
-          {
-            read: 'asc',
-          },
-          {
-            createdAt: 'asc',
-          },
-        ],
-        skip: parseInt(offset?.toString()) || 0,
-        take: parseInt(limit?.toString()) || 5,
-      });
-      res.status(HttpStatusCode.OK).json(employee);
-    }
+      ],
+    });
+    res.status(HttpStatusCode.OK).json(employee);
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }

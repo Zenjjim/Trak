@@ -134,22 +134,13 @@ type LoggedInUserCardProps = {
 const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, setDisplayNotifications, userId }: LoggedInUserCardProps) => {
   const classes = useStyles();
   const name = `${firstName} ${lastName[0]}.`;
-  const [offset, setOffset] = useState(0);
   const [notifications, setNotifications] = useState<INotification[]>([]);
-  const [unreadNotifications, setUnreadNotifications] = useState(false);
-  const LIMIT = 5;
 
   useEffect(() => {
-    axios.get(`/api/employee/${userId}/notifications?offset=${offset}&limit=${LIMIT}`).then((res) => {
-      setNotifications([...notifications, ...res.data]);
+    axios.get(`/api/employee/${userId}/notifications`).then((res) => {
+      setNotifications([...res.data]);
     });
-  }, [offset]);
-
-  useEffect(() => {
-    axios.get(`/api/employee/${userId}/notifications?read=false`).then((res) => {
-      setUnreadNotifications(res.data);
-    });
-  }, [notifications]);
+  }, [userId, displayNotifications]);
 
   if (!notifications) {
     return <CircularProgress />;
@@ -163,7 +154,7 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
       padding={theme.spacing(2)}>
       <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>
         <Box flex={3} mb={theme.spacing(1)}>
-          <Badge badgeContent={unreadNotifications} color='error'>
+          <Badge badgeContent={notifications.length} color='error'>
             <Avatar alt={'Logged in user photo'} src={image ? image : '/dummy_avatar.png'} />
           </Badge>
         </Box>
@@ -189,11 +180,6 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
                   })}
                 </ScrollableFeed>
               </Box>
-              {notifications.length % LIMIT === 0 && (
-                <Button color='primary' onClick={() => setOffset(offset + LIMIT)} variant='text'>
-                  Last inn flere
-                </Button>
-              )}
             </>
           )}
 

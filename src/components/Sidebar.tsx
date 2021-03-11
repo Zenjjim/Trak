@@ -137,7 +137,6 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
   const [offset, setOffset] = useState(0);
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [unreadNotifications, setUnreadNotifications] = useState(false);
-  //Rename
   const LIMIT = 5;
 
   useEffect(() => {
@@ -160,7 +159,6 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
       bgcolor={theme.palette.background.paper}
       boxShadow={'0px 4px 4px rgba(0,0,0,0.25)'}
       className={classes.gutterBottom}
-      minHeight={displayNotifications ? '20vh' : '10vh'}
       mx={'-' + theme.spacing(2)}
       padding={theme.spacing(2)}>
       <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>

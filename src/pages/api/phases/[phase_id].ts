@@ -34,6 +34,7 @@ const GET = async (res, phase_id) => {
       select: {
         id: true,
         title: true,
+        dueDateDayOffset: true,
       },
     });
     if (!phase) {

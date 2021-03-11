@@ -1,5 +1,6 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Box, Button, makeStyles } from '@material-ui/core';
 import axios from 'axios';
+import BeforeToogle from 'components/form/BeforeToggle';
 import TextField from 'components/form/TextField';
 import Modal from 'components/Modal';
 import Typo from 'components/Typo';
@@ -8,7 +9,7 @@ import useSnackbar from 'context/Snackbar';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IPhase, IProcessTemplate } from 'utils/types';
+import { IProcessTemplate } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
 
 type PhaseModalProps = {
@@ -20,6 +21,8 @@ type PhaseModalProps = {
 
 type PhaseData = {
   title: string;
+  before: 'true' | 'false';
+  dueDateDayOffset: number;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -40,12 +43,14 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
   const showProgressbar = useProgressbar();
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
-  const [phase, setPhase] = useState<IPhase | undefined>(undefined);
-  const { register, handleSubmit, errors, reset } = useForm({
+  const [phase, setPhase] = useState<PhaseData | undefined>(undefined);
+  const { register, handleSubmit, control, errors, reset } = useForm({
     reValidateMode: 'onChange',
     defaultValues: useMemo(
       () => ({
         title: phase?.title,
+        dueDateDayOffset: phase?.dueDateDayOffset,
+        before: phase?.before,
       }),
       [phase],
     ),
@@ -54,7 +59,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
   useEffect(() => {
     if (phase_id) {
       axios.get(`/api/phases/${phase_id}`).then((res) => {
-        setPhase(res.data);
+        setPhase({ ...res.data, before: res.data.dueDateDayOffset <= 0 ? 'true' : 'false', dueDateDayOffset: Math.abs(res.data.dueDateDayOffset) });
       });
     }
   }, [phase_id]);
@@ -62,6 +67,8 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
   useEffect(() => {
     reset({
       title: phase?.title,
+      dueDateDayOffset: phase?.dueDateDayOffset,
+      before: phase?.before,
     });
   }, [phase]);
 
@@ -70,8 +77,9 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
   };
 
   const onSubmit = handleSubmit((formData: PhaseData) => {
+    //console.log(formData);
     const data = {
-      data: formData,
+      data: { ...formData, dueDateDayOffset: formData.before === 'true' ? -Math.abs(formData.dueDateDayOffset) : Math.abs(formData.dueDateDayOffset) },
       processTemplateId: processTemplate.id,
     };
     if (phase_id) {
@@ -109,7 +117,6 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
           {phase_id ? 'Oppdater' : 'Opprett'}
         </Button>,
       ];
-
   return (
     <Modal
       buttonGroup={buttonGroup}
@@ -133,6 +140,16 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
             required: 'Prosesstittel er påkrevd',
           }}
         />
+        {(processTemplate.slug === 'onboarding' || processTemplate.slug === 'offboarding') && (
+          <div>
+            <Typo variant='body1'>Forfaller</Typo>
+            <Box display='flex'>
+              <TextField errors={errors} label='' name='dueDateDayOffset' placeholder='dager...' register={register} required type='number' />
+              <BeforeToogle control={control} name='before' />
+              <Typo variant='body1'>{processTemplate.slug === 'onboarding' ? 'ansettelsesdato' : 'termineringsdato'}</Typo>
+            </Box>
+          </div>
+        )}
       </div>
     </Modal>
   );

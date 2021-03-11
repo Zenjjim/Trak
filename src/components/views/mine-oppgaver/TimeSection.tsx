@@ -15,7 +15,7 @@ type TimeSectionProps = {
 const useStyles = makeStyles({
   grid: {
     display: 'grid',
-    gridTemplateColumns: '2fr 1fr 1fr',
+    gridTemplateColumns: '2fr 1fr 1fr 1fr',
     alignItems: 'end',
     marginRight: '30px',
     marginBottom: theme.spacing(1),
@@ -51,10 +51,13 @@ const TimeSection = ({ section, first }: TimeSectionProps) => {
         </IconButton>
       </div>
       <Typo color='disabled' variant='body2'>
-        {first && 'Prosess'}
+        {first && 'Gjelder'}
       </Typo>
       <Typo color='disabled' variant='body2'>
-        {first && 'Gjelder'}
+        {first && 'Forfallsdato'}
+      </Typo>
+      <Typo color='disabled' variant='body2'>
+        {first && 'Prosess'}
       </Typo>
       {open && section.data.map((data) => <TaskRow data={data} key={data.id} />)}
       <Divider style={{ gridColumn: 'span 3' }} />

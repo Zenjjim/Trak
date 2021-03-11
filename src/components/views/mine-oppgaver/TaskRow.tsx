@@ -4,6 +4,8 @@ import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
 import useSnackbar from 'context/Snackbar';
+import moment from 'moment';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
@@ -23,6 +25,17 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  avatarOnClick: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    '&:hover': {
+      cursor: 'pointer',
+      width: 'max-content',
+      background: theme.palette.text.secondary,
+      borderRadius: '4px',
+    },
+  },
 });
 
 const TaskRow = ({ data }: { data: IEmployeeTask }) => {
@@ -30,6 +43,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [completed, setCompleted] = useState<boolean>(data.completed);
   const showSnackbar = useSnackbar();
+  const router = useRouter();
 
   return (
     <>
@@ -43,11 +57,14 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         </IconButton>
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
       </div>
-      <div>{data.task.phase.processTemplate.title}</div>
-      <div className={classes.centeringRow}>
+      <div
+        className={classes.avatarOnClick}
+        onClick={() => router.push(`/ansatt/${data.employee.id}?år=${new Date(data.dueDate).getFullYear()}&prosess=${data.task.phase.processTemplate.slug}`)}>
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />
         <Typo>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
       </div>
+      <div>{moment(data.dueDate).format('DD.MMM')}</div>
+      <div>{data.task.phase.processTemplate.title}</div>
     </>
   );
 };

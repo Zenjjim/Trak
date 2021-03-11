@@ -63,6 +63,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       },
       employee: {
         select: {
+          id: true,
           firstName: true,
           lastName: true,
           imageUrl: true,
@@ -77,6 +78,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
               processTemplate: {
                 select: {
                   title: true,
+                  slug: true,
                 },
               },
             },

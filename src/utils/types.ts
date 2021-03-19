@@ -81,3 +81,8 @@ export type ITask = {
   responsible?: IEmployee;
   responsibleId?: number;
 };
+
+export enum Offset {
+  Before = 'before',
+  After = 'after',
+}

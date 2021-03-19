@@ -2,6 +2,7 @@ import { MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { Control, Controller } from 'react-hook-form';
 import theme from 'theme';
+import { Offset } from 'utils/types';
 
 const useStyles = makeStyles({
   marginRight: {
@@ -16,7 +17,12 @@ type BeforeToogleProps = {
 
 const BeforeToogle = ({ control, name }: BeforeToogleProps) => {
   return (
-    <Controller control={control} defaultValue='true' name={name} render={({ value, onChange }) => <SelectComponent setValue={onChange} value={value} />} />
+    <Controller
+      control={control}
+      defaultValue={Offset.Before}
+      name={name}
+      render={({ value, onChange }) => <SelectComponent setValue={onChange} value={value} />}
+    />
   );
 };
 
@@ -27,9 +33,9 @@ type ToggleComponentProps = {
 const SelectComponent = ({ setValue, value }: ToggleComponentProps) => {
   const classes = useStyles();
   return (
-    <Select className={classes.marginRight} onChange={() => setValue(value === 'true' ? 'false' : 'true')} value={value}>
-      <MenuItem value={'true'}>før</MenuItem>
-      <MenuItem value={'false'}>etter</MenuItem>
+    <Select className={classes.marginRight} onChange={() => setValue(value === Offset.Before ? Offset.After : Offset.Before)} value={value}>
+      <MenuItem value={Offset.Before}>før</MenuItem>
+      <MenuItem value={Offset.After}>etter</MenuItem>
     </Select>
   );
 };

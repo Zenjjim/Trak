@@ -11,7 +11,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IProcessTemplate } from 'utils/types';
+import { IProcessTemplate, Offset } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
 
 type PhaseModalProps = {
@@ -23,7 +23,7 @@ type PhaseModalProps = {
 
 type PhaseData = {
   title: string;
-  before: 'true' | 'false';
+  offset: Offset;
   dueDateDayOffset: number;
   dueDate: string;
   cronDate?: string;
@@ -54,7 +54,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
       () => ({
         title: phase?.title,
         dueDateDayOffset: phase?.dueDateDayOffset,
-        before: phase?.before,
+        offset: phase?.offset,
         dueDate: phase?.dueDate,
         cronDate: phase?.cronDate,
       }),
@@ -68,7 +68,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
         setPhase({
           ...res.data,
           dueDate: moment(res.data.dueDate).format('yyyy-MM-DD'),
-          before: res.data.dueDateDayOffset <= 0 ? 'true' : 'false',
+          offset: res.data.dueDateDayOffset <= 0 ? Offset.Before : Offset.After,
           dueDateDayOffset: Math.abs(res.data.dueDateDayOffset),
           cronDate: moment(res.data.cronDate).format('yyyy-MM-DD'),
         });
@@ -80,7 +80,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
     reset({
       title: phase?.title,
       dueDateDayOffset: phase?.dueDateDayOffset,
-      before: phase?.before,
+      offset: phase?.offset,
       dueDate: phase?.dueDate,
       cronDate: phase?.cronDate,
     });
@@ -95,7 +95,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
       data: {
         ...formData,
         dueDate: new Date(formData.dueDate),
-        dueDateDayOffset: formData.before === 'true' ? -Math.abs(formData.dueDateDayOffset) : Math.abs(formData.dueDateDayOffset),
+        dueDateDayOffset: formData.offset === Offset.Before ? -Math.abs(formData.dueDateDayOffset) : Math.abs(formData.dueDateDayOffset),
         cronDate: new Date(formData.cronDate),
       },
       processTemplateId: processTemplate.id,
@@ -183,7 +183,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
                 }}
                 type='number'
               />
-              <BeforeToogle control={control} name='before' />
+              <BeforeToogle control={control} name='offset' />
               <Typo variant='body1'>{processTemplate.slug === 'onboarding' ? 'ansettelsesdato' : 'termineringsdato'}</Typo>
             </Box>
           </div>

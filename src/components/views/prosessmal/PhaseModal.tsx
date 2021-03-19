@@ -178,7 +178,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
                 rules={{
                   min: {
                     value: 0,
-                    message: 'Må være stlrre eller lik 0',
+                    message: 'Må være større eller lik 0',
                   },
                 }}
                 type='number'

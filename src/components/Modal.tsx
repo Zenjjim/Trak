@@ -25,7 +25,7 @@ const Modal = ({ header, subheader, buttonGroup, open, onClose, onSubmit, childr
     <Dialog aria-labelledby='modal' fullWidth onClose={onClose} open={open}>
       <form noValidate onSubmit={onSubmit}>
         {header && (
-          <DialogTitle id='modal-title'>
+          <DialogTitle disableTypography id='modal-title'>
             <Typo variant='h1'>{header}</Typo>
             {subheader && <Typo variant='body2'>{subheader}</Typo>}
           </DialogTitle>

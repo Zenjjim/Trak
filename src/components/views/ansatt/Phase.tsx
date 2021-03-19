@@ -19,9 +19,10 @@ type PhaseProps = {
   tasksFinished: number;
   totalTasks: number;
   employeeTasks: IEmployeeTask[];
+  first: boolean;
 };
 
-const Phase = ({ title, tasksFinished, totalTasks, employeeTasks }: PhaseProps) => {
+const Phase = ({ title, tasksFinished, totalTasks, employeeTasks, first }: PhaseProps) => {
   const classes = useStyles();
   return (
     <Box marginBottom={theme.spacing(2)}>
@@ -39,9 +40,7 @@ const Phase = ({ title, tasksFinished, totalTasks, employeeTasks }: PhaseProps) 
             <b>{tasksFinished}</b> av <b>{totalTasks}</b> oppgaver er gjennomført
           </Typo>
         </Box>
-        <Box flex={1}>
-          <Typo variant='body2'>Ansvarlig</Typo>
-        </Box>
+        <Box flex={1}>{first && <Typo variant='body2'>Ansvarlig</Typo>}</Box>
       </Box>
       {employeeTasks.map((employeeTask) => {
         return <TaskRow employeeTask={employeeTask} key={employeeTask.taskId} />;

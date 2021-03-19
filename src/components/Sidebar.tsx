@@ -137,9 +137,11 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
   useEffect(() => {
-    axios.get(`/api/employee/${userId}/notifications`).then((res) => {
-      setNotifications([...res.data]);
-    });
+    if (displayNotifications) {
+      axios.get(`/api/employee/${userId}/notifications`).then((res) => {
+        setNotifications([...res.data]);
+      });
+    }
   }, [userId, displayNotifications]);
 
   if (!notifications) {

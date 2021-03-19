@@ -1,4 +1,4 @@
-import { Box, ButtonBase, makeStyles, Table, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Box, ButtonBase, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import classNames from 'classnames';
 import Typo from 'components/Typo';
@@ -48,9 +48,11 @@ const PhaseCard = ({ title, amount, employees, slug }: PhaseCardProps) => {
                 <TableCell style={{ width: '18.75rem' }}>Ansvarlig</TableCell>
               </TableRow>
             </TableHead>
-            {employees.map((employee) => {
-              return <UserRow employee={employee} key={employee.id} slug={slug} />;
-            })}
+            <TableBody>
+              {employees.map((employee) => {
+                return <UserRow employee={employee} key={employee.id} slug={slug} />;
+              })}
+            </TableBody>
           </Table>
         ) : (
           <Typo variant='body2'>Ingen ansatte i denne fasen</Typo>

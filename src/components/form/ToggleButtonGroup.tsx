@@ -27,7 +27,7 @@ type ToggleButtonGroupComponentProps = {
 
 const ToggleButtonGroupComponent = ({ professions, value = [], setValue }: ToggleButtonGroupComponentProps) => {
   return (
-    <Box display='flex'>
+    <Box display='flex' flexWrap='wrap'>
       <Button color={value.length > 1 ? 'secondary' : 'primary'} onClick={() => setValue(professions)} type='button'>
         Alle
       </Button>

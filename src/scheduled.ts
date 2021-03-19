@@ -1,15 +1,20 @@
 // eslint-disable-next-line
 const axios = require('axios');
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const APP_URL = process.env.APP_URL;
 const BASE_URI = 'api/cron/';
+const CRON_SECRET = process.env.CRON_SECRET;
 
 axios
-  .get(`https://trak-trak-trak.herokuapp.com/${BASE_URI}phases`, {
-    headers: {
-      CRON_SECRET: CRON_SECRET ?? 'secret',
+  .post(
+    `${APP_URL}${BASE_URI}phases`,
+    {},
+    {
+      headers: {
+        CRON_SECRET: CRON_SECRET ?? 'secret',
+      },
     },
-  })
+  )
   // eslint-disable-next-line
   .then((res) => console.log(res))
   // eslint-disable-next-line

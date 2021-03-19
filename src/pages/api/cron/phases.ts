@@ -10,7 +10,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.headers.cron_secret !== CRON_SECRET) {
     res.status(HttpStatusCode.UNAUTHORIZED).end();
   }
-  if (req.method === 'GET') {
+  if (req.method === 'POST') {
     const phases = await prisma.phase.findMany({
       select: {
         id: true,

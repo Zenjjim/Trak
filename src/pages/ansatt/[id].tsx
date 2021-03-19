@@ -242,9 +242,16 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
           </Box>
         </Box>
         <EmployeeContext.Provider value={{ employee }}>
-          {phasesWithTasks.map((phase) => {
+          {phasesWithTasks.map((phase, index) => {
             return (
-              <Phase employeeTasks={phase.tasks} key={phase.title} tasksFinished={phase.finishedTasks} title={phase.title} totalTasks={phase.totalTasks} />
+              <Phase
+                employeeTasks={phase.tasks}
+                first={index === 0}
+                key={phase.title}
+                tasksFinished={phase.finishedTasks}
+                title={phase.title}
+                totalTasks={phase.totalTasks}
+              />
             );
           })}
         </EmployeeContext.Provider>

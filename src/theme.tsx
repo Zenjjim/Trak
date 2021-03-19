@@ -134,6 +134,13 @@ theme.components = {
       },
     },
   },
+  MuiTooltip: {
+    styleOverrides: {
+      tooltip: {
+        fontSize: '1rem',
+      },
+    },
+  },
 };
 
 export default theme;

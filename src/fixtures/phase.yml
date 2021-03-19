@@ -3,55 +3,45 @@ connectedFields: ['processTemplate']
 items:
   phase1:
     title: 'Før signering'
-    order: 1
     processTemplate: '@processTemplate1'
     dueDateDayOffset: -14
   phase2:
     title: 'Ved oppstart'
-    order: 2
     processTemplate: '@processTemplate1'
     dueDateDayOffset: -7
   phase3:
     title: 'Første arbeidsdag'
-    order: 3
     processTemplate: '@processTemplate1'
     dueDateDayOffset: 0
   phase4:
     title: 'Oppstartssamtale'
-    order: 4
     processTemplate: '@processTemplate1'
     dueDateDayOffset: 14
   phase5:
     title: 'Kvartal 1'
-    order: 1
     processTemplate: '@processTemplate2'
     cronDate: <%= new Date("2021-12-15").toISOString() %>
     dueDate: <%= new Date("2021-03-31").toISOString() %>
   phase6:
     title: 'Kvartal 2'
-    order: 2
     processTemplate: '@processTemplate2'
     cronDate: <%= new Date("2021-03-15").toISOString() %>
     dueDate: <%= new Date("2021-06-30").toISOString() %>
   phase7:
     title: 'Kvartal 3'
-    order: 3
     processTemplate: '@processTemplate2'
     cronDate: <%= new Date("2021-06-15").toISOString() %>
     dueDate: <%= new Date("2021-09-30").toISOString() %>
   phase8:
     title: 'Kvartal 4'
-    order: 4
     processTemplate: '@processTemplate2'
     cronDate: <%= new Date("2021-09-15").toISOString() %>
     dueDate: <%= new Date("2021-12-31").toISOString() %>
   phase9:
     title: 'Praktisk før fratredelse'
-    order: 1
     processTemplate: '@processTemplate3'
     dueDateDayOffset: -14
   phase10:
     title: 'Sluttsamtale'
-    order: 2
     processTemplate: '@processTemplate3'
     dueDateDayOffset: -7

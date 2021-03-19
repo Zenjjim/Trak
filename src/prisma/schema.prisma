@@ -56,7 +56,6 @@ model Phase {
   title             String
   processTemplateId String
   createdAt         DateTime        @default(now())
-  order             Int             @default(1)
   dueDateDayOffset  Int?
   cronDate          DateTime?
   dueDate           DateTime?

@@ -24,6 +24,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    width: '35rem',
   },
   avatarOnClick: {
     display: 'flex',

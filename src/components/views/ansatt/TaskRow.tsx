@@ -1,5 +1,5 @@
-import { Box, IconButton } from '@material-ui/core';
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon, Info as InfoIcon } from '@material-ui/icons';
+import { Box, ButtonBase, IconButton } from '@material-ui/core';
+import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
@@ -20,6 +20,12 @@ const useStyles = makeStyles({
   completedTask: {
     textDecoration: 'line-through',
   },
+  textButton: {
+    '&:hover': {
+      background: theme.palette.text.secondary,
+      borderRadius: theme.spacing(0.5),
+    },
+  },
 });
 
 type TaskRowProps = {
@@ -39,12 +45,12 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
         <IconButton onClick={() => toggleCheckBox(employeeTask, completed, setCompleted, showSnackbar)} size='small'>
           {completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
         </IconButton>
-        <Typo className={completed && classes.completedTask} color={!completed && 'disabled'} noWrap variant='body1'>
-          {employeeTask.task.title}
-        </Typo>
-        <IconButton onClick={() => setModalIsOpen(true)} size='small'>
-          <InfoIcon color={completed ? 'inherit' : 'primary'} />
-        </IconButton>
+        <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>
+          <Typo className={completed && classes.completedTask} color={!completed && 'disabled'} noWrap variant='body1'>
+            {employeeTask.task.title}
+          </Typo>
+        </ButtonBase>
+
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={employeeTask.id} modalIsOpen={modalIsOpen} />}
       </Box>
       {employeeTask.responsible.id !== employee.hrManager.id && (

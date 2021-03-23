@@ -1,5 +1,5 @@
-import { IconButton, makeStyles } from '@material-ui/core';
-import { CheckBox, CheckBoxOutlineBlank, Info } from '@material-ui/icons';
+import { ButtonBase, IconButton, makeStyles } from '@material-ui/core';
+import { CheckBox, CheckBoxOutlineBlank } from '@material-ui/icons';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
@@ -37,6 +37,12 @@ const useStyles = makeStyles({
       background: theme.palette.text.secondary,
     },
   },
+  textButton: {
+    '&:hover': {
+      background: theme.palette.text.secondary,
+      borderRadius: theme.spacing(0.5),
+    },
+  },
 });
 
 const TaskRow = ({ data }: { data: IEmployeeTask }) => {
@@ -52,12 +58,11 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         <IconButton onClick={() => toggleCheckBox(data, completed, setCompleted, showSnackbar)} size='small'>
           {completed ? <CheckBox /> : <CheckBoxOutlineBlank />}
         </IconButton>
-        <Typo className={completed ? classes.completedTask : undefined} noWrap>
-          {data.task.title}
-        </Typo>
-        <IconButton onClick={() => setModalIsOpen(true)} size='small'>
-          <Info color={completed ? 'inherit' : 'primary'} />
-        </IconButton>
+        <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>
+          <Typo className={completed ? classes.completedTask : undefined} noWrap>
+            {data.task.title}
+          </Typo>
+        </ButtonBase>
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
       </div>
       <div

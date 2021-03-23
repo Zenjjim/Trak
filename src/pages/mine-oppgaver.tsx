@@ -109,8 +109,9 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
   const splitIntoTimeSections = () => {
     const todaysDate = moment().startOf('day').toDate();
     const taskPast = myTasks.filter((task) => moment(task.dueDate).isBefore(todaysDate));
-    const taskToday = today(myTasks, 'dueDate');
-    const withoutToday = differenceBy(myTasks, taskToday, 'id');
+    const withoutPast = differenceBy(myTasks, taskPast, 'id');
+    const taskToday = today(withoutPast, 'dueDate');
+    const withoutToday = differenceBy(withoutPast, taskToday, 'id');
     const taskTomorrow = tomorrow(withoutToday, 'dueDate');
     const withoutTomorrow = differenceBy(withoutToday, taskTomorrow, 'id');
     const taskThisWeek = thisWeek(withoutTomorrow, 'dueDate');
@@ -159,7 +160,6 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
         date: capitalize(moment(taskNextNextMonth[0]?.dueDate).format('MMMM')),
       },
     ];
-
     return compact(data);
   };
 

@@ -37,6 +37,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     where: {
       id: parsedId,
     },
+
     select: {
       id: true,
       firstName: true,
@@ -87,17 +88,14 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
                       slug: true,
                     },
                   },
+                  dueDate: true,
                 },
               },
             },
           },
         },
         orderBy: {
-          task: {
-            phase: {
-              createdAt: 'asc',
-            },
-          },
+          dueDate: 'asc',
         },
       },
     },

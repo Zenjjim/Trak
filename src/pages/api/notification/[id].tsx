@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const {
-    body: { data },
     query: { id },
   } = req;
   if (req.method === 'PUT') {
@@ -14,10 +13,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         id: id.toString(),
       },
       data: {
-        read: data.read,
+        read: true,
       },
     });
-
     res.status(HttpStatusCode.OK).json(notification);
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);

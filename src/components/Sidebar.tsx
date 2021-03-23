@@ -91,6 +91,9 @@ type NotificationProps = {
 
 const Notification = ({ notification, setNotifications, notifications }: NotificationProps) => {
   useEffect(() => {
+    if (!notification.read) {
+      axios.put(`/api/notification/${notification.id}`);
+    }
     return () => {
       const index = notifications.find((element: INotification) => notification.id === element.id).id;
       const newArray = [...notifications];
@@ -99,12 +102,6 @@ const Notification = ({ notification, setNotifications, notifications }: Notific
       setNotifications(newArray);
     };
   }, []);
-  const updateNotification = async () => {
-    await axios.put(`api/notification/${notification.id}`, { data: { read: true } });
-  };
-  if (!notification.read) {
-    updateNotification();
-  }
   return (
     <>
       <Box p={theme.spacing(1)} style={{ backgroundColor: notification.read ? theme.palette.background.paper : theme.palette.primary.light }}>
@@ -137,11 +134,9 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
   useEffect(() => {
-    if (displayNotifications) {
-      axios.get(`/api/employee/${userId}/notifications`).then((res) => {
-        setNotifications([...res.data]);
-      });
-    }
+    axios.get(`/api/employee/${userId}/notifications`).then((res) => {
+      setNotifications([...res.data]);
+    });
   }, [userId, displayNotifications]);
 
   if (!notifications) {
@@ -156,7 +151,7 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
       padding={theme.spacing(2)}>
       <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>
         <Box flex={3} mb={theme.spacing(1)}>
-          <Badge badgeContent={notifications.length} color='error'>
+          <Badge badgeContent={notifications.filter((notification) => !notification.read).length} color='error'>
             <Avatar alt={'Logged in user photo'} src={image ? image : '/dummy_avatar.png'} />
           </Badge>
         </Box>

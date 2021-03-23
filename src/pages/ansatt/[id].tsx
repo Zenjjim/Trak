@@ -93,11 +93,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           },
         },
         orderBy: {
-          task: {
-            phase: {
-              createdAt: 'asc',
-            },
-          },
+          dueDate: 'asc',
         },
       },
     },

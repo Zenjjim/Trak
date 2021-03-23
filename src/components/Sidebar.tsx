@@ -9,6 +9,7 @@ import { useUser } from 'context/User';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Dispatch, useEffect, useState } from 'react';
 import ScrollableFeed from 'react-scrollable-feed';
 import theme from 'theme';
@@ -38,6 +39,10 @@ const useStyles = makeStyles({
     lineHeight: theme.spacing(0.2),
     color: theme.palette.text.disabled,
   },
+  linkActive: {
+    lineHeight: theme.spacing(0.2),
+    color: theme.palette.primary.main,
+  },
   pointerCursor: {
     cursor: 'pointer',
   },
@@ -63,6 +68,7 @@ const useStyles = makeStyles({
   },
 });
 const LinkGroup = ({ title, links, divider }: section) => {
+  const router = useRouter();
   const classes = useStyles();
   return (
     <>
@@ -72,7 +78,11 @@ const LinkGroup = ({ title, links, divider }: section) => {
           return (
             <Link href={url.link} key={url.title}>
               <ListItem button className={classes.nested}>
-                <ListItemText aria-label={url.aria_label} classes={{ secondary: classes.link }} secondary={url.title} />
+                <ListItemText
+                  aria-label={url.aria_label}
+                  classes={{ secondary: router.asPath === url.link ? classes.linkActive : classes.link }}
+                  secondary={url.title}
+                />
               </ListItem>
             </Link>
           );

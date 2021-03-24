@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from '@material-ui/core';
+import { Box, Button, Fade, TextField } from '@material-ui/core';
 import { Search, Tune } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
@@ -6,7 +6,8 @@ import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCa
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
@@ -173,12 +174,19 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
   const processTemplate = allPhases[0];
   const phases = getPhasesWithEmployees(processTemplate, myEmployees);
   const [displaySearch, setDisplaySearch] = useState(false);
+  const phase = useRouter();
+
+  useEffect(() => {
+    setSearchResults([]);
+    setDisplaySearch(false);
+  }, [phase.query]);
 
   const [searchResults, setSearchResults] = useState([]);
 
   const search = (text: string) => {
+    const names = text.split(' ');
     const noe = phases.map((phase) => {
-      return { ...phase, employees: phase.employees.filter((employee) => employee.firstName.includes(text) || employee.lastName.includes(text)) };
+      return { ...phase, employees: phase.employees.filter((employee) => employee.firstName.includes(names) || employee.lastName.includes(names)) };
     });
     setSearchResults(noe);
   };
@@ -195,13 +203,15 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
         </Box>
         <Box className={classes.centeringRow} justifyContent='flex-end'>
           {displaySearch ? (
-            <TextField
-              InputProps={{ className: classes.textField }}
-              autoFocus
-              onBlur={(e) => !e.target.value && setDisplaySearch(false)}
-              onChange={(e) => search(e.target.value)}
-              size='small'
-            />
+            <Fade in timeout={100}>
+              <TextField
+                InputProps={{ className: classes.textField }}
+                autoFocus
+                onBlur={(e) => !e.target.value && setDisplaySearch(false)}
+                onChange={(e) => search(e.target.value)}
+                size='small'
+              />
+            </Fade>
           ) : (
             <Button aria-label='Søk' color='primary' onClick={() => setDisplaySearch(true)} startIcon={<Search />}>
               Søk

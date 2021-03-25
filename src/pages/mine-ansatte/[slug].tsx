@@ -1,6 +1,6 @@
-import { Box, Button, Fade, TextField } from '@material-ui/core';
-import { Search, Tune } from '@material-ui/icons';
+import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCard';
 import Fuse from 'fuse.js';
@@ -174,8 +174,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
   const classes = useStyles();
   const processTemplate = allPhases[0];
   const phases = getPhasesWithEmployees(processTemplate, myEmployees);
-  const [displaySearch, setDisplaySearch] = useState(false);
-  const phase = useRouter();
+  const router = useRouter();
 
   const searchOptions = {
     includeScore: true,
@@ -185,8 +184,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
 
   useEffect(() => {
     setSearchResults([]);
-    setDisplaySearch(false);
-  }, [phase.query]);
+  }, [router.query]);
 
   const [searchResults, setSearchResults] = useState([]);
   const search = (text: string) => {
@@ -202,11 +200,6 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
     });
     setSearchResults(filteredEmployees);
   };
-
-  // Send to SearchFilter component
-  // options
-  // [SearchResults, setSearchResults]
-
   return (
     <>
       <Head>
@@ -217,27 +210,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
           <Typo variant='h1'>Mine ansatte</Typo>
           <Typo variant='h2'>{processTemplate.title}</Typo>
         </Box>
-        <Box className={classes.centeringRow} justifyContent='flex-end'>
-          {displaySearch ? (
-            <Fade in timeout={100}>
-              <TextField
-                InputProps={{ className: classes.textField }}
-                autoFocus
-                onBlur={(e) => !e.target.value && setDisplaySearch(false)}
-                onChange={(e) => search(e.target.value)}
-                size='small'
-              />
-            </Fade>
-          ) : (
-            <Button aria-label='Søk' color='primary' onClick={() => setDisplaySearch(true)} startIcon={<Search />}>
-              Søk
-            </Button>
-          )}
-
-          <Button aria-label='Filter' color='primary' startIcon={<Tune />}>
-            Filter
-          </Button>
-        </Box>
+        <SearchFilter search={search} />
         {searchResults.length > 0
           ? searchResults.map((phase) => {
               return (

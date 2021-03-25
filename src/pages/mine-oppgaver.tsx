@@ -4,11 +4,13 @@ import { makeStyles } from '@material-ui/core';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import TimeSection from 'components/views/mine-oppgaver/TimeSection';
+import Fuse from 'fuse.js';
 import prisma from 'lib/prisma';
 import moment from 'moment';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import { IEmployeeTask } from 'utils/types';
 import { splitIntoTimeSections } from 'utils/utils';
@@ -108,6 +110,31 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
 
   const timeSections: TimeSectionType[] = splitIntoTimeSections(myTasks);
 
+  const searchOptions = {
+    includeScore: true,
+    keys: ['task.title', 'employee.firstName', 'employee.lastName'],
+    threshold: 0.3,
+  };
+
+  useEffect(() => {
+    setSearchResults([]);
+  }, [router.query]);
+
+  const [searchResults, setSearchResults] = useState([]);
+  const search = (text: string) => {
+    const result = timeSections.map((timeSection) => {
+      if (!text) {
+        return timeSection;
+      }
+      const fuse = new Fuse(timeSection.data, searchOptions);
+      return {
+        ...timeSection,
+        data: fuse.search(text).map((item) => item.item),
+      };
+    });
+    setSearchResults(result);
+  };
+
   return (
     <>
       <Head>
@@ -120,10 +147,14 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
           </Typo>
           <Typo className={classes.template_title}>{completed.toString() === 'true' ? 'Fullførte' : 'Aktive'} oppgaver</Typo>
         </div>
-        <SearchFilter />
+        <SearchFilter search={search} />
         <div>
           {timeSections.length === 0 ? (
             <Typo>Ingen oppgaver</Typo>
+          ) : searchResults.length > 0 ? (
+            searchResults.map((section: TimeSectionType, index: number) => {
+              return <TimeSection first={index === 0} key={index} section={section} />;
+            })
           ) : (
             timeSections.map((section: TimeSectionType, index: number) => <TimeSection first={index === 0} key={index} section={section} />)
           )}

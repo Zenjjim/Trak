@@ -54,6 +54,7 @@
     "classnames": "^2.2.6",
     "eslint-plugin-json": "^2.1.2",
     "faker": "^5.4.0",
+    "fuse.js": "^6.4.6",
     "http-status-typed": "^1.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",

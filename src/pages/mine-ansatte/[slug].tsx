@@ -3,6 +3,7 @@ import { Search, Tune } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
 import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCard';
+import Fuse from 'fuse.js';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -176,20 +177,35 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
   const [displaySearch, setDisplaySearch] = useState(false);
   const phase = useRouter();
 
+  const searchOptions = {
+    includeScore: true,
+    keys: ['firstName', 'lastName'],
+    threshold: 0.5,
+  };
+
   useEffect(() => {
     setSearchResults([]);
     setDisplaySearch(false);
   }, [phase.query]);
 
   const [searchResults, setSearchResults] = useState([]);
-
   const search = (text: string) => {
-    const names = text.split(' ');
-    const noe = phases.map((phase) => {
-      return { ...phase, employees: phase.employees.filter((employee) => employee.firstName.includes(names) || employee.lastName.includes(names)) };
+    const filteredEmployees = phases.map((phase) => {
+      if (!text) {
+        return phase;
+      }
+      const fuse = new Fuse(phase.employees, searchOptions);
+      return {
+        ...phase,
+        employees: fuse.search(text).map((item) => item.item),
+      };
     });
-    setSearchResults(noe);
+    setSearchResults(filteredEmployees);
   };
+
+  // Send to SearchFilter component
+  // options
+  // [SearchResults, setSearchResults]
 
   return (
     <>

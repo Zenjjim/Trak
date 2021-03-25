@@ -52,12 +52,12 @@ export const urls: section[] = [
     links: [
       {
         title: 'Aktive oppgaver',
-        link: '/',
+        link: '/alle-oppgaver?fullfort=false',
         aria_label: 'Til alle aktive oppgaver',
       },
       {
         title: 'Fullførte oppgaver',
-        link: '/',
+        link: '/alle-oppgaver?fullfort=true',
         aria_label: 'Til alle fullførte oppgaver',
       },
     ],
@@ -67,17 +67,17 @@ export const urls: section[] = [
     links: [
       {
         title: 'Onboarding',
-        link: '/',
+        link: '/alle-ansatte/onboarding',
         aria_label: 'Til alle ansatte på onboarding',
       },
       {
         title: 'Løpende',
-        link: '/',
+        link: '/alle-ansatte/lopende',
         aria_label: 'Til alle ansatte på løpende',
       },
       {
         title: 'Offboarding',
-        link: '/',
+        link: '/alle-ansatte/offboarding',
         aria_label: 'Til alle ansatte på offboarding',
       },
     ],

@@ -1,5 +1,6 @@
 import { ButtonBase, IconButton, makeStyles } from '@material-ui/core';
 import { CheckBox, CheckBoxOutlineBlank } from '@material-ui/icons';
+import classnames from 'classnames';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
@@ -26,10 +27,12 @@ const useStyles = makeStyles({
     alignItems: 'center',
     width: '35rem',
   },
-  avatarOnClick: {
+  avatarRoot: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  onClick: {
     width: 'max-content',
     borderRadius: '4px',
     '&:hover': {
@@ -66,10 +69,14 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
       </div>
       <div
-        className={classes.avatarOnClick}
+        className={classnames(classes.avatarRoot, classes.onClick)}
         onClick={() => router.push(`/ansatt/${data.employee.id}?år=${new Date(data.dueDate).getFullYear()}&prosess=${data.task.phase.processTemplate.slug}`)}>
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />
         <Typo>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
+      </div>
+      <div className={classes.avatarRoot}>
+        <Avatar className={classes.avatar} firstName={data.responsible.firstName} image={data.responsible.imageUrl} lastName={data.responsible.lastName} />
+        <Typo>{`${data.responsible.firstName} ${data.responsible.lastName}`}</Typo>
       </div>
       <div>{moment(data.dueDate).format('DD.MMM')}</div>
       <div>{data.task.phase.processTemplate.title}</div>

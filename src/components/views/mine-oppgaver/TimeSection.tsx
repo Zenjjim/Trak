@@ -15,7 +15,7 @@ type TimeSectionProps = {
 const useStyles = makeStyles({
   grid: {
     display: 'grid',
-    gridTemplateColumns: '2fr 1fr 1fr 1fr',
+    gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
     alignItems: 'end',
     marginRight: '30px',
     marginBottom: theme.spacing(1),
@@ -52,6 +52,9 @@ const TimeSection = ({ section, first }: TimeSectionProps) => {
       </div>
       <Typo color='disabled' variant='body2'>
         {first && 'Gjelder'}
+      </Typo>
+      <Typo color='disabled' variant='body2'>
+        {first && 'Ansvarlig'}
       </Typo>
       <Typo color='disabled' variant='body2'>
         {first && 'Forfallsdato'}

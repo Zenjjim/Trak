@@ -29,16 +29,11 @@ const useStyles = makeStyles({
   },
 });
 
-const LOGGED_IN_USER = 1;
-
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { fullfort: completed } = query;
   const isCompleted = completed.toString() === 'true';
   const myTasksQuery = await prisma.employeeTask.findMany({
     where: {
-      responsible: {
-        id: LOGGED_IN_USER,
-      },
       completed: isCompleted,
       ...(isCompleted && {
         dueDate: {

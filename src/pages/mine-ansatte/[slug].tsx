@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/styles';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCard';
-import Fuse from 'fuse.js';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -12,6 +11,7 @@ import { useEffect, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
+import { searchEmployees } from 'utils/utils';
 
 const LOGGED_IN_USER = 1;
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -176,28 +176,13 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
   const phases = getPhasesWithEmployees(processTemplate, myEmployees);
   const router = useRouter();
 
-  const searchOptions = {
-    includeScore: true,
-    keys: ['firstName', 'lastName'],
-    threshold: 0.5,
-  };
-
   useEffect(() => {
     setSearchResults([]);
   }, [router.query]);
 
   const [searchResults, setSearchResults] = useState([]);
   const search = (text: string) => {
-    const filteredEmployees = phases.map((phase) => {
-      if (!text) {
-        return phase;
-      }
-      const fuse = new Fuse(phase.employees, searchOptions);
-      return {
-        ...phase,
-        employees: fuse.search(text).map((item) => item.item),
-      };
-    });
+    const filteredEmployees = searchEmployees(text, phases);
     setSearchResults(filteredEmployees);
   };
   return (

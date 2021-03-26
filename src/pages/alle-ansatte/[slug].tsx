@@ -6,9 +6,11 @@ import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCa
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import { useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
+import { searchEmployees } from 'utils/utils';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const phases = prisma.processTemplate.findMany({
@@ -158,6 +160,13 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
   const processTemplate = allPhases[0];
   const phases = getPhasesWithEmployees(processTemplate, myEmployees);
 
+  const [searchResults, setSearchResults] = useState([]);
+
+  const search = (text: string) => {
+    const filteredEmployees = searchEmployees(text, phases);
+    setSearchResults(filteredEmployees);
+  };
+
   return (
     <>
       <Head>
@@ -168,14 +177,22 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
           <Typo variant='h1'>Alle ansatte</Typo>
           <Typo variant='h2'>{processTemplate.title}</Typo>
         </Box>
-        <SearchFilter />
-        {phases.map((phase: PhaseCardProps) => {
-          return (
-            <Box key={phase.id} mb={theme.spacing(2)}>
-              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
-            </Box>
-          );
-        })}
+        <SearchFilter search={search} />
+        {searchResults.length > 0
+          ? searchResults.map((phase) => {
+              return (
+                <Box key={phase.id} mb={theme.spacing(2)}>
+                  <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
+                </Box>
+              );
+            })
+          : phases.map((phase: PhaseCardProps) => {
+              return (
+                <Box key={phase.id} mb={theme.spacing(2)}>
+                  <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
+                </Box>
+              );
+            })}
       </Box>
     </>
   );

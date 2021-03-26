@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import TimeSection from 'components/views/mine-oppgaver/TimeSection';
-import Fuse from 'fuse.js';
 import prisma from 'lib/prisma';
 import moment from 'moment';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -13,7 +12,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import { IEmployeeTask } from 'utils/types';
-import { splitIntoTimeSections } from 'utils/utils';
+import { searchTask, splitIntoTimeSections } from 'utils/utils';
 
 const useStyles = makeStyles({
   root: {
@@ -109,32 +108,14 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
   const { fullfort: completed } = router.query;
 
   const timeSections: TimeSectionType[] = splitIntoTimeSections(myTasks);
-
-  const searchOptions = {
-    keys: ['task.title', 'employee.searchName', 'employee.firstName', 'employee.lastName'],
-    threshold: 0.3,
-  };
-
   useEffect(() => {
     setSearchResults([]);
   }, [router.query]);
 
   const [searchResults, setSearchResults] = useState([]);
-  const search = (text: string) => {
-    const result = timeSections.map((timeSection) => {
-      if (!text) {
-        return timeSection;
-      }
-      const modifiedSearchData = timeSection.data.map((section) => {
-        return { ...section, employee: { ...section.employee, searchName: `${section.employee.firstName} ${section.employee.lastName}` } };
-      });
 
-      const fuse = new Fuse(modifiedSearchData, searchOptions);
-      return {
-        ...timeSection,
-        data: fuse.search(text).map((item) => item.item),
-      };
-    });
+  const search = (text: string) => {
+    const result = searchTask(text, timeSections);
     setSearchResults(result);
   };
 

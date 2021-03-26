@@ -1,7 +1,9 @@
 import axios from 'axios';
 import capitalize from 'capitalize-first-letter';
+import Fuse from 'fuse.js';
 import { compact, differenceBy } from 'lodash';
 import moment from 'moment';
+import { TimeSectionType } from 'pages/mine-oppgaver';
 import { Dispatch, SetStateAction } from 'react';
 import { thisMonth, thisWeek, today, tomorrow } from 'sortof';
 import { IEmployeeTask } from 'utils/types';
@@ -108,4 +110,45 @@ export const splitIntoTimeSections = (tasks) => {
     },
   ];
   return compact(data);
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const searchEmployees = (text: string, phases: any) => {
+  const searchOptions = {
+    keys: ['firstName', 'lastName'],
+    threshold: 0.5,
+  };
+  const filteredEmployees = phases.map((phase) => {
+    if (!text) {
+      return phase;
+    }
+    const fuse = new Fuse(phase.employees, searchOptions);
+    return {
+      ...phase,
+      employees: fuse.search(text).map((item) => item.item),
+    };
+  });
+  return filteredEmployees;
+};
+
+export const searchTask = (text: string, timeSections: TimeSectionType[]) => {
+  const searchOptions = {
+    keys: ['task.title', 'employee.searchName', 'employee.firstName', 'employee.lastName'],
+    threshold: 0.3,
+  };
+
+  const result = timeSections.map((timeSection) => {
+    if (!text) {
+      return timeSection;
+    }
+    const modifiedSearchData = timeSection.data.map((section) => {
+      return { ...section, employee: { ...section.employee, searchName: `${section.employee.firstName} ${section.employee.lastName}` } };
+    });
+
+    const fuse = new Fuse(modifiedSearchData, searchOptions);
+    return {
+      ...timeSection,
+      data: fuse.search(text).map((item) => item.item),
+    };
+  });
+  return result;
 };

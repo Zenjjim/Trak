@@ -111,8 +111,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
   const timeSections: TimeSectionType[] = splitIntoTimeSections(myTasks);
 
   const searchOptions = {
-    includeScore: true,
-    keys: ['task.title', 'employee.firstName', 'employee.lastName'],
+    keys: ['task.title', 'employee.searchName', 'employee.firstName', 'employee.lastName'],
     threshold: 0.3,
   };
 
@@ -126,7 +125,11 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
       if (!text) {
         return timeSection;
       }
-      const fuse = new Fuse(timeSection.data, searchOptions);
+      const modifiedSearchData = timeSection.data.map((section) => {
+        return { ...section, employee: { ...section.employee, searchName: `${section.employee.firstName} ${section.employee.lastName}` } };
+      });
+
+      const fuse = new Fuse(modifiedSearchData, searchOptions);
       return {
         ...timeSection,
         data: fuse.search(text).map((item) => item.item),

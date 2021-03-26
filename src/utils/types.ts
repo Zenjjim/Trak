@@ -86,3 +86,7 @@ export enum Offset {
   Before = 'before',
   After = 'after',
 }
+
+export enum Actions {
+  UpdateDueDate = 'updateDueDate',
+}

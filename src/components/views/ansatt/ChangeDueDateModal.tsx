@@ -48,6 +48,7 @@ const ChangeDueDateModal = ({ modalIsOpen, closeModal, employeeTasks }: ChangeDu
       <TextField
         defaultValue={moment(employeeTasks[0]?.dueDate).format('yyyy-MM-DD')}
         errors={errors}
+        label='Forfallsdato'
         name='dueDate'
         register={register}
         rules={{ required: 'Du må skrive inn en gyldig dato' }}

@@ -40,7 +40,7 @@ const ChangeDueDateModal = ({ modalIsOpen, closeModal, employeeTasks }: ChangeDu
       dueDate: moment(formData.dueDate).toISOString(),
       employeeTasksId: employeeTasks.map((employeeTask: IEmployeeTask) => employeeTask.id),
     };
-    axiosChangeDueDateModal(axios.patch('/api/employeeTask', data), 'Forfallsdato ble oppdatert');
+    axiosChangeDueDateModal(axios.patch('/api/employeeTasks', data), 'Forfallsdato ble oppdatert');
   });
 
   return (

@@ -49,7 +49,7 @@ const Phase = ({ title, tasksFinished, totalTasks, employeeTasks, first }: Phase
         return <TaskRow employeeTask={employeeTask} key={employeeTask.taskId} />;
       })}
       <AddButton onClick={() => undefined} text='Legg til oppgave' />
-      {modalIsOpen && <ChangeDueDateModal closeModal={() => setModalIsOpen(false)} employeeTasks={employeeTasks} modalIsOpen={modalIsOpen} />}
+      <ChangeDueDateModal closeModal={() => setModalIsOpen(false)} employeeTasks={employeeTasks} modalIsOpen={modalIsOpen} />
     </Box>
   );
 };

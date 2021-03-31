@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }) {
     return <Error statusCode={pageProps.error.statusCode} title={pageProps.error.message} />;
   }
   return (
-    <ContextProvider>
+    <ContextProvider pageProps={pageProps}>
       <Component {...pageProps} />
     </ContextProvider>
   );

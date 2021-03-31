@@ -10,6 +10,7 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/client';
 import { Dispatch, useEffect, useState } from 'react';
 import ScrollableFeed from 'react-scrollable-feed';
 import theme from 'theme';
@@ -142,7 +143,6 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
   const classes = useStyles();
   const name = `${firstName} ${lastName[0]}.`;
   const [notifications, setNotifications] = useState<INotification[]>([]);
-
   useEffect(() => {
     axios.get(`/api/employee/${userId}/notifications`).then((res) => {
       setNotifications([...res.data]);
@@ -207,23 +207,25 @@ const Sidebar = () => {
   const classes = useStyles();
 
   const [displayNotifications, setDisplayNotifications] = useState(false);
-  if (!user) {
-    return <Typo>Loading...</Typo>;
-  }
+
   return (
     <Drawer anchor='left' className={classes.drawer} classes={{ paper: classnames(classes.drawerPaper, classes.removeScrollbar) }} variant='permanent'>
       <Box className={classes.removeScrollbar} display='flex' flexDirection='column' padding={theme.spacing(2)}>
         <Box className={classes.gutterBottom}>
           <Image height={34} src={'/trak_logo.png'} width={120} />
         </Box>
-        <LoggedInUserCard
-          displayNotifications={displayNotifications}
-          firstName={user.firstName}
-          image={user.imageUrl}
-          lastName={user.lastName}
-          setDisplayNotifications={setDisplayNotifications}
-          userId={user.id}
-        />
+        {user ? (
+          <LoggedInUserCard
+            displayNotifications={displayNotifications}
+            firstName={user.firstName}
+            image={user.imageUrl}
+            lastName={user.lastName}
+            setDisplayNotifications={setDisplayNotifications}
+            userId={user.id}
+          />
+        ) : (
+          <Button onClick={signIn}>Logg inn</Button>
+        )}
         <Divider />
         {!displayNotifications && (
           <List className={classes.listRoot} component='nav'>

@@ -114,25 +114,23 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
   return (
     <>
       <Head>
-        <title>Mine oppgaver</title>
+        <title>Alle oppgaver</title>
       </Head>
       <div className={classes.root}>
         <div className={classes.header}>
           <Typo className={classes.title} variant='h1'>
-            Mine oppgaver
+            Alle oppgaver
           </Typo>
           <Typo className={classes.template_title}>{completed.toString() === 'true' ? 'Fullførte' : 'Aktive'} oppgaver</Typo>
         </div>
         <SearchFilter search={search} />
         <div>
-          {timeSections.length === 0 ? (
+          {!timeSections.length ? (
             <Typo>Ingen oppgaver</Typo>
-          ) : searchResults.length > 0 ? (
-            searchResults.map((section: TimeSectionType, index: number) => {
+          ) : (
+            (searchResults.length ? searchResults : timeSections).map((section: TimeSectionType, index: number) => {
               return <TimeSection first={index === 0} key={index} section={section} />;
             })
-          ) : (
-            timeSections.map((section: TimeSectionType, index: number) => <TimeSection first={index === 0} key={index} section={section} />)
           )}
         </div>
       </div>

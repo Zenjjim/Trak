@@ -2,7 +2,7 @@ import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
-import PhaseCard, { PhaseCardProps } from 'components/views/mine-ansatte/PhaseCard';
+import PhaseCard from 'components/views/mine-ansatte/PhaseCard';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -196,21 +196,13 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
           <Typo variant='h2'>{processTemplate.title}</Typo>
         </Box>
         <SearchFilter search={search} />
-        {searchResults.length > 0
-          ? searchResults.map((phase) => {
-              return (
-                <Box key={phase.id} mb={theme.spacing(2)}>
-                  <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
-                </Box>
-              );
-            })
-          : phases.map((phase: PhaseCardProps) => {
-              return (
-                <Box key={phase.id} mb={theme.spacing(2)}>
-                  <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
-                </Box>
-              );
-            })}
+        {(searchResults.length ? searchResults : phases).map((phase) => {
+          return (
+            <Box key={phase.id} mb={theme.spacing(2)}>
+              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
+            </Box>
+          );
+        })}
       </Box>
     </>
   );

@@ -37,7 +37,7 @@ const ChangeDueDateModal = ({ modalIsOpen, closeModal, employeeTasks }: ChangeDu
   const onSubmit = handleSubmit((formData) => {
     const data = {
       action: Actions.UpdateDueDate,
-      dueDate: moment(formData.dueDate).toISOString(),
+      dueDate: moment.utc(formData.dueDate).format(),
       employeeTasksId: employeeTasks.map((employeeTask: IEmployeeTask) => employeeTask.id),
     };
     axiosChangeDueDateModal(axios.patch('/api/employeeTasks', data), 'Forfallsdato ble oppdatert');

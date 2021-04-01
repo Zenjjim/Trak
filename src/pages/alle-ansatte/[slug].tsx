@@ -176,7 +176,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
           <Typo variant='h1'>Alle ansatte</Typo>
           <Typo variant='h2'>{processTemplate.title}</Typo>
         </Box>
-        <SearchFilter search={search} />
+        <SearchFilter filterByTags={() => null} search={search} />
         {(searchResults.length ? searchResults : phases).map((phase) => {
           return (
             <Box key={phase.id} mb={theme.spacing(2)}>

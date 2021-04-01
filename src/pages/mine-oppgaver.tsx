@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import TimeSection from 'components/views/mine-oppgaver/TimeSection';
+import { DataProvider } from 'context/Data';
 import prisma from 'lib/prisma';
 import moment from 'moment';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -11,7 +12,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
-import { IEmployeeTask } from 'utils/types';
+import { IEmployeeTask, ITag } from 'utils/types';
 import { searchTask, splitIntoTimeSections } from 'utils/utils';
 
 const useStyles = makeStyles({
@@ -74,6 +75,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         select: {
           id: true,
           title: true,
+          tags: true,
           phase: {
             select: {
               processTemplate: {
@@ -108,6 +110,8 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
   const { fullfort: completed } = router.query;
 
   const timeSections: TimeSectionType[] = splitIntoTimeSections(myTasks);
+  const [filteredTasks, setFilteredTasks] = useState<TimeSectionType[]>([]);
+
   useEffect(() => {
     setSearchResults([]);
   }, [router.query]);
@@ -117,6 +121,25 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
   const search = (text: string) => {
     const result = searchTask(text, timeSections);
     setSearchResults(result);
+  };
+
+  const filterByTags = (tags: ITag[]) => {
+    if (!tags.length) {
+      setFilteredTasks([]);
+    } else {
+      const result = timeSections.map((timeSection) => {
+        const tagsId = tags.map((element) => element.id);
+        return {
+          ...timeSection,
+          data: timeSection.data.filter((data) => {
+            const dataTagsId = data.task.tags.map((tag) => tag.id);
+
+            return tagsId.every((tag) => dataTagsId.includes(tag));
+          }),
+        };
+      });
+      setFilteredTasks(result);
+    }
   };
 
   return (
@@ -131,15 +154,24 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
           </Typo>
           <Typo className={classes.template_title}>{completed.toString() === 'true' ? 'Fullførte' : 'Aktive'} oppgaver</Typo>
         </div>
-        <SearchFilter search={search} />
+        <DataProvider>
+          <SearchFilter filterByTags={filterByTags} search={search} />
+        </DataProvider>
         <div>
-          {!timeSections.length ? (
-            <Typo>Ingen oppgaver</Typo>
-          ) : (
+          {
+            !timeSections.length ? (
+              <Typo>Ingen oppgaver</Typo>
+            ) : (
+              <h1>Max</h1>
+            ) /* (
             (searchResults.length ? searchResults : timeSections).map((section: TimeSectionType, index: number) => {
               return <TimeSection first={index === 0} key={index} section={section} />;
             })
-          )}
+            (filteredTasks.length ? filteredTasks : timeSections).map((section: TimeSectionType, index: number) => (
+              <TimeSection first={index === 0} key={index} section={section} />
+            ))
+          ) */
+          }
         </div>
       </div>
     </>

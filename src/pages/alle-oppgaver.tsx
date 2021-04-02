@@ -1,18 +1,20 @@
 import 'moment/locale/nb';
 
-import { makeStyles } from '@material-ui/core';
+import { Autocomplete, Box, Button, makeStyles, TextField, ToggleButton, ToggleButtonGroup } from '@material-ui/core';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import TimeSection from 'components/views/mine-oppgaver/TimeSection';
+import { useData } from 'context/Data';
 import prisma from 'lib/prisma';
 import moment from 'moment';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
-import { IEmployeeTask } from 'utils/types';
-import { searchTask, splitIntoTimeSections } from 'utils/utils';
+import theme from 'theme';
+import { IEmployeeTask, IProcessTemplate, ITag } from 'utils/types';
+import { filterAndSearchTasks, splitIntoTimeSections } from 'utils/utils';
 
 const useStyles = makeStyles({
   root: {
@@ -27,6 +29,9 @@ const useStyles = makeStyles({
   },
   template_title: {
     marginLeft: '3px',
+  },
+  gutterBottom: {
+    marginBottom: theme.spacing(2),
   },
 });
 
@@ -69,6 +74,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         select: {
           id: true,
           title: true,
+          tags: true,
           phase: {
             select: {
               processTemplate: {
@@ -104,12 +110,67 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
 
   const timeSections: TimeSectionType[] = splitIntoTimeSections(myTasks);
 
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchAndFilterResults, setSearchAndFilterResults] = useState<TimeSectionType[]>([]);
+  const [searchString, setSearchString] = useState('');
 
-  const search = (text: string) => {
-    const result = searchTask(text, timeSections);
-    setSearchResults(result);
+  const { tags, processTemplates } = useData();
+  const [choosenProcessTemplates, setChoosenProcessTemplates] = useState<string[]>([]);
+  const [choosenTags, setChoosenTags] = useState<ITag[]>([]);
+
+  const handleFormat = (_, newFormats) => {
+    if (newFormats.length === processTemplates.length) {
+      setChoosenProcessTemplates([]);
+    } else {
+      setChoosenProcessTemplates(newFormats);
+    }
   };
+
+  useEffect(() => {
+    const noe = filterAndSearchTasks(searchString, { tags: choosenTags, processTemplates: choosenProcessTemplates }, timeSections, true);
+    setSearchAndFilterResults(noe);
+  }, [choosenTags, choosenProcessTemplates, searchString]);
+
+  const clearFilters = () => {
+    setChoosenTags([]);
+    setChoosenProcessTemplates([]);
+  };
+  // TODO:
+  // Make this a common component?
+
+  const FilterComponent = () => (
+    <Box display='flex' flexDirection='column' maxWidth='400px' minWidth='300px' padding={2}>
+      <Typo gutterBottom variant='h2'>
+        Tags
+      </Typo>
+      <Autocomplete
+        className={classes.gutterBottom}
+        getOptionLabel={(option: ITag) => option.title}
+        multiple
+        noOptionsText='Finner ingen tags'
+        onChange={(_, value: ITag[]) => {
+          setChoosenTags(value);
+        }}
+        options={tags}
+        renderInput={(params) => <TextField {...params} size='small' />}
+        value={choosenTags}
+      />
+      <Typo gutterBottom variant='h2'>
+        Prosess
+      </Typo>
+      <ToggleButtonGroup className={classes.gutterBottom} onChange={handleFormat} value={choosenProcessTemplates}>
+        {processTemplates?.map((processTemplate: IProcessTemplate) => {
+          return (
+            <ToggleButton key={processTemplate.id} value={processTemplate.title}>
+              {processTemplate.title}
+            </ToggleButton>
+          );
+        })}
+      </ToggleButtonGroup>
+      <Button disabled={!choosenProcessTemplates.length && !choosenTags.length} onClick={clearFilters} variant='outlined'>
+        Tøm filtre
+      </Button>
+    </Box>
+  );
 
   return (
     <>
@@ -123,12 +184,16 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
           </Typo>
           <Typo className={classes.template_title}>{completed.toString() === 'true' ? 'Fullførte' : 'Aktive'} oppgaver</Typo>
         </div>
-        <SearchFilter search={search} />
+        <SearchFilter
+          activeFilters={Boolean(choosenTags.length || choosenProcessTemplates.length)}
+          filterComponent={<FilterComponent />}
+          search={setSearchString}
+        />
         <div>
           {!timeSections.length ? (
             <Typo>Ingen oppgaver</Typo>
           ) : (
-            (searchResults.length ? searchResults : timeSections).map((section: TimeSectionType, index: number) => {
+            (searchAndFilterResults.length ? searchAndFilterResults : timeSections).map((section: TimeSectionType, index: number) => {
               return <TimeSection first={index === 0} key={index} section={section} />;
             })
           )}

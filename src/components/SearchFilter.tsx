@@ -1,11 +1,8 @@
-import { Autocomplete, Box, Button, Fade, makeStyles, Popover, TextField } from '@material-ui/core';
+import { Badge, Button, Fade, makeStyles, Popover, TextField } from '@material-ui/core';
 import { Search, Tune } from '@material-ui/icons';
-import Typo from 'components/Typo';
-import { useData } from 'context/Data';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import theme from 'theme';
-import { ITag } from 'utils/types';
 const useStyles = makeStyles({
   centeringRow: {
     display: 'flex',
@@ -22,11 +19,11 @@ const useStyles = makeStyles({
 });
 
 type SearchFilterProps = {
-  filterByTags: (value: ITag[]) => void;
-  // eslint-disable-next-line
-  search: (element: any) => void;
+  filterComponent: React.ReactNode;
+  search: (element: string) => void;
+  activeFilters: boolean;
 };
-const SearchFilter = ({ filterByTags, search }: SearchFilterProps) => {
+const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterProps) => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -35,7 +32,6 @@ const SearchFilter = ({ filterByTags, search }: SearchFilterProps) => {
   }, [router.query]);
 
   const [displaySearch, setDisplaySearch] = useState(false);
-  const [choosenTags, setChoosenTags] = useState<ITag[]>([]);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -46,7 +42,6 @@ const SearchFilter = ({ filterByTags, search }: SearchFilterProps) => {
     setAnchorEl(null);
   };
 
-  const { tags } = useData();
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
   return (
@@ -66,7 +61,15 @@ const SearchFilter = ({ filterByTags, search }: SearchFilterProps) => {
           Søk
         </Button>
       )}
-      <Button aria-label='Filter' color='primary' onClick={handleClick} startIcon={<Tune />}>
+      <Button
+        aria-label='Filter'
+        color='primary'
+        onClick={handleClick}
+        startIcon={
+          <Badge color='secondary' invisible={!activeFilters} variant='dot'>
+            <Tune />
+          </Badge>
+        }>
         Filter
       </Button>
       <Popover
@@ -82,27 +85,7 @@ const SearchFilter = ({ filterByTags, search }: SearchFilterProps) => {
           vertical: 'top',
           horizontal: 'left',
         }}>
-        <Box display='flex' flexDirection='column' marginRight={2} minWidth='300px'>
-          <Typo gutterBottom variant='h2'>
-            Tags
-          </Typo>
-          <Autocomplete
-            className={classes.gutterBottom}
-            getOptionLabel={(option: ITag) => option.title}
-            multiple
-            noOptionsText='Finner ingen tags'
-            onChange={(_, value: ITag[]) => {
-              setChoosenTags(value);
-              filterByTags(value);
-            }}
-            options={tags}
-            renderInput={(params) => <TextField {...params} size='small' />}
-            value={choosenTags}
-          />
-          <Typo gutterBottom variant='h2'>
-            Prosess
-          </Typo>
-        </Box>
+        {filterComponent}
       </Popover>
     </div>
   );

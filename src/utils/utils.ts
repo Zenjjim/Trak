@@ -6,7 +6,7 @@ import moment from 'moment';
 import { TimeSectionType } from 'pages/mine-oppgaver';
 import { Dispatch, SetStateAction } from 'react';
 import { thisMonth, thisWeek, today, tomorrow } from 'sortof';
-import { IEmployeeTask } from 'utils/types';
+import { IEmployee, IEmployeeTask, ITag } from 'utils/types';
 
 moment.locale('nb');
 
@@ -111,17 +111,29 @@ export const splitIntoTimeSections = (tasks) => {
   ];
   return compact(data);
 };
+
+type EmployeeFilter = {
+  professions: string[];
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const searchEmployees = (text: string, phases: any) => {
+export const searchEmployees = (text: string, phases: any, withResponsible = false) => {
   const searchOptions = {
-    keys: ['firstName', 'lastName'],
-    threshold: 0.5,
+    keys: ['searchName', 'firstName', 'lastName', ...(withResponsible ? ['hrManager.searchName', 'hrManager.firstName', 'hrManager.lastName'] : [])],
+    threshold: 0.3,
   };
   const filteredEmployees = phases.map((phase) => {
     if (!text) {
       return phase;
     }
-    const fuse = new Fuse(phase.employees, searchOptions);
+    const modifiedSearchData = phase.employees.map((employee: IEmployee) => {
+      return {
+        ...employee,
+        hrManager: { ...employee.hrManager, searchName: `${employee.hrManager.firstName} ${employee.hrManager.lastName}` },
+        searchName: `${employee.firstName} ${employee.lastName}`,
+      };
+    });
+    const fuse = new Fuse(modifiedSearchData, searchOptions);
     return {
       ...phase,
       employees: fuse.search(text).map((item) => item.item),
@@ -130,9 +142,15 @@ export const searchEmployees = (text: string, phases: any) => {
   return filteredEmployees;
 };
 
-export const searchTask = (text: string, timeSections: TimeSectionType[]) => {
+export const searchTask = (text: string, timeSections: TimeSectionType[], withResponsible = false) => {
   const searchOptions = {
-    keys: ['task.title', 'employee.searchName', 'employee.firstName', 'employee.lastName'],
+    keys: [
+      'task.title',
+      'employee.searchName',
+      'employee.firstName',
+      'employee.lastName',
+      ...(withResponsible ? ['responsible.searchName', 'responsible.firstName', 'responsible.lastName'] : []),
+    ],
     threshold: 0.3,
   };
 
@@ -141,7 +159,11 @@ export const searchTask = (text: string, timeSections: TimeSectionType[]) => {
       return timeSection;
     }
     const modifiedSearchData = timeSection.data.map((section) => {
-      return { ...section, employee: { ...section.employee, searchName: `${section.employee.firstName} ${section.employee.lastName}` } };
+      return {
+        ...section,
+        responsible: { ...section.responsible, searchName: `${section.responsible.firstName} ${section.responsible.lastName}` },
+        employee: { ...section.employee, searchName: `${section.employee.firstName} ${section.employee.lastName}` },
+      };
     });
 
     const fuse = new Fuse(modifiedSearchData, searchOptions);
@@ -150,5 +172,88 @@ export const searchTask = (text: string, timeSections: TimeSectionType[]) => {
       data: fuse.search(text).map((item) => item.item),
     };
   });
+  return result;
+};
+
+const filterTasks = (taskFilters: TaskFilters, timeSections: TimeSectionType[]) => {
+  const result = timeSections.map((timeSection) => {
+    const tagsId = taskFilters.tags.map((element) => element.id);
+    return {
+      ...timeSection,
+      data: timeSection.data.filter((data) => {
+        const dataTagsId = data.task.tags.map((tag) => tag.id);
+        if (taskFilters.processTemplates.length && taskFilters.tags.length) {
+          const tasksInProcess = taskFilters.processTemplates.includes(data.task.phase.processTemplate.title);
+          if (tasksInProcess) {
+            return tagsId.some((tag) => dataTagsId.includes(tag));
+          } else {
+            return false;
+          }
+        }
+        if (taskFilters.processTemplates.length && !taskFilters.tags.length) {
+          return taskFilters.processTemplates.includes(data.task.phase.processTemplate.title);
+        }
+        if (!taskFilters.processTemplates.length && taskFilters.tags.length) {
+          return tagsId.some((tag) => dataTagsId.includes(tag));
+        }
+      }),
+    };
+  });
+  return result;
+};
+
+export type TaskFilters = {
+  tags: ITag[];
+  processTemplates: string[];
+};
+
+export const filterAndSearchTasks = (searchText: string, taskFilters: TaskFilters, timeSections: TimeSectionType[], withResponsible = false) => {
+  const noSearchText = !searchText;
+  const noFilters = !taskFilters.processTemplates.length && !taskFilters.tags.length;
+  if (noFilters && noSearchText) {
+    return timeSections;
+  }
+
+  if (noSearchText) {
+    const result = filterTasks(taskFilters, timeSections);
+    return result;
+  }
+
+  if (noFilters) {
+    const result = searchTask(searchText, timeSections, withResponsible);
+    return result;
+  }
+
+  const filteredTasks = filterTasks(taskFilters, timeSections);
+  const result = searchTask(searchText, filteredTasks, withResponsible);
+  return result;
+};
+// eslint-disable-next-line
+const filterEmployees = (employeeFilter: EmployeeFilter, phases: any) => {
+  const result = phases.map((phase) => {
+    return { ...phase, employees: phase.employees.filter((employee: IEmployee) => employeeFilter.professions.includes(employee.profession.title)) };
+  });
+  return result;
+};
+// eslint-disable-next-line
+export const filterAndSearchEmployees = (searchText: string, employeeFilters: EmployeeFilter, phases: any, withResponsible = false) => {
+  const noSearchText = !searchText;
+  const noFilters = !employeeFilters.professions.length;
+
+  if (noSearchText && noFilters) {
+    return phases;
+  }
+
+  if (noSearchText) {
+    const result = filterEmployees(employeeFilters, phases);
+    return result;
+  }
+  if (noFilters) {
+    const result = searchEmployees(searchText, phases, withResponsible);
+    return result;
+  }
+
+  const filteredEmployees = filterEmployees(employeeFilters, phases);
+  const result = searchEmployees(searchText, filteredEmployees, withResponsible);
   return result;
 };

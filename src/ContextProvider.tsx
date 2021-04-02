@@ -1,5 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import Layout from 'components/Layout';
+import { DataProvider } from 'context/Data';
 import { ProgressbarProvider } from 'context/Progressbar';
 import { SnackbarProvider } from 'context/Snackbar';
 import { UserProvider } from 'context/User';
@@ -12,8 +13,10 @@ const ContextProvider = ({ children }) => {
         <SnackbarProvider>
           <ProgressbarProvider>
             <UserProvider>
-              <CssBaseline />
-              <Layout>{children}</Layout>
+              <DataProvider>
+                <CssBaseline />
+                <Layout>{children}</Layout>
+              </DataProvider>
             </UserProvider>
           </ProgressbarProvider>
         </SnackbarProvider>

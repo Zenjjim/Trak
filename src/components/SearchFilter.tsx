@@ -43,7 +43,7 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? 'filter' : undefined;
   return (
     <div className={classes.centeringRow}>
       {displaySearch ? (

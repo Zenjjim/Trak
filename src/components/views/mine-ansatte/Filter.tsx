@@ -1,0 +1,57 @@
+import { Box, Button, ToggleButton, ToggleButtonGroup } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import Typo from 'components/Typo';
+import { useData } from 'context/Data';
+import theme from 'theme';
+import { IProfession } from 'utils/types';
+
+const useStyles = makeStyles({
+  gutterBottom: {
+    marginBottom: theme.spacing(2),
+  },
+});
+
+type FilterProps = {
+  choosenProfession: string[];
+  // eslint-disable-next-line
+  setChoosenProfession: (element: any) => void;
+};
+
+const Filter = ({ choosenProfession, setChoosenProfession }: FilterProps) => {
+  const classes = useStyles();
+  const { professions } = useData();
+
+  const handleFormat = (_, newFormats) => {
+    if (newFormats.length === professions.length) {
+      setChoosenProfession([]);
+    } else {
+      setChoosenProfession(newFormats);
+    }
+  };
+
+  const clearFilters = () => {
+    setChoosenProfession([]);
+  };
+  return (
+    <Box display='flex' flexDirection='column' maxWidth='400px' minWidth='300px' padding={2}>
+      <Typo gutterBottom variant='h2'>
+        Rolle
+      </Typo>
+      <ToggleButtonGroup className={classes.gutterBottom} onChange={handleFormat} value={choosenProfession}>
+        {professions?.map((profession: IProfession) => {
+          return (
+            <ToggleButton key={profession.id} value={profession.title}>
+              {profession.title}
+            </ToggleButton>
+          );
+        })}
+      </ToggleButtonGroup>
+
+      <Button disabled={!choosenProfession.length} onClick={clearFilters} variant='outlined'>
+        Tøm filtre
+      </Button>
+    </Box>
+  );
+};
+
+export default Filter;

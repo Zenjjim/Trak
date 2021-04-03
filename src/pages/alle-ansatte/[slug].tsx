@@ -1,17 +1,17 @@
-import { Box, Button, ToggleButton, ToggleButtonGroup } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
+import Filter from 'components/views/mine-ansatte/Filter';
 import PhaseCard from 'components/views/mine-ansatte/PhaseCard';
-import { useData } from 'context/Data';
 import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate, IProfession } from 'utils/types';
+import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
 import { filterAndSearchEmployees } from 'utils/utils';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -171,49 +171,13 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
   const [choosenProfession, setChoosenProfession] = useState<string[]>([]);
 
   useEffect(() => {
-    setSearchAndFilterResults([]);
     setChoosenProfession([]);
   }, [router.query]);
 
-  const { professions } = useData();
-  const handleFormat = (_, newFormats) => {
-    if (newFormats.length === professions.length) {
-      setChoosenProfession([]);
-    } else {
-      setChoosenProfession(newFormats);
-    }
-  };
-  const [searchAndFilterResults, setSearchAndFilterResults] = useState([]);
-
-  const clearFilters = () => {
-    setChoosenProfession([]);
-  };
-
-  useEffect(() => {
-    const result = filterAndSearchEmployees(searchString, { professions: choosenProfession }, phases, true);
-    setSearchAndFilterResults(result);
+  const filterResult = useMemo(() => {
+    return filterAndSearchEmployees(searchString, { professions: choosenProfession }, phases, true);
   }, [searchString, choosenProfession]);
 
-  const FilterComponent = () => (
-    <Box display='flex' flexDirection='column' maxWidth='400px' minWidth='300px' padding={2}>
-      <Typo gutterBottom variant='h2'>
-        Rolle
-      </Typo>
-      <ToggleButtonGroup className={classes.gutterBottom} onChange={handleFormat} value={choosenProfession}>
-        {professions?.map((profession: IProfession) => {
-          return (
-            <ToggleButton key={profession.id} value={profession.title}>
-              {profession.title}
-            </ToggleButton>
-          );
-        })}
-      </ToggleButtonGroup>
-
-      <Button disabled={!choosenProfession.length} onClick={clearFilters} variant='outlined'>
-        Tøm filtre
-      </Button>
-    </Box>
-  );
   return (
     <>
       <Head>
@@ -224,8 +188,12 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
           <Typo variant='h1'>Alle ansatte</Typo>
           <Typo variant='h2'>{processTemplate.title}</Typo>
         </Box>
-        <SearchFilter activeFilters={Boolean(choosenProfession.length)} filterComponent={<FilterComponent />} search={setSearchString} />
-        {(searchAndFilterResults.length ? searchAndFilterResults : phases).map((phase) => {
+        <SearchFilter
+          activeFilters={Boolean(choosenProfession.length)}
+          filterComponent={<Filter choosenProfession={choosenProfession} setChoosenProfession={setChoosenProfession} />}
+          search={setSearchString}
+        />
+        {(filterResult.length ? filterResult : phases).map((phase) => {
           return (
             <Box key={phase.id} mb={theme.spacing(2)}>
               <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />

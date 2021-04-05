@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { addDays } from 'utils/utils';
-
 const prisma = new PrismaClient();
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const CRON_SECRET = process.env.CRON_SECRET;

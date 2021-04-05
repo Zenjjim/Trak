@@ -3,9 +3,10 @@ import axios from 'axios';
 import HttpStatusCode from 'http-status-typed';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const prisma = new PrismaClient();
+import withAuth from 'lib/withAuth';
 import qs from 'qs';
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+export default withAuth(async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const {
       body: { description, employeeId, slackData },
@@ -31,4 +32,4 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
-}
+});

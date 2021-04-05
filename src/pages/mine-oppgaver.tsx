@@ -10,8 +10,8 @@ import moment from 'moment';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/client';
 import { useMemo, useState } from 'react';
-import React from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { IEmployeeTask, ITag } from 'utils/types';
@@ -35,16 +35,14 @@ const useStyles = makeStyles({
     marginBottom: theme.spacing(2),
   },
 });
-
-const LOGGED_IN_USER = 1;
-
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { fullfort: completed } = query;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+  const { fullfort: completed } = context.query;
   const isCompleted = completed.toString() === 'true';
   const myTasksQuery = await prisma.employeeTask.findMany({
     where: {
       responsible: {
-        id: LOGGED_IN_USER,
+        email: session?.user?.email,
       },
       completed: isCompleted,
       ...(isCompleted && {

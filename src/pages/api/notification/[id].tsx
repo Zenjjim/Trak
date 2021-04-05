@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
 import type { NextApiRequest, NextApiResponse } from 'next';
 const prisma = new PrismaClient();
-
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+import withAuth from 'lib/withAuth';
+export default withAuth(async function (req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { id },
   } = req;
@@ -20,4 +20,4 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
-}
+});

@@ -8,17 +8,19 @@ import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/client';
 import { useEffect, useMemo, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
 import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
 import { filterAndSearchEmployees } from 'utils/utils';
 
-const LOGGED_IN_USER = 1;
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
   const phases = prisma.processTemplate.findMany({
     where: {
-      slug: params.slug.toString(),
+      slug: context.params.slug.toString(),
     },
     select: {
       slug: true,
@@ -35,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
                 where: {
                   employee: {
                     hrManager: {
-                      id: LOGGED_IN_USER,
+                      email: session?.user?.email,
                     },
                   },
                 },
@@ -72,7 +74,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   const employees = prisma.employee.findMany({
     where: {
-      hrManagerId: LOGGED_IN_USER,
+      hrManager: {
+        email: session?.user?.email,
+      },
     },
     select: {
       id: true,
@@ -95,7 +99,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
           task: {
             phase: {
               processTemplate: {
-                slug: params.slug.toString(),
+                slug: context.params.slug.toString(),
               },
             },
           },

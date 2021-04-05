@@ -1,6 +1,5 @@
 import { Avatar, Badge, Box, Button, CircularProgress, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 import classnames from 'classnames';
@@ -10,7 +9,7 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/client';
+import { signOut } from 'next-auth/client';
 import { Dispatch, useEffect, useState } from 'react';
 import ScrollableFeed from 'react-scrollable-feed';
 import theme from 'theme';
@@ -143,6 +142,7 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
   const classes = useStyles();
   const name = `${firstName} ${lastName[0]}.`;
   const [notifications, setNotifications] = useState<INotification[]>([]);
+
   useEffect(() => {
     axios.get(`/api/employee/${userId}/notifications`).then((res) => {
       setNotifications([...res.data]);
@@ -172,8 +172,9 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
 
       {displayNotifications && (
         <>
-          <Box alignItems='center' className={classes.gutterBottom} display='flex'>
-            <Button startIcon={<SettingsIcon />}>Innstillinger</Button>
+          <Box alignItems='center' className={classes.gutterBottom} display='flex' flexDirection='column'>
+            <Button>Innstillinger</Button>
+            <Button onClick={signOut}>Logg ut</Button>
           </Box>
 
           {notifications.length === 0 ? (
@@ -214,7 +215,9 @@ const Sidebar = () => {
         <Box className={classes.gutterBottom}>
           <Image height={34} src={'/trak_logo.png'} width={120} />
         </Box>
-        {user ? (
+        {!user ? (
+          <CircularProgress />
+        ) : (
           <LoggedInUserCard
             displayNotifications={displayNotifications}
             firstName={user.firstName}
@@ -223,8 +226,6 @@ const Sidebar = () => {
             setDisplayNotifications={setDisplayNotifications}
             userId={user.id}
           />
-        ) : (
-          <Button onClick={signIn}>Logg inn</Button>
         )}
         <Divider />
         {!displayNotifications && (

@@ -1,13 +1,13 @@
+import { CircularProgress } from '@material-ui/core';
 import Head from 'next/head';
 
 export default function Home() {
   return (
     <div>
       <Head>
-        <title>Create Next App</title>
-        <link href='/favicon.ico' rel='icon' />
+        <title>TRAK</title>
       </Head>
-      TRAK
+      <CircularProgress />
     </div>
   );
 }

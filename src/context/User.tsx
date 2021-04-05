@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/client';
 import { createContext, useContext } from 'react';
 import useSWR, { responseInterface } from 'swr';
 import { IEmployee } from 'utils/types';
@@ -12,9 +13,8 @@ function useUser() {
   return context;
 }
 function UserProvider(props) {
-  const userId = 1;
-
-  const { data: user }: responseInterface<IEmployee, unknown> = useSWR(`/api/employee/${userId}`, fetcher);
+  const [session] = useSession();
+  const { data: user }: responseInterface<IEmployee, unknown> = useSWR(`/api/employee/${session?.user?.email}`, fetcher);
 
   return <UserContext.Provider value={{ user: user }} {...props} />;
 }

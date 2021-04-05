@@ -3,8 +3,9 @@ import HttpStatusCode from 'http-status-typed';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { IProfession, ITag } from 'utils/types';
 const prisma = new PrismaClient();
+import withAuth from 'lib/withAuth';
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+export default withAuth(async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const {
       body: { data, phaseId, global },
@@ -46,4 +47,4 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
   prisma.$disconnect();
-}
+});

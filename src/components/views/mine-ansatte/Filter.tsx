@@ -1,5 +1,6 @@
 import { Box, Button, ToggleButton, ToggleButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import classNames from 'classnames';
 import Typo from 'components/Typo';
 import { useData } from 'context/Data';
 import theme from 'theme';
@@ -9,12 +10,19 @@ const useStyles = makeStyles({
   gutterBottom: {
     marginBottom: theme.spacing(2),
   },
+  wrap: {
+    flexWrap: 'wrap',
+  },
+  selectedButton: {
+    '&.Mui-selected': {
+      color: theme.palette.primary.main,
+    },
+  },
 });
 
 type FilterProps = {
   choosenProfession: string[];
-  // eslint-disable-next-line
-  setChoosenProfession: (element: any) => void;
+  setChoosenProfession: (element: string[]) => void;
 };
 
 const Filter = ({ choosenProfession, setChoosenProfession }: FilterProps) => {
@@ -37,10 +45,10 @@ const Filter = ({ choosenProfession, setChoosenProfession }: FilterProps) => {
       <Typo gutterBottom variant='h2'>
         Rolle
       </Typo>
-      <ToggleButtonGroup className={classes.gutterBottom} onChange={handleFormat} value={choosenProfession}>
+      <ToggleButtonGroup className={classNames(classes.wrap, classes.gutterBottom)} onChange={handleFormat} value={choosenProfession}>
         {professions?.map((profession: IProfession) => {
           return (
-            <ToggleButton key={profession.id} value={profession.title}>
+            <ToggleButton className={classes.selectedButton} key={profession.id} value={profession.title}>
               {profession.title}
             </ToggleButton>
           );

@@ -1,5 +1,6 @@
-import { Badge, Button, Fade, makeStyles, Popover, TextField } from '@material-ui/core';
+import { Badge, Button, Fade, IconButton, InputAdornment, makeStyles, Popover, TextField } from '@material-ui/core';
 import { Search, Tune } from '@material-ui/icons';
+import ClearIcon from '@material-ui/icons/Clear';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import theme from 'theme';
@@ -33,6 +34,7 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
 
   const [displaySearch, setDisplaySearch] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,6 +44,10 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+    search(searchValue);
+  }, [searchValue]);
+
   const open = Boolean(anchorEl);
   const id = open ? 'filter' : undefined;
   return (
@@ -49,11 +55,26 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
       {displaySearch ? (
         <Fade in timeout={100}>
           <TextField
-            InputProps={{ className: classes.textField }}
+            InputProps={{
+              className: classes.textField,
+              ...(searchValue.length && {
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      onClick={() => {
+                        setSearchValue('');
+                      }}>
+                      <ClearIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }),
+            }}
             autoFocus
             onBlur={(e) => !e.target.value && setDisplaySearch(false)}
-            onChange={(e) => search(e.target.value)}
+            onChange={(e) => setSearchValue(e.target.value)}
             size='small'
+            value={searchValue}
           />
         </Fade>
       ) : (
@@ -76,14 +97,14 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
         id={id}
         onClose={handleClose}
         open={open}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left',
+          horizontal: 'right',
         }}>
         {filterComponent}
       </Popover>

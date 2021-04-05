@@ -6,7 +6,7 @@ import moment from 'moment';
 import { TimeSectionType } from 'pages/mine-oppgaver';
 import { Dispatch, SetStateAction } from 'react';
 import { thisMonth, thisWeek, today, tomorrow } from 'sortof';
-import { IEmployee, IEmployeeTask, ITag } from 'utils/types';
+import { IEmployee, IEmployeeExtended, IEmployeeTask, IPhaseWithEmployees, ITag } from 'utils/types';
 
 moment.locale('nb');
 
@@ -116,8 +116,7 @@ type EmployeeFilter = {
   professions: string[];
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const searchEmployees = (text: string, phases: any, withResponsible = false) => {
+export const searchEmployees = (text: string, phases: IPhaseWithEmployees[], withResponsible = false) => {
   const searchOptions = {
     keys: ['searchName', 'firstName', 'lastName', ...(withResponsible ? ['hrManager.searchName', 'hrManager.firstName', 'hrManager.lastName'] : [])],
     threshold: 0.3,
@@ -217,26 +216,24 @@ export const filterAndSearchTasks = (searchText: string, taskFilters: TaskFilter
   if (noSearchText) {
     const result = filterTasks(taskFilters, timeSections);
     return result;
-  }
-
-  if (noFilters) {
+  } else if (noFilters) {
     const result = searchTask(searchText, timeSections, withResponsible);
     return result;
+  } else {
+    const filteredTasks = filterTasks(taskFilters, timeSections);
+    const result = searchTask(searchText, filteredTasks, withResponsible);
+    return result;
   }
-
-  const filteredTasks = filterTasks(taskFilters, timeSections);
-  const result = searchTask(searchText, filteredTasks, withResponsible);
-  return result;
 };
 // eslint-disable-next-line
-const filterEmployees = (employeeFilter: EmployeeFilter, phases: any) => {
+const filterEmployees = (employeeFilter: EmployeeFilter, phases: IPhaseWithEmployees[]) => {
   const result = phases.map((phase) => {
-    return { ...phase, employees: phase.employees.filter((employee: IEmployee) => employeeFilter.professions.includes(employee.profession.title)) };
+    return { ...phase, employees: phase.employees.filter((employee: IEmployeeExtended) => employeeFilter.professions.includes(employee.profession.title)) };
   });
   return result;
 };
-// eslint-disable-next-line
-export const filterAndSearchEmployees = (searchText: string, employeeFilters: EmployeeFilter, phases: any, withResponsible = false) => {
+
+export const filterAndSearchEmployees = (searchText: string, employeeFilters: EmployeeFilter, phases: IPhaseWithEmployees[], withResponsible = false) => {
   const noSearchText = !searchText;
   const noFilters = !employeeFilters.professions.length;
 

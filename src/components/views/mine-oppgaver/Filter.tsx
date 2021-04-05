@@ -1,5 +1,6 @@
 import { Autocomplete, Box, Button, TextField, ToggleButton, ToggleButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import classNames from 'classnames';
 import Typo from 'components/Typo';
 import { useData } from 'context/Data';
 import theme from 'theme';
@@ -8,6 +9,14 @@ import { IProcessTemplate, ITag } from 'utils/types';
 const useStyles = makeStyles({
   gutterBottom: {
     marginBottom: theme.spacing(2),
+  },
+  selectedButton: {
+    '&.Mui-selected': {
+      color: theme.palette.primary.main,
+    },
+  },
+  wrap: {
+    flexWrap: 'wrap',
   },
 });
 
@@ -52,10 +61,10 @@ const Filter = ({ choosenTags, setChoosenTags, choosenProcessTemplates, setChoos
       <Typo gutterBottom variant='h2'>
         Prosess
       </Typo>
-      <ToggleButtonGroup className={classes.gutterBottom} onChange={handleFormat} value={choosenProcessTemplates}>
+      <ToggleButtonGroup className={classNames(classes.gutterBottom, classes.wrap)} onChange={handleFormat} value={choosenProcessTemplates}>
         {processTemplates?.map((processTemplate: IProcessTemplate) => {
           return (
-            <ToggleButton key={processTemplate.id} value={processTemplate.title}>
+            <ToggleButton className={classes.selectedButton} key={processTemplate.id} value={processTemplate.title}>
               {processTemplate.title}
             </ToggleButton>
           );

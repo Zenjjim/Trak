@@ -90,3 +90,11 @@ export enum Offset {
 export enum Actions {
   UpdateDueDate = 'updateDueDate',
 }
+
+export type IEmployeeExtended = IEmployee & { tasksFinished: number; totalTasks: number };
+
+export type IPhaseWithEmployees = {
+  id: string;
+  title: string;
+  employees: IEmployeeExtended[];
+};

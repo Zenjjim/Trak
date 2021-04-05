@@ -213,7 +213,7 @@ const Sidebar = () => {
     <Drawer anchor='left' className={classes.drawer} classes={{ paper: classnames(classes.drawerPaper, classes.removeScrollbar) }} variant='permanent'>
       <Box className={classes.removeScrollbar} display='flex' flexDirection='column' padding={theme.spacing(2)}>
         <Box className={classes.gutterBottom}>
-          <Image height={34} src={'/trak_logo.png'} width={120} />
+          <Image height={34} src={'/trak_logo.svg'} width={120} />
         </Box>
         {!user ? (
           <CircularProgress />

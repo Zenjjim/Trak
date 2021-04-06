@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
+import { groupBy } from 'lodash';
+import moment from 'moment';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { addDays } from 'utils/utils';
+import { addDays, slackMessager } from 'utils/utils';
 const prisma = new PrismaClient();
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const CRON_SECRET = process.env.CRON_SECRET;
@@ -45,6 +47,16 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         dateOfEmployment: true,
         professionId: true,
         hrManagerId: true,
+        hrManager: {
+          select: {
+            employeeSettings: {
+              select: {
+                slack: true,
+                notificationSettings: true,
+              },
+            },
+          },
+        },
         employeeTask: {
           select: {
             id: true,
@@ -64,10 +76,38 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
+    const responsibleEmployees = await prisma.employee.findMany({
+      where: {
+        responsibleEmployeeTask: {
+          some: {
+            completed: false,
+          },
+        },
+      },
+      select: {
+        id: true,
+        responsibleEmployeeTask: {
+          where: {
+            completed: false,
+          },
+          select: {
+            dueDate: true,
+          },
+        },
+        employeeSettings: {
+          select: {
+            slack: true,
+            notificationSettings: true,
+          },
+        },
+      },
+    });
+
     prisma.$disconnect();
 
     cronDateEmployeeTaskCreator(phases, employees);
     nonCronDateEmployeeTaskCreator(phases, employees);
+    createNotification(responsibleEmployees);
 
     res.status(HttpStatusCode.OK).end();
   } else {
@@ -89,6 +129,7 @@ const cronDateEmployeeTaskCreator = (phases, employees) => {
     }
   });
 };
+
 const nonCronDateEmployeeTaskCreator = (phases, employees) =>
   employees.forEach((employee) => {
     if (!employeeHasProcessTask(employee, 'onboarding')) {
@@ -98,11 +139,16 @@ const nonCronDateEmployeeTaskCreator = (phases, employees) =>
       offboardingEmployeeTaskCreator(phases, employee);
     }
   });
+
 const onboardingEmployeeTaskCreator = (phases, employee) =>
   phases.forEach((phase) => {
     if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
       phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
       createEmployeeTasks(employee, phase);
+      if (employee.hrManager.employeeSettings.notificationSettings.includes('HIRED')) {
+        const notificationText = `${employee.firstName} ${employee.lastName} har nettopp startet og flyttet til Onboarding`;
+        notificationSender(employee.hrManagerId, notificationText, employee.hrManager.employeeSettings?.slack);
+      }
     }
   });
 const offboardingEmployeeTaskCreator = (phases, employee) =>
@@ -110,6 +156,10 @@ const offboardingEmployeeTaskCreator = (phases, employee) =>
     if (phase.processTemplate.slug === 'offboarding') {
       phase.dueDate = addDays(employee.terminationDate, phase.dueDateDayOffset);
       createEmployeeTasks(employee, phase);
+      if (employee.hrManager.employeeSettings.notificationSettings.includes('TERMINATION')) {
+        const notificationText = `${employee.firstName} ${employee.lastName} slutter og er flyttet til Offboarding`;
+        notificationSender(employee.hrManagerId, notificationText, employee.hrManager.employeeSettings?.slack);
+      }
     }
   });
 const employeeHasProcessTask = (employee, processTitle) =>
@@ -131,4 +181,45 @@ const createEmployeeTasks = async (employee, phase) => {
   });
 
   await prisma.employeeTask.createMany({ data: data, skipDuplicates: true });
+};
+
+const createNotification = async (responsibleEmployees) => {
+  try {
+    const today = new Date();
+    const nextWeek = new Date().setDate(today.getDate() + 7);
+    responsibleEmployees?.forEach((employee) => {
+      const notificationSettings = employee?.employeeSettings?.notificationSettings;
+      if (!notificationSettings?.includes('DEADLINE') && !notificationSettings?.inludes('WEEK_BEFORE_DEADLINE')) {
+        return;
+      }
+      const dates = Object.keys(groupBy(employee.responsibleEmployeeTask, 'dueDate'));
+      dates.forEach((d) => {
+        const date = moment(d);
+        let notificationText = undefined;
+        if (notificationSettings?.includes('DEADLINE') && moment(today).isSame(date, 'day')) {
+          notificationText = `Du har oppgaver som utgår idag`;
+        } else if (notificationSettings?.includes('WEEK_BEFORE_DEADLINE') && moment(nextWeek).isSame(date, 'day')) {
+          notificationText = `Du har oppgaver som utgår om en uke`;
+        }
+        if (notificationText) {
+          notificationSender(employee.id, notificationText, employee?.employeeSettings?.slack);
+        }
+      });
+    });
+  } catch (err) {
+    // eslint-disable-next-line
+    console.error(err.message);
+  }
+};
+
+const notificationSender = async (employeeId, description, slackId = undefined) => {
+  await prisma.notification.create({
+    data: {
+      employeeId: employeeId,
+      description: description,
+    },
+  });
+  if (slackId) {
+    slackMessager(slackId, description);
+  }
 };

@@ -44,6 +44,7 @@ const EmployeeSelectorComponent = ({
     hrManager: undefined,
     employees: undefined,
     employeeTask: undefined,
+    employeeSettings: undefined,
   },
 }: EmployeeSelectorComponentProps) => {
   return (

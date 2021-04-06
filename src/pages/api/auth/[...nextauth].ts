@@ -22,17 +22,32 @@ export default NextAuth({
     //eslint-disabe-next-line
     async signIn(_, __, profile) {
       try {
-        const userExists = await prisma.employee.findUnique({
+        const user = await prisma.employee.findUnique({
           where: {
             email: profile.email,
           },
         });
-        if (userExists && profile.verified_email) {
+        if (user && profile.verified_email) {
           return true;
         }
         // eslint-disable-next-line no-empty
       } catch (err) {}
       return false;
+    },
+    async session(session, user) {
+      try {
+        const user_id = await prisma.employee.findUnique({
+          where: {
+            email: user.email,
+          },
+          select: {
+            id: true,
+          },
+        });
+        session.user.id = user_id.id;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      return session;
     },
   },
 });

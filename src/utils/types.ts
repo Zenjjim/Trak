@@ -8,14 +8,28 @@ export type IEmployee = {
   dateOfEmployment?: Date;
   terminationDate?: Date;
   imageUrl?: string;
-  slack?: string;
   profession: IProfession;
   hrManager: IEmployee;
   hrManagerId?: number;
   employees: IEmployee[];
+  employeeSettings: IEmployeeSettings;
   employeeTask: IEmployeeTask[];
   notifications?: INotification[];
 };
+
+export type IEmployeeSettings = {
+  employeeId?: number;
+  slack?: string;
+  notificationSettings: NotificationType[];
+};
+
+export enum NotificationType {
+  DELEGATE = 'jeg blir delegert en oppgave',
+  DEADLINE = 'en fase utløper',
+  WEEK_BEFORE_DEADLINE = 'en fase utløper om en uke',
+  TERMINATION = 'en av mine ansatte skal slutte',
+  HIRED = 'jeg får ansvaret for en ny ansatt',
+}
 
 export type IEmployeeTask = {
   id: string;

@@ -46,7 +46,6 @@ const GET = async (res, id) => {
             id: true,
             firstName: true,
             lastName: true,
-            slack: true,
           },
         },
         task: {

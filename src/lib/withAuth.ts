@@ -12,13 +12,17 @@ const withAuth = (handler) => {
       const token = await jwt.getToken({ req, secret });
 
       if (token) {
-        const userExists = await prisma.employee.findUnique({
+        const user = await prisma.employee.findUnique({
           where: {
             email: token.email,
           },
+          select: {
+            id: true,
+            email: true,
+          },
         });
-        if (userExists) {
-          return handler(req, res);
+        if (user) {
+          return handler(req, res, user);
         }
       }
       // eslint-disable-next-line no-empty

@@ -12,7 +12,11 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
         firstName: true,
         lastName: true,
         imageUrl: true,
-        slack: true,
+        employeeSettings: {
+          select: {
+            slack: true,
+          },
+        },
       },
     });
     res.json(employees);

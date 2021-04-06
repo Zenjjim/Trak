@@ -106,6 +106,7 @@ export type TimeSectionType = {
 const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const classes = useStyles();
   const router = useRouter();
+
   const { fullfort: completed } = router.query;
 
   const timeSections: TimeSectionType[] = splitIntoTimeSections(myTasks);
@@ -117,7 +118,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
 
   const filterResult = useMemo(() => {
     return filterAndSearchTasks(searchString, { tags: choosenTags, processTemplates: choosenProcessTemplates }, timeSections, true);
-  }, [searchString, choosenTags, choosenProcessTemplates]);
+  }, [searchString, choosenTags, choosenProcessTemplates, myTasks]);
 
   return (
     <>

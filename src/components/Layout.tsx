@@ -24,11 +24,12 @@ const Layout = ({ children }: LayoutProps) => {
   const classes = useStyles();
   const [session, loading] = useSession();
   const router = useRouter();
-
   useEffect(() => {
     if (!loading) {
       if (session?.user) {
-        router.push(urls[0].links[0].link);
+        if (router.pathname === '/') {
+          router.push(urls[0].links[0].link);
+        }
       } else {
         router.push('/');
       }

@@ -67,9 +67,9 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
           axios.post('/api/notification', {
             description: `Du har blitt delegert arbeidsoppgaven "${employeeTask.task.title}" av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
             employeeId: formData.responsible?.id,
-            ...(formData.responsible.slack && {
+            ...(formData.responsible.employeeSettings?.slack && {
               slackData: {
-                channel: formData.responsible.slack,
+                channel: formData.responsible.employeeSettings.slack,
                 text: `Du har blitt delegert arbeidsoppgaven ${employeeTask.task.title} av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
               },
             }),

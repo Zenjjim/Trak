@@ -140,6 +140,7 @@ type LoggedInUserCardProps = {
 
 const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, setDisplayNotifications, userId }: LoggedInUserCardProps) => {
   const classes = useStyles();
+  const router = useRouter();
   const name = `${firstName} ${lastName[0]}.`;
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
@@ -173,7 +174,13 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
       {displayNotifications && (
         <>
           <Box alignItems='center' className={classes.gutterBottom} display='flex' flexDirection='column'>
-            <Button>Innstillinger</Button>
+            <Button
+              onClick={() => {
+                router.push('/innstillinger');
+                setDisplayNotifications(false);
+              }}>
+              Innstillinger
+            </Button>
             <Button onClick={signOut}>Logg ut</Button>
           </Box>
 
@@ -192,7 +199,7 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
           )}
 
           <Box alignItems='flex-end' display='flex' flexDirection='column-reverse'>
-            <IconButton onClick={() => setDisplayNotifications(!displayNotifications)}>
+            <IconButton onClick={() => setDisplayNotifications(false)}>
               <ExpandLessIcon />
             </IconButton>
           </Box>

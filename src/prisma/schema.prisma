@@ -8,10 +8,9 @@ datasource db {
 }
 
 model Employee {
-  id                      Int            @id @default(autoincrement())
+  id                      Int               @id @default(autoincrement())
   title                   String?
-  email                   String         @unique
-  slack                   String?        @unique
+  email                   String            @unique
   professionId            String
   firstName               String
   lastName                String
@@ -20,13 +19,29 @@ model Employee {
   terminationDate         DateTime?
   imageUrl                String?
   hrManagerId             Int?
-  hrManager               Employee?      @relation("EmployeeToEmployee", fields: [hrManagerId], references: [id])
-  profession              Profession     @relation(fields: [professionId], references: [id])
-  employees               Employee[]     @relation("EmployeeToEmployee")
-  employeeTask            EmployeeTask[] @relation("tasks")
-  responsibleEmployeeTask EmployeeTask[] @relation("responsible_employee_tasks")
-  notifications           Notification[] @relation("employee")
-  responsibleTask         Task[]         @relation("responsible_tasks")
+  hrManager               Employee?         @relation("EmployeeToEmployee", fields: [hrManagerId], references: [id])
+  profession              Profession        @relation(fields: [professionId], references: [id])
+  employees               Employee[]        @relation("EmployeeToEmployee")
+  employeeSettings        EmployeeSettings? @relation("settings")
+  employeeTask            EmployeeTask[]    @relation("tasks")
+  responsibleEmployeeTask EmployeeTask[]    @relation("responsible_employee_tasks")
+  notifications           Notification[]    @relation("employee")
+  responsibleTask         Task[]            @relation("responsible_tasks")
+}
+
+enum NotificationType {
+  DELEGATE
+  DEADLINE
+  WEEK_BEFORE_DEADLINE
+  TERMINATION
+  HIRED
+}
+
+model EmployeeSettings {
+  employeeId           Int                @id
+  employee             Employee           @relation("settings", fields: [employeeId], references: [id])
+  slack                String?            @unique
+  notificationSettings NotificationType[]
 }
 
 model EmployeeTask {

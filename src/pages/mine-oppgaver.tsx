@@ -120,7 +120,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
 
   const filterResult = useMemo(() => {
     return filterAndSearchTasks(searchString, { tags: choosenTags, processTemplates: choosenProcessTemplates }, timeSections);
-  }, [searchString, choosenTags, choosenProcessTemplates]);
+  }, [searchString, choosenTags, choosenProcessTemplates, myTasks]);
 
   return (
     <>

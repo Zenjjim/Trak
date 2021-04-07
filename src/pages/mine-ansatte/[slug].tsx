@@ -1,5 +1,4 @@
 import { Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import Filter from 'components/views/mine-ansatte/Filter';
@@ -23,6 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       slug: context.params.slug.toString(),
     },
     select: {
+      title: true,
       slug: true,
       phases: {
         orderBy: {
@@ -127,27 +127,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return { props: { allPhases, myEmployees } };
 };
-
-const useStyles = makeStyles({
-  root: {
-    marginLeft: '30px',
-    marginTop: '60px',
-  },
-  pointer: {
-    cursor: 'pointer',
-  },
-  centeringRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  textField: {
-    height: theme.spacing(4),
-  },
-  gutterBottom: {
-    marginBottom: theme.spacing(2),
-  },
-});
 export const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) => {
   filteredEmployees.forEach((employee: IEmployee) => {
     employee['tasksFinished'] = employee.employeeTask.filter(
@@ -179,13 +158,11 @@ export const getPhasesWithEmployees = (processTemplate: IProcessTemplate, myEmpl
   ];
 };
 const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const classes = useStyles();
   const processTemplate = allPhases[0];
   const phases = getPhasesWithEmployees(processTemplate, myEmployees);
   const router = useRouter();
   const [searchString, setSearchString] = useState('');
   const [choosenProfession, setChoosenProfession] = useState<string[]>([]);
-
   useEffect(() => {
     setChoosenProfession([]);
   }, [router.query]);
@@ -198,24 +175,22 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
       <Head>
         <title>Mine ansatte - {processTemplate.title}</title>
       </Head>
-      <Box className={classes.root}>
-        <Box>
-          <Typo variant='h1'>Mine ansatte</Typo>
-          <Typo variant='h2'>{processTemplate.title}</Typo>
-        </Box>
-        <SearchFilter
-          activeFilters={Boolean(choosenProfession.length)}
-          filterComponent={<Filter choosenProfession={choosenProfession} setChoosenProfession={setChoosenProfession} />}
-          search={setSearchString}
-        />
-        {(filterResult.length ? filterResult : phases).map((phase) => {
-          return (
-            <Box key={phase.id} mb={theme.spacing(2)}>
-              <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
-            </Box>
-          );
-        })}
+      <Box>
+        <Typo variant='h1'>Mine ansatte</Typo>
+        <Typo variant='h2'>{processTemplate.title}</Typo>
       </Box>
+      <SearchFilter
+        activeFilters={Boolean(choosenProfession.length)}
+        filterComponent={<Filter choosenProfession={choosenProfession} setChoosenProfession={setChoosenProfession} />}
+        search={setSearchString}
+      />
+      {(filterResult.length ? filterResult : phases).map((phase) => {
+        return (
+          <Box key={phase.id} mb={theme.spacing(2)}>
+            <PhaseCard amount={phase.employees.length} employees={phase.employees} id={phase.id} slug={processTemplate.slug} title={phase.title} />
+          </Box>
+        );
+      })}
     </>
   );
 };

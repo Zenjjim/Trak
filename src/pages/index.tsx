@@ -1,4 +1,4 @@
-import { CircularProgress } from '@material-ui/core';
+import LoadingLogo from 'components/LoadingLogo';
 import Head from 'next/head';
 
 export default function Home() {
@@ -7,7 +7,7 @@ export default function Home() {
       <Head>
         <title>TRAK</title>
       </Head>
-      <CircularProgress />
+      <LoadingLogo />
     </div>
   );
 }

@@ -80,6 +80,11 @@ const useStyles = makeStyles({
       overflowY: 'auto',
     },
   },
+  collapsNavbar: {
+    backgroundColor: theme.palette.secondary.light,
+    height: '100vh',
+    cursor: 'pointer',
+  },
 });
 const LinkGroup = ({ title, links, divider, setDrawer }: section & { setDrawer: (boolean) => void }) => {
   const router = useRouter();
@@ -272,6 +277,7 @@ const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotificatio
 };
 
 const Sidebar = () => {
+  const classes = useStyles();
   const [drawer, setDrawer] = useState<boolean>(false);
   const [displayNotifications, setDisplayNotifications] = useState<boolean>(false);
   const { user } = useUser();
@@ -279,8 +285,8 @@ const Sidebar = () => {
   return (
     <>
       <Hidden mdUp>
-        <div>
-          <IconButton onClick={() => setDrawer(true)} style={{ width: '50px', height: '50px' }}>
+        <div className={classes.collapsNavbar} onClick={() => setDrawer(true)}>
+          <IconButton style={{ width: '50px', height: '50px' }}>
             <Menu />
           </IconButton>
         </div>

@@ -15,16 +15,27 @@ import { IEmployeeTask, ITask } from 'utils/types';
 export const EmployeeContext = createContext(undefined);
 
 const useStyles = makeStyles({
-  root: {
-    marginLeft: '30px',
-    marginTop: '60px',
-    marginRight: '30px',
-  },
   spaceRight: {
     marginRight: theme.spacing(4),
   },
+  header: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column',
+    },
+  },
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
 });
-
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id, år: year, prosess: process } = query;
   const parsedId = typeof id === 'string' && parseInt(id);
@@ -187,19 +198,19 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
       <Head>
         <title>Ansatt</title>
       </Head>
-      <div className={classes.root}>
-        <Box alignItems='flex-end' display='flex'>
-          <Typo className={classes.spaceRight} variant='h1'>
+      <>
+        <div className={classes.header}>
+          <Typo className={classes.spaceRight} noWrap variant='h1'>
             {employee.firstName} {employee.lastName}
           </Typo>
           {employee.hrManager && (
-            <Typo variant='body1'>
+            <Typo noWrap variant='body1'>
               Ansvarlig: {employee.hrManager.firstName} {employee.hrManager.lastName}
             </Typo>
           )}
-        </Box>
-        <Box display='flex' justifyContent='space-between' mb={theme.spacing(4)}>
-          <Typo variant='body1'>
+        </div>
+        <div className={classes.buttonGroup}>
+          <Typo noWrap variant='body1'>
             {year} {history.find((element) => element.slug === process)?.title}
           </Typo>
           <Box display='flex'>
@@ -238,7 +249,7 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               })}
             </Menu>
           </Box>
-        </Box>
+        </div>
         <EmployeeContext.Provider value={{ employee }}>
           {phasesWithTasks.map((phase, index) => {
             return (
@@ -253,7 +264,7 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
             );
           })}
         </EmployeeContext.Provider>
-      </div>
+      </>
     </>
   );
 };

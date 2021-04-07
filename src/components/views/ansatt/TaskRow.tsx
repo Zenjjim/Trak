@@ -1,4 +1,4 @@
-import { Box, ButtonBase, IconButton } from '@material-ui/core';
+import { Box, ButtonBase, Hidden, IconButton } from '@material-ui/core';
 import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Avatar from 'components/Avatar';
@@ -46,26 +46,28 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
           {completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
         </IconButton>
         <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>
-          <Typo className={completed && classes.completedTask} color={!completed && 'disabled'} noWrap variant='body1'>
+          <Typo className={completed && classes.completedTask} color={!completed && 'disabled'} noWrap style={{ maxWidth: '80vw' }} variant='body1'>
             {employeeTask.task.title}
           </Typo>
         </ButtonBase>
 
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={employeeTask.id} modalIsOpen={modalIsOpen} />}
       </Box>
-      {employeeTask.responsible.id !== employee.hrManager.id && (
-        <Box alignItems='center' display='flex' flex={1} flexDirection='row'>
-          <Avatar
-            className={classes.avatar}
-            firstName={employeeTask.responsible.firstName}
-            image={employeeTask.responsible.imageUrl}
-            lastName={employeeTask.responsible.lastName}
-          />
-          <Typo variant='body1'>
-            {employeeTask.responsible.firstName} {employeeTask.responsible.lastName}
-          </Typo>
-        </Box>
-      )}
+      <Hidden smDown>
+        {employeeTask.responsible.id !== employee.hrManager.id && (
+          <Box alignItems='center' display='flex' flex={1} flexDirection='row'>
+            <Avatar
+              className={classes.avatar}
+              firstName={employeeTask.responsible.firstName}
+              image={employeeTask.responsible.imageUrl}
+              lastName={employeeTask.responsible.lastName}
+            />
+            <Typo variant='body1'>
+              {employeeTask.responsible.firstName} {employeeTask.responsible.lastName}
+            </Typo>
+          </Box>
+        )}
+      </Hidden>
     </Box>
   );
 };

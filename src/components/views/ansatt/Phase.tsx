@@ -1,4 +1,4 @@
-import { Box, Button } from '@material-ui/core';
+import { Box, Button, Hidden } from '@material-ui/core';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import { makeStyles } from '@material-ui/styles';
 import AddButton from 'components/AddButton';
@@ -43,7 +43,9 @@ const Phase = ({ title, tasksFinished, totalTasks, employeeTasks, first }: Phase
             <b>{tasksFinished}</b> av <b>{totalTasks}</b> oppgaver er gjennomført
           </Typo>
         </Box>
-        <Box flex={1}>{first && <Typo variant='body2'>Ansvarlig</Typo>}</Box>
+        <Hidden smDown>
+          <Box flex={1}>{first && <Typo variant='body2'>Ansvarlig</Typo>}</Box>
+        </Hidden>
       </Box>
       {employeeTasks.map((employeeTask) => {
         return <TaskRow employeeTask={employeeTask} key={employeeTask.taskId} />;

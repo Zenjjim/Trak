@@ -34,7 +34,7 @@ const PUT = async (req, res, id) => {
       },
     });
     if (!employeeSettings) {
-      throw new Error();
+      throw new Error('Ansattinnstillinger mangler i bodyen');
     }
     res.status(HttpStatusCode.OK).json(employeeSettings);
   } catch (err) {

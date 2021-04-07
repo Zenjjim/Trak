@@ -67,10 +67,13 @@ const Settings = ({ mySettings }: InferGetServerSidePropsType<typeof getServerSi
   });
 
   const onSubmit = handleSubmit((data) => {
-    const notificationSettings = Object.keys(NotificationType).filter((key) => {
+    const NotificationTypeArray = Object.keys(NotificationType);
+    const notificationSettings = NotificationTypeArray.filter((notificationType) => {
       return Object.entries(data).some((arr) => {
-        if (arr[0] === key) {
-          return arr[1];
+        const data_name = arr[0];
+        const data_value = arr[1];
+        if (data_name === notificationType) {
+          return data_value;
         }
       });
     });

@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     marginRight: '30px',
     marginTop: '60px',
     [theme.breakpoints.down('md')]: {
-      marginLeft: '10px',
+      marginLeft: '0',
     },
   },
 });

@@ -104,7 +104,6 @@ export type TimeSectionType = {
   date?: string;
   data: IEmployeeTask[];
   error?: boolean;
-  defaultOpen?: boolean;
 };
 
 const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -151,7 +150,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
             <Typo>Ingen oppgaver</Typo>
           ) : (
             (filterResult?.length ? filterResult : timeSections).map((section: TimeSectionType, index: number) => {
-              return <TimeSection first={index === 0} key={index} section={section} />;
+              return <TimeSection index={index} key={index} section={section} />;
             })
           )}
         </div>

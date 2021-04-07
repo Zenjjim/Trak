@@ -9,7 +9,7 @@ import theme from 'theme';
 
 type TimeSectionProps = {
   section: TimeSectionType;
-  first: boolean;
+  index: number;
 };
 
 const useStyles = makeStyles({
@@ -30,9 +30,10 @@ const useStyles = makeStyles({
   },
 });
 
-const TimeSection = ({ section, first }: TimeSectionProps) => {
+const TimeSection = ({ section, index }: TimeSectionProps) => {
   const classes = useStyles();
-  const [open, setOpen] = useState<boolean>(section.defaultOpen);
+  const [open, setOpen] = useState<boolean>(index < 3);
+  const first = index === 0;
   if (!section) {
     return <></>;
   }

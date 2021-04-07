@@ -1,4 +1,4 @@
-import { Avatar, Box, makeStyles, TableCell, TableRow } from '@material-ui/core';
+import { Avatar, Box, Hidden, makeStyles, TableCell, TableRow } from '@material-ui/core';
 import Typo from 'components/Typo';
 import { useRouter } from 'next/router';
 import theme from 'theme';
@@ -51,22 +51,28 @@ const UserRow = ({ employee, slug }: UserRowProps) => {
           </Typo>
         </div>
       </TableCell>
-      <TableCell>
-        <Typo variant={typoVariant}>
-          <b>{employee.tasksFinished}</b> av <b>{employee.totalTasks}</b>
-        </Typo>
-      </TableCell>
-      <TableCell>
-        <Typo variant={typoVariant}>{employee.profession.title}</Typo>
-      </TableCell>
-      <TableCell>
-        <Box alignItems='flex-end' display='flex' flexDirection='row'>
-          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
+      <Hidden mdDown>
+        <TableCell>
           <Typo variant={typoVariant}>
-            {employee.hrManager.firstName} {employee.hrManager.lastName}
+            <b>{employee.tasksFinished}</b> av <b>{employee.totalTasks}</b>
           </Typo>
-        </Box>
-      </TableCell>
+        </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>
+          <Typo variant={typoVariant}>{employee.profession.title}</Typo>
+        </TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell>
+          <Box alignItems='flex-end' display='flex' flexDirection='row'>
+            <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
+            <Typo variant={typoVariant}>
+              {employee.hrManager.firstName} {employee.hrManager.lastName}
+            </Typo>
+          </Box>
+        </TableCell>
+      </Hidden>
     </TableRow>
   );
 };

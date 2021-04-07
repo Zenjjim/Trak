@@ -36,7 +36,7 @@ const LoadingLogo = () => {
   const classes = useStyles();
   return (
     <Box className={classes.root}>
-      <Image className={classes.animateLogo} height='80px' src={'/trak_logo.svg'} width='240px' />
+      <Image className={classes.animateLogo} height={80} priority src='/trak_logo.svg' width={240} />
     </Box>
   );
 };

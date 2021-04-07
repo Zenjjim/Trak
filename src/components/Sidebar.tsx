@@ -1,17 +1,4 @@
-import {
-  Avatar,
-  Badge,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  Drawer as MuiDrawer,
-  Hidden,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-} from '@material-ui/core';
+import { Avatar, Badge, Box, Button, Divider, Drawer as MuiDrawer, Hidden, IconButton, List, ListItem, ListItemText, Skeleton } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { makeStyles } from '@material-ui/styles';
@@ -149,29 +136,24 @@ const Notification = ({ notification, setNotifications, notifications }: Notific
 };
 
 type LoggedInUserCardProps = {
-  firstName: string;
-  lastName: string;
-  image?: string;
+  user?: IEmployee;
   displayNotifications: boolean;
   setDisplayNotifications: Dispatch<boolean>;
-  userId: number;
 };
 
-const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, setDisplayNotifications, userId }: LoggedInUserCardProps) => {
+const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications }: LoggedInUserCardProps) => {
   const classes = useStyles();
   const router = useRouter();
-  const name = `${firstName} ${lastName[0]}.`;
+  const name = `${user?.firstName} ${user?.lastName[0]}.`;
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
   useEffect(() => {
-    axios.get(`/api/employee/${userId}/notifications`).then((res) => {
-      setNotifications([...res.data]);
-    });
-  }, [userId, displayNotifications]);
-
-  if (!notifications) {
-    return <CircularProgress />;
-  }
+    if (user) {
+      axios.get(`/api/employee/${user.id}/notifications`).then((res) => {
+        setNotifications([...res.data]);
+      });
+    }
+  }, [user?.id, displayNotifications]);
   return (
     <Box
       bgcolor={theme.palette.background.paper}
@@ -182,11 +164,11 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
       <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>
         <Box flex={3} mb={theme.spacing(1)}>
           <Badge badgeContent={notifications.filter((notification) => !notification.read).length} color='error'>
-            <Avatar alt={'Logged in user photo'} src={image ? image : '/dummy_avatar.png'} />
+            <Avatar alt={'Logged in user photo'} src={user?.imageUrl || '/dummy_avatar.png'} />
           </Badge>
         </Box>
         <Box alignItems='center' display='flex' flex={4}>
-          <Typo variant='body2'>{name}</Typo>
+          {user ? <Typo variant='body2'>{name}</Typo> : <Skeleton variant='text' width={100} />}
         </Box>
       </Box>
 
@@ -251,18 +233,8 @@ const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotificatio
         <Box className={classes.gutterBottom}>
           <Image height={34} src={'/trak_logo.svg'} width={120} />
         </Box>
-        {!user ? (
-          <CircularProgress />
-        ) : (
-          <LoggedInUserCard
-            displayNotifications={displayNotifications}
-            firstName={user.firstName}
-            image={user.imageUrl}
-            lastName={user.lastName}
-            setDisplayNotifications={setDisplayNotifications}
-            userId={user.id}
-          />
-        )}
+        <LoggedInUserCard displayNotifications={displayNotifications} setDisplayNotifications={setDisplayNotifications} user={user} />
+
         <Divider />
         {!displayNotifications && (
           <List className={classes.listRoot} component='nav'>

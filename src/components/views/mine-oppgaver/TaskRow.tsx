@@ -1,4 +1,4 @@
-import { ButtonBase, IconButton, makeStyles } from '@material-ui/core';
+import { ButtonBase, Hidden, IconButton, makeStyles } from '@material-ui/core';
 import { CheckBox, CheckBoxOutlineBlank } from '@material-ui/icons';
 import classnames from 'classnames';
 import Avatar from 'components/Avatar';
@@ -25,7 +25,6 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    width: '35rem',
   },
   avatarRoot: {
     display: 'flex',
@@ -74,12 +73,18 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />
         <Typo>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
       </div>
-      <div className={classes.avatarRoot}>
-        <Avatar className={classes.avatar} firstName={data.responsible.firstName} image={data.responsible.imageUrl} lastName={data.responsible.lastName} />
-        <Typo>{`${data.responsible.firstName} ${data.responsible.lastName}`}</Typo>
-      </div>
-      <div>{moment(data.dueDate).format('DD.MMM')}</div>
-      <div>{data.task.phase.processTemplate.title}</div>
+      <Hidden lgDown>
+        <div className={classes.avatarRoot}>
+          <Avatar className={classes.avatar} firstName={data.responsible.firstName} image={data.responsible.imageUrl} lastName={data.responsible.lastName} />
+          <Typo>{`${data.responsible.firstName} ${data.responsible.lastName}`}</Typo>
+        </div>
+      </Hidden>
+      <Hidden>
+        <div>{moment(data.dueDate).format('DD.MMM')}</div>
+      </Hidden>
+      <Hidden lgDown>
+        <div>{data.task.phase.processTemplate.title}</div>
+      </Hidden>
     </>
   );
 };

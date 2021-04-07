@@ -1,4 +1,4 @@
-import { Divider, IconButton } from '@material-ui/core';
+import { Divider, Hidden, IconButton } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
@@ -19,6 +19,15 @@ const useStyles = makeStyles({
     alignItems: 'end',
     marginRight: '30px',
     marginBottom: theme.spacing(1),
+    [theme.breakpoints.down('lg')]: {
+      gridTemplateColumns: '2fr 1fr 1fr',
+    },
+  },
+  span: {
+    gridColumn: 'span 5',
+    [theme.breakpoints.down('lg')]: {
+      gridColumn: 'span 3',
+    },
   },
   centeringRow: {
     display: 'flex',
@@ -53,17 +62,23 @@ const TimeSection = ({ section, first }: TimeSectionProps) => {
       <Typo color='disabled' variant='body2'>
         {first && 'Gjelder'}
       </Typo>
-      <Typo color='disabled' variant='body2'>
-        {first && 'Ansvarlig'}
-      </Typo>
-      <Typo color='disabled' variant='body2'>
-        {first && 'Forfallsdato'}
-      </Typo>
-      <Typo color='disabled' variant='body2'>
-        {first && 'Prosess'}
-      </Typo>
+      <Hidden lgDown>
+        <Typo color='disabled' variant='body2'>
+          {first && 'Ansvarlig'}
+        </Typo>
+      </Hidden>
+      <Hidden>
+        <Typo color='disabled' variant='body2'>
+          {first && 'Forfallsdato'}
+        </Typo>
+      </Hidden>
+      <Hidden lgDown>
+        <Typo color='disabled' variant='body2'>
+          {first && 'Prosess'}
+        </Typo>
+      </Hidden>
       {open && section.data.map((data) => <TaskRow data={data} key={data.id} />)}
-      <Divider style={{ gridColumn: 'span 3' }} />
+      <Divider className={classes.span} />
     </div>
   );
 };

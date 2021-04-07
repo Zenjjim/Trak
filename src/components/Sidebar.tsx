@@ -1,4 +1,18 @@
-import { Avatar, Badge, Box, Button, CircularProgress, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Drawer as MuiDrawer,
+  Hidden,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+} from '@material-ui/core';
+import { Menu } from '@material-ui/icons';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
@@ -209,15 +223,25 @@ const LoggedInUserCard = ({ firstName, lastName, image, displayNotifications, se
   );
 };
 
-const Sidebar = () => {
+type DrawerType = {
+  drawer: boolean;
+  setDrawer: (boolean) => void;
+  displayNotifications: boolean;
+  setDisplayNotifications: (boolean) => void;
+  variant: 'permanent' | 'persistent' | 'temporary';
+};
+const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotifications, variant }: DrawerType) => {
+  const classes = useStyles();
   const { user } = useUser();
 
-  const classes = useStyles();
-
-  const [displayNotifications, setDisplayNotifications] = useState(false);
-
   return (
-    <Drawer anchor='left' className={classes.drawer} classes={{ paper: classnames(classes.drawerPaper, classes.removeScrollbar) }} variant='permanent'>
+    <MuiDrawer
+      anchor='left'
+      className={classes.drawer}
+      classes={{ paper: classnames(classes.drawerPaper, classes.removeScrollbar) }}
+      onClose={() => setDrawer(false)}
+      open={drawer}
+      variant={variant}>
       <Box className={classes.removeScrollbar} display='flex' flexDirection='column' padding={theme.spacing(2)}>
         <Box className={classes.gutterBottom}>
           <Image height={34} src={'/trak_logo.svg'} width={120} />
@@ -243,7 +267,40 @@ const Sidebar = () => {
           </List>
         )}
       </Box>
-    </Drawer>
+    </MuiDrawer>
+  );
+};
+
+const Sidebar = () => {
+  const [drawer, setDrawer] = useState<boolean>(false);
+  const [displayNotifications, setDisplayNotifications] = useState<boolean>(false);
+
+  return (
+    <>
+      <Hidden mdUp>
+        <div>
+          <IconButton onClick={() => setDrawer(true)} style={{ width: '50px', height: '50px' }}>
+            <Menu />
+          </IconButton>
+        </div>
+        <Drawer
+          displayNotifications={displayNotifications}
+          drawer={drawer}
+          setDisplayNotifications={setDisplayNotifications}
+          setDrawer={setDrawer}
+          variant={'temporary'}
+        />
+      </Hidden>
+      <Hidden mdDown>
+        <Drawer
+          displayNotifications={displayNotifications}
+          drawer={true}
+          setDisplayNotifications={setDisplayNotifications}
+          setDrawer={() => undefined}
+          variant={'permanent'}
+        />
+      </Hidden>
+    </>
   );
 };
 

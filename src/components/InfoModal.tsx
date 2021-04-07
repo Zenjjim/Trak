@@ -55,16 +55,17 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
 
   useMemo(() => employeeTask, [employeeTask, employeeTask?.responsible]);
 
-  const onSubmit = handleSubmit((formData) => {
+  const onSubmit = handleSubmit(async (formData) => {
     if (formData.responsible?.id !== employeeTask.responsible.id) {
-      axios
-        .all([
-          axios.put(`/api/employeeTasks/${employeeTask.id}`, {
-            completed: employeeTask.completed,
-            dueDate: employeeTask.dueDate,
-            responsibleId: formData.responsible?.id,
-          }),
-          axios.post('/api/notification', {
+      try {
+        await axios.put(`/api/employeeTasks/${employeeTask.id}`, {
+          completed: employeeTask.completed,
+          dueDate: employeeTask.dueDate,
+          responsibleId: formData.responsible?.id,
+        });
+        const employeeWantsDelegateNotifications = formData.responsible.employeeSettings.notificationSettings.includes('DELEGATE');
+        if (employeeWantsDelegateNotifications) {
+          await axios.post('/api/notification', {
             description: `Du har blitt delegert arbeidsoppgaven "${employeeTask.task.title}" av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
             employeeId: formData.responsible?.id,
             ...(formData.responsible.employeeSettings?.slack && {
@@ -73,18 +74,17 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
                 text: `Du har blitt delegert arbeidsoppgaven ${employeeTask.task.title} av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
               },
             }),
-          }),
-        ])
-        .then(() => {
-          setResponsibleSelector(false);
-          employeeTask.responsible = formData.responsible;
-          router.replace(router.asPath).finally(() => {
-            showSnackbar('Ansvarlig byttet', 'success');
           });
-        })
-        .catch((error) => {
-          showSnackbar(error.response.data?.message || 'Noe gikk galt', 'error');
+        }
+
+        setResponsibleSelector(false);
+        employeeTask.responsible = formData.responsible;
+        router.replace(router.asPath).finally(() => {
+          showSnackbar('Ansvarlig byttet', 'success');
         });
+      } catch (error) {
+        showSnackbar(error.response.data?.message || 'Noe gikk galt', 'error');
+      }
     }
   });
 

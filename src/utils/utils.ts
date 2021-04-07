@@ -4,6 +4,7 @@ import Fuse from 'fuse.js';
 import { compact, differenceBy } from 'lodash';
 import moment from 'moment';
 import { TimeSectionType } from 'pages/mine-oppgaver';
+import qs from 'qs';
 import { Dispatch, SetStateAction } from 'react';
 import { thisMonth, thisWeek, today, tomorrow } from 'sortof';
 import { IEmployee, IEmployeeExtended, IEmployeeTask, IPhaseWithEmployees, ITag } from 'utils/types';
@@ -74,25 +75,21 @@ export const splitIntoTimeSections = (tasks) => {
       title: 'Forfalt',
       data: taskPast,
       error: true,
-      defaultOpen: true,
     },
     taskToday.length && {
       title: 'I dag',
       data: taskToday,
       date: moment(taskToday[0]?.dueDate).format('ddd d MMM'),
-      defaultOpen: true,
     },
     taskTomorrow.length && {
       title: 'I morgen',
       data: taskTomorrow,
       date: moment(taskTomorrow[0]?.dueDate).format('ddd d MMM'),
-      defaultOpen: true,
     },
     taskThisWeek.length && {
       title: 'Denne uken',
       data: taskThisWeek,
       date: `uke ${moment(taskThisWeek[0]?.dueDate).isoWeek()}`,
-      defaultOpen: true,
     },
     taskThisMonth.length && {
       title: 'Denne måneden',
@@ -253,4 +250,20 @@ export const filterAndSearchEmployees = (searchText: string, employeeFilters: Em
   const filteredEmployees = filterEmployees(employeeFilters, phases);
   const result = searchEmployees(searchText, filteredEmployees, withResponsible);
   return result;
+};
+
+export const slackMessager = async (channel, text) => {
+  try {
+    await axios.post(
+      'https://slack.com/api/chat.postMessage',
+      qs.stringify({
+        token: process.env.SLACK_TOKEN,
+        channel: channel,
+        text: text,
+      }),
+    );
+  } catch (err) {
+    // eslint-disable-next-line
+    console.log(err);
+  }
 };

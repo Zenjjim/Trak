@@ -20,7 +20,7 @@ export type IEmployee = {
 export type IEmployeeSettings = {
   employeeId?: number;
   slack?: string;
-  notificationSettings: NotificationType[];
+  notificationSettings: ('DELEGATE' | 'DEADLINE' | 'WEEK_BEFORE_DEADLINE' | 'TERMINATION' | 'HIRED')[];
 };
 
 export enum NotificationType {

@@ -18,10 +18,7 @@ import { IEmployeeTask, ITag } from 'utils/types';
 import { filterAndSearchTasks, splitIntoTimeSections } from 'utils/utils';
 
 const useStyles = makeStyles({
-  root: {
-    marginLeft: '30px',
-    marginTop: '60px',
-  },
+  root: {},
   header: {
     marginBottom: '2rem',
   },

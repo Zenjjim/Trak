@@ -17,16 +17,21 @@ const useStyles = makeStyles({
     display: 'grid',
     gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
     alignItems: 'end',
-    marginRight: '30px',
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('lg')]: {
       gridTemplateColumns: '2fr 1fr 1fr',
+    },
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: '2fr 1fr',
     },
   },
   span: {
     gridColumn: 'span 5',
     [theme.breakpoints.down('lg')]: {
       gridColumn: 'span 3',
+    },
+    [theme.breakpoints.down('md')]: {
+      gridColumn: 'span 2',
     },
   },
   centeringRow: {
@@ -67,7 +72,7 @@ const TimeSection = ({ section, first }: TimeSectionProps) => {
           {first && 'Ansvarlig'}
         </Typo>
       </Hidden>
-      <Hidden>
+      <Hidden mdDown>
         <Typo color='disabled' variant='body2'>
           {first && 'Forfallsdato'}
         </Typo>

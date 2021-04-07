@@ -28,7 +28,7 @@ import { Dispatch, useEffect, useState } from 'react';
 import ScrollableFeed from 'react-scrollable-feed';
 import theme from 'theme';
 import urls, { link, section } from 'URLS';
-import { INotification } from 'utils/types';
+import { IEmployee, INotification } from 'utils/types';
 const SIDEBAR_WIDTH = 190;
 
 const useStyles = makeStyles({
@@ -81,7 +81,7 @@ const useStyles = makeStyles({
     },
   },
 });
-const LinkGroup = ({ title, links, divider }: section) => {
+const LinkGroup = ({ title, links, divider, setDrawer }: section & { setDrawer: (boolean) => void }) => {
   const router = useRouter();
   const classes = useStyles();
   return (
@@ -90,8 +90,8 @@ const LinkGroup = ({ title, links, divider }: section) => {
       <List component='div' disablePadding>
         {links.map((url: link) => {
           return (
-            <Link href={url.link} key={url.title}>
-              <ListItem button className={classes.nested}>
+            <Link href={url.link} key={url.title} passHref>
+              <ListItem button className={classes.nested} component='a' onClick={() => setDrawer(false)}>
                 <ListItemText
                   aria-label={url.aria_label}
                   classes={{ secondary: router.asPath === url.link ? classes.linkActive : classes.link }}
@@ -229,10 +229,10 @@ type DrawerType = {
   displayNotifications: boolean;
   setDisplayNotifications: (boolean) => void;
   variant: 'permanent' | 'persistent' | 'temporary';
+  user: IEmployee;
 };
-const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotifications, variant }: DrawerType) => {
+const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotifications, variant, user }: DrawerType) => {
   const classes = useStyles();
-  const { user } = useUser();
 
   return (
     <MuiDrawer
@@ -262,7 +262,7 @@ const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotificatio
         {!displayNotifications && (
           <List className={classes.listRoot} component='nav'>
             {urls.map((url) => {
-              return <LinkGroup divider={url.divider} key={url.title} links={url.links} title={url.title} />;
+              return <LinkGroup divider={url.divider} key={url.title} links={url.links} setDrawer={setDrawer} title={url.title} />;
             })}
           </List>
         )}
@@ -274,6 +274,7 @@ const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotificatio
 const Sidebar = () => {
   const [drawer, setDrawer] = useState<boolean>(false);
   const [displayNotifications, setDisplayNotifications] = useState<boolean>(false);
+  const { user } = useUser();
 
   return (
     <>
@@ -288,6 +289,7 @@ const Sidebar = () => {
           drawer={drawer}
           setDisplayNotifications={setDisplayNotifications}
           setDrawer={setDrawer}
+          user={user}
           variant={'temporary'}
         />
       </Hidden>
@@ -297,6 +299,7 @@ const Sidebar = () => {
           drawer={true}
           setDisplayNotifications={setDisplayNotifications}
           setDrawer={() => undefined}
+          user={user}
           variant={'permanent'}
         />
       </Hidden>

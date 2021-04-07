@@ -61,7 +61,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
           {completed ? <CheckBox /> : <CheckBoxOutlineBlank />}
         </IconButton>
         <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>
-          <Typo className={completed ? classes.completedTask : undefined} noWrap>
+          <Typo className={completed ? classes.completedTask : undefined} noWrap style={{ maxWidth: '50vw' }}>
             {data.task.title}
           </Typo>
         </ButtonBase>
@@ -71,15 +71,15 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         className={classnames(classes.avatarRoot, classes.onClick)}
         onClick={() => router.push(`/ansatt/${data.employee.id}?år=${new Date(data.dueDate).getFullYear()}&prosess=${data.task.phase.processTemplate.slug}`)}>
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />
-        <Typo>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
+        <Typo noWrap>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
       </div>
       <Hidden lgDown>
         <div className={classes.avatarRoot}>
           <Avatar className={classes.avatar} firstName={data.responsible.firstName} image={data.responsible.imageUrl} lastName={data.responsible.lastName} />
-          <Typo>{`${data.responsible.firstName} ${data.responsible.lastName}`}</Typo>
+          <Typo noWrap>{`${data.responsible.firstName} ${data.responsible.lastName}`}</Typo>
         </div>
       </Hidden>
-      <Hidden>
+      <Hidden mdDown>
         <div>{moment(data.dueDate).format('DD.MMM')}</div>
       </Hidden>
       <Hidden lgDown>

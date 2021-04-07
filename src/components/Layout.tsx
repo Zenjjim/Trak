@@ -5,6 +5,7 @@ import Sidebar from 'components/Sidebar';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
 import { useEffect } from 'react';
+import theme from 'theme';
 import urls from 'URLS';
 
 const useStyles = makeStyles({
@@ -13,6 +14,14 @@ const useStyles = makeStyles({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%,-50%)',
+  },
+  root: {
+    marginLeft: '30px',
+    marginRight: '30px',
+    marginTop: '60px',
+    [theme.breakpoints.down('md')]: {
+      marginLeft: '10px',
+    },
   },
 });
 
@@ -40,7 +49,9 @@ const Layout = ({ children }: LayoutProps) => {
       {session?.user ? (
         <Box display='flex'>
           <Sidebar />
-          <Box flexGrow={1}>{children}</Box>
+          <Box className={classes.root} flexGrow={1}>
+            {children}
+          </Box>
         </Box>
       ) : (
         <Box className={classes.center} display='flex' justifyContent='center'>

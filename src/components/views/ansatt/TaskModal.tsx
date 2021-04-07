@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     display: 'grid',
     gridTemplateRows: 'auto',
-    rowGap: 32,
+    rowGap: theme.spacing(4),
   },
   error: {
     color: theme.palette.error.main,
@@ -57,7 +57,7 @@ const TaskModal = ({ modalIsOpen, closeModal, phaseId, dueDate }: TaskModalProps
   const classes = useStyles();
   const onSubmit = handleSubmit((formData) => {
     const data = {
-      data: { ...formData, professions: [] },
+      data: { ...formData, professions: [employee.profession] },
       phaseId: phaseId,
       global: false,
     };

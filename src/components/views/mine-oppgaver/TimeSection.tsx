@@ -32,7 +32,9 @@ const useStyles = makeStyles({
 
 const TimeSection = ({ section, index }: TimeSectionProps) => {
   const classes = useStyles();
-  const [open, setOpen] = useState<boolean>(index < 3);
+  const DEFAULT_OPEN_SECTIONS = 3;
+  const isDefaultOpen = index < DEFAULT_OPEN_SECTIONS;
+  const [open, setOpen] = useState<boolean>(isDefaultOpen);
   const first = index === 0;
   if (!section) {
     return <></>;

@@ -63,7 +63,8 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
           dueDate: employeeTask.dueDate,
           responsibleId: formData.responsible?.id,
         });
-        if (formData.responsible.employeeSettings.notificationSettings.includes('DELEGATE')) {
+        const employeeWantsDelegateNotifications = formData.responsible.employeeSettings.notificationSettings.includes('DELEGATE');
+        if (employeeWantsDelegateNotifications) {
           await axios.post('/api/notification', {
             description: `Du har blitt delegert arbeidsoppgaven "${employeeTask.task.title}" av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
             employeeId: formData.responsible?.id,

@@ -145,7 +145,8 @@ const onboardingEmployeeTaskCreator = (phases, employee) =>
     if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
       phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
       createEmployeeTasks(employee, phase);
-      if (employee.hrManager.employeeSettings.notificationSettings.includes('HIRED')) {
+      const employeeWantsNewEmployeeNotificiation = employee.hrManager.employeeSettings.notificationSettings.includes('HIRED');
+      if (employeeWantsNewEmployeeNotificiation) {
         const notificationText = `${employee.firstName} ${employee.lastName} har nettopp startet og flyttet til Onboarding`;
         notificationSender(employee.hrManagerId, notificationText, employee.hrManager.employeeSettings?.slack);
       }
@@ -156,7 +157,8 @@ const offboardingEmployeeTaskCreator = (phases, employee) =>
     if (phase.processTemplate.slug === 'offboarding') {
       phase.dueDate = addDays(employee.terminationDate, phase.dueDateDayOffset);
       createEmployeeTasks(employee, phase);
-      if (employee.hrManager.employeeSettings.notificationSettings.includes('TERMINATION')) {
+      const employeeWantsEmployeeQuittingNotification = employee.hrManager.employeeSettings.notificationSettings.includes('TERMINATION');
+      if (employeeWantsEmployeeQuittingNotification) {
         const notificationText = `${employee.firstName} ${employee.lastName} slutter og er flyttet til Offboarding`;
         notificationSender(employee.hrManagerId, notificationText, employee.hrManager.employeeSettings?.slack);
       }
@@ -189,16 +191,18 @@ const createNotification = async (responsibleEmployees) => {
     const nextWeek = new Date().setDate(today.getDate() + 7);
     responsibleEmployees?.forEach((employee) => {
       const notificationSettings = employee?.employeeSettings?.notificationSettings;
-      if (!notificationSettings?.includes('DEADLINE') && !notificationSettings?.inludes('WEEK_BEFORE_DEADLINE')) {
+      const employeeWantsPhaseEndsTodayNotification = notificationSettings?.includes('DEADLINE');
+      const employeeWantsPhaseEndsNextWeekNotification = notificationSettings?.inludes('WEEK_BEFORE_DEADLINE');
+      if (!employeeWantsPhaseEndsTodayNotification && !employeeWantsPhaseEndsNextWeekNotification) {
         return;
       }
       const dates = Object.keys(groupBy(employee.responsibleEmployeeTask, 'dueDate'));
       dates.forEach((d) => {
         const date = moment(d);
         let notificationText = undefined;
-        if (notificationSettings?.includes('DEADLINE') && moment(today).isSame(date, 'day')) {
+        if (employeeWantsPhaseEndsTodayNotification && moment(today).isSame(date, 'day')) {
           notificationText = `Du har oppgaver som utgår idag`;
-        } else if (notificationSettings?.includes('WEEK_BEFORE_DEADLINE') && moment(nextWeek).isSame(date, 'day')) {
+        } else if (employeeWantsPhaseEndsNextWeekNotification && moment(nextWeek).isSame(date, 'day')) {
           notificationText = `Du har oppgaver som utgår om en uke`;
         }
         if (notificationText) {

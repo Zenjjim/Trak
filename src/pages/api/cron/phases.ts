@@ -64,6 +64,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         employeeTask: {
           select: {
             id: true,
+            completed: true,
+            dueDate: true,
             task: {
               select: {
                 phase: {
@@ -109,8 +111,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     prisma.$disconnect();
 
-    cronDateEmployeeTaskCreator(phases, employees);
-    nonCronDateEmployeeTaskCreator(phases, employees);
+    employeeTaskCreator(phases, employees);
     createNotification(responsibleEmployees);
 
     res.status(HttpStatusCode.OK).end();
@@ -119,23 +120,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-const cronDateEmployeeTaskCreator = (phases, employees) => {
-  const today = new Date();
-  phases.forEach((phase) => {
-    if (phase?.cronDate?.getDate() === today.getDate() && phase?.cronDate?.getMonth() === today.getMonth()) {
-      employees.forEach((employee) => {
-        if (!employee?.terminationDate) {
-          if (employee?.hrManagerId) {
-            createEmployeeTasks(employee, phase);
-          }
-        }
-      });
-    }
-  });
-};
+const employeeTaskCreator = (phases, employees) => {
+  const lopendePhases = phases.filter((phase) => phase.processTemplate.slug === 'lopende');
+  const firstPhase = lopendePhases.reduce((phaseA, phaseB) => (phaseA?.dueDate < phaseB?.dueDate ? phaseA : phaseB));
+  firstPhase.dueDate = moment(firstPhase).set('year', new Date().getFullYear()).format();
 
-const nonCronDateEmployeeTaskCreator = (phases, employees) =>
   employees.forEach((employee) => {
+    lopendeEmployeeTaskCreator(employee, lopendePhases, firstPhase);
     if (!employeeHasProcessTask(employee, 'onboarding')) {
       onboardingEmployeeTaskCreator(phases, employee);
     }
@@ -143,6 +134,32 @@ const nonCronDateEmployeeTaskCreator = (phases, employees) =>
       offboardingEmployeeTaskCreator(phases, employee);
     }
   });
+};
+
+const lopendeEmployeeTaskCreator = (employee, lopendePhases, firstPhase) => {
+  const lopendeTasks = employee.employeeTask.filter((employeeTask) => employeeTask.task.phase.processTemplate.slug === 'lopende');
+  const anyActiveTasks = lopendeTasks.some((employeeTask) => !employeeTask.completed);
+  if (!anyActiveTasks) {
+    const latestDate = lopendeTasks?.reduce((taskA, taskB) => (taskA?.dueDate > taskB?.dueDate ? taskA : taskB), undefined);
+    if (latestDate) {
+      const latestMomentDate = moment(latestDate?.dueDate);
+      const validPhases = lopendePhases.filter((phase) => {
+        const phaseDate = moment(phase.dueDate);
+        if (phaseDate.month() === latestMomentDate.month()) {
+          return phaseDate.day() > phaseDate.day();
+        }
+        return phaseDate.month() > latestMomentDate.month();
+      });
+      if (validPhases.length) {
+        validPhases[0].dueDate = moment(firstPhase).set('year', new Date().getFullYear()).format();
+        return createEmployeeTasks(employee, validPhases[0]);
+      } else {
+        firstPhase.dueDate = moment(firstPhase).add(1, 'y').format();
+      }
+    }
+    return createEmployeeTasks(employee, firstPhase);
+  }
+};
 
 const onboardingEmployeeTaskCreator = (phases, employee) =>
   phases.forEach((phase) => {

@@ -5,7 +5,32 @@ import { Actions } from 'utils/types';
 const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'PATCH') {
+  if (req.method === 'POST') {
+    const {
+      body: { data },
+    } = req;
+    const newEmployeeTask = await prisma.employeeTask.create({
+      data: {
+        task: {
+          connect: {
+            id: data.taskId,
+          },
+        },
+        dueDate: data.dueDate,
+        employee: {
+          connect: {
+            id: data.employeeId,
+          },
+        },
+        responsible: {
+          connect: {
+            id: data.responsibleId,
+          },
+        },
+      },
+    });
+    res.json(newEmployeeTask);
+  } else if (req.method === 'PATCH') {
     if (req.body.action === Actions.UpdateDueDate) {
       try {
         const {

@@ -75,25 +75,21 @@ export const splitIntoTimeSections = (tasks) => {
       title: 'Forfalt',
       data: taskPast,
       error: true,
-      defaultOpen: true,
     },
     taskToday.length && {
       title: 'I dag',
       data: taskToday,
       date: moment(taskToday[0]?.dueDate).format('ddd d MMM'),
-      defaultOpen: true,
     },
     taskTomorrow.length && {
       title: 'I morgen',
       data: taskTomorrow,
       date: moment(taskTomorrow[0]?.dueDate).format('ddd d MMM'),
-      defaultOpen: true,
     },
     taskThisWeek.length && {
       title: 'Denne uken',
       data: taskThisWeek,
       date: `uke ${moment(taskThisWeek[0]?.dueDate).isoWeek()}`,
-      defaultOpen: true,
     },
     taskThisMonth.length && {
       title: 'Denne måneden',

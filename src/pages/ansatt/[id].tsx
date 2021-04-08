@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
 import Phase from 'components/views/ansatt/Phase';
 import prisma from 'lib/prisma';
-import { flattenDeep, uniq, uniqBy } from 'lodash';
+import { flattenDeep, uniqBy } from 'lodash';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -53,6 +53,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       id: true,
       firstName: true,
       lastName: true,
+      profession: true,
       hrManager: {
         select: {
           id: true,
@@ -92,6 +93,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
               description: true,
               phase: {
                 select: {
+                  id: true,
                   title: true,
                   processTemplate: {
                     select: {
@@ -142,17 +144,19 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const employee = JSON.parse(safeJsonStringify(employeeQuery));
   const processes = JSON.parse(safeJsonStringify(processesQuery));
-  const phases = uniq(
+  const phases = uniqBy(
     employee.employeeTask.map((element) => {
-      return element.task.phase.title;
+      return { id: element.task.phase.id, title: element.task.phase.title };
     }),
+    'title',
   );
-
-  const phasesWithTasks = phases.map((unique: string) => {
-    const tasks = employee.employeeTask.filter((task: IEmployeeTask) => task.task.phase.title === unique);
+  // eslint-disable-next-line
+  const phasesWithTasks = phases.map((unique: any) => {
+    const tasks = employee.employeeTask.filter((task: IEmployeeTask) => task.task.phase.title === unique.title);
     const finishedTasks = tasks.filter((task: IEmployeeTask) => task.completed);
     return {
-      title: unique,
+      id: unique.id,
+      title: unique.title,
       tasks: tasks,
       totalTasks: tasks.length,
       finishedTasks: finishedTasks.length,
@@ -257,6 +261,7 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
                 employeeTasks={phase.tasks}
                 first={index === 0}
                 key={phase.title}
+                phaseId={phase.id}
                 tasksFinished={phase.finishedTasks}
                 title={phase.title}
                 totalTasks={phase.totalTasks}

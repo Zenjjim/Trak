@@ -75,6 +75,7 @@ model Phase {
   dueDate           DateTime?
   processTemplate   ProcessTemplate @relation(fields: [processTemplateId], references: [id])
   tasks             Task[]
+  active            Boolean         @default(true)
 }
 
 model ProcessTemplate {
@@ -110,4 +111,5 @@ model Task {
   employeeTask  EmployeeTask[]
   professions   Profession[]
   tags          Tag[]
+  active        Boolean        @default(true)
 }

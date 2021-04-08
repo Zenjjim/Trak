@@ -140,7 +140,7 @@ const PUT = async (req, res, task_id) => {
 };
 const DELETE = async (res, task_id) => {
   try {
-    const deletedTask = await prisma.task.delete({ where: { id: task_id.toString() } });
+    const deletedTask = await prisma.task.update({ where: { id: task_id.toString() }, data: { active: false } });
     res.status(HttpStatusCode.OK).json(deletedTask);
   } catch (err) {
     if (err) {

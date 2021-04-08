@@ -37,6 +37,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
             dueDate: 'asc',
           },
         ],
+        where: {
+          active: {
+            equals: true,
+          },
+        },
         select: {
           id: true,
           title: true,
@@ -46,6 +51,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
             },
             where: {
               global: true,
+              active: true,
             },
             select: {
               id: true,

@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
 import Phase from 'components/views/ansatt/Phase';
 import prisma from 'lib/prisma';
-import { flattenDeep, uniqBy } from 'lodash';
+import { flattenDeep, uniq, uniqBy } from 'lodash';
+import moment from 'moment';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -64,7 +65,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       employeeTask: {
         where: {
           dueDate: {
-            gte: new Date(year.toString()),
+            gte: moment(year.toString()).startOf('year').toDate(),
+            lte: moment(year.toString()).endOf('year').toDate(),
           },
           task: {
             phase: {
@@ -179,7 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const history = allTasks.map((process) => {
     const years = flattenDeep(process.years);
-    const uniqeYears = uniqBy(years, 'dueDate');
+    const uniqeYears = uniq(years);
     return { title: process.title, slug: process.slug, years: uniqeYears };
   });
 
@@ -243,8 +245,8 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               {history.map((process) => {
                 return process.years.map((year) => {
                   return (
-                    <Link href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`} key={`${process.title} ${year}`}>
-                      <MenuItem onClick={handleClose}>
+                    <Link passHref href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`} key={`${process.title} ${year}`}>
+                      <MenuItem button component='a' onClick={handleClose}>
                         {year} {process.title}
                       </MenuItem>
                     </Link>

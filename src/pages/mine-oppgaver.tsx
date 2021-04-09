@@ -18,10 +18,6 @@ import { IEmployeeTask, ITag } from 'utils/types';
 import { filterAndSearchTasks, splitIntoTimeSections } from 'utils/utils';
 
 const useStyles = makeStyles({
-  root: {
-    marginLeft: '30px',
-    marginTop: '60px',
-  },
   header: {
     marginBottom: '2rem',
   },
@@ -126,7 +122,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
       <Head>
         <title>Mine oppgaver</title>
       </Head>
-      <div className={classes.root}>
+      <>
         <div className={classes.header}>
           <Typo className={classes.title} variant='h1'>
             Mine oppgaver
@@ -154,7 +150,7 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
             })
           )}
         </div>
-      </div>
+      </>
     </>
   );
 };

@@ -11,10 +11,6 @@ import { useState } from 'react';
 import { IPhase } from 'utils/types';
 
 const useStyles = makeStyles({
-  root: {
-    marginLeft: '30px',
-    marginTop: '60px',
-  },
   header: {
     marginBottom: '2rem',
   },
@@ -41,6 +37,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
             dueDate: 'asc',
           },
         ],
+        where: {
+          active: {
+            equals: true,
+          },
+        },
         select: {
           id: true,
           title: true,
@@ -50,6 +51,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
             },
             where: {
               global: true,
+              active: true,
             },
             select: {
               id: true,
@@ -81,21 +83,19 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
       <Head>
         <title>Prosessmal {processTemplate && `- ${processTemplate.title}`}</title>
       </Head>
-      <div className={classes.root}>
-        <div className={classes.header}>
-          <Typo className={classes.title} variant='h1'>
-            Prosessmal
-          </Typo>
-          <Typo className={classes.template_title}>{processTemplate?.title}</Typo>
-        </div>
-        <DataProvider>
-          {processTemplate?.phases.map((phase: IPhase) => (
-            <Phase key={phase.id} phase={phase} processTemplate={processTemplate} />
-          ))}
-        </DataProvider>
-        <AddButton onClick={() => setModalIsOpen(true)} text='Legg til fase' />
-        {modalIsOpen && <PhaseModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} processTemplate={processTemplate} />}
+      <div className={classes.header}>
+        <Typo className={classes.title} variant='h1'>
+          Prosessmal
+        </Typo>
+        <Typo className={classes.template_title}>{processTemplate?.title}</Typo>
       </div>
+      <DataProvider>
+        {processTemplate?.phases.map((phase: IPhase) => (
+          <Phase key={phase.id} phase={phase} processTemplate={processTemplate} />
+        ))}
+      </DataProvider>
+      <AddButton onClick={() => setModalIsOpen(true)} text='Legg til fase' />
+      {modalIsOpen && <PhaseModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} processTemplate={processTemplate} />}
     </>
   );
 };

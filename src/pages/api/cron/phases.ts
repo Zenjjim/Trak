@@ -13,6 +13,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   }
   if (req.method === 'POST') {
     const phases = await prisma.phase.findMany({
+      where: {
+        active: true,
+      },
       select: {
         id: true,
         title: true,
@@ -27,6 +30,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         tasks: {
           where: {
             global: true,
+            active: true,
           },
           select: {
             id: true,

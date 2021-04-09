@@ -1,4 +1,5 @@
-import { Avatar, Box, makeStyles, TableCell, TableRow } from '@material-ui/core';
+import { Box, Hidden, makeStyles, TableCell, TableRow } from '@material-ui/core';
+import Avatar from 'components/Avatar';
 import Typo from 'components/Typo';
 import { useRouter } from 'next/router';
 import theme from 'theme';
@@ -9,7 +10,7 @@ const useStyles = makeStyles({
     cursor: 'pointer',
   },
   userRow: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     '&:focus': {
@@ -19,6 +20,7 @@ const useStyles = makeStyles({
   avatar: {
     width: '25px',
     height: '25px',
+    marginRight: theme.spacing(1),
   },
 });
 export type EmployeeRow = {
@@ -26,6 +28,7 @@ export type EmployeeRow = {
   firstName: string;
   lastName: string;
   profession: IProfession;
+  image?: string;
   hrManager: IEmployee;
   tasksFinished: number;
   totalTasks: number;
@@ -41,32 +44,44 @@ const UserRow = ({ employee, slug }: UserRowProps) => {
   const classes = useStyles();
   const typoVariant = 'body2';
   const router = useRouter();
+
   return (
     <TableRow className={classes.pointer} hover>
       <TableCell onClick={() => router.push(`/ansatt/${employee.id}?år=${new Date(employee.employeeTask[0].dueDate).getFullYear()}&prosess=${slug}`)}>
         <div className={classes.userRow} tabIndex={0}>
-          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
-          <Typo variant={typoVariant}>
+          <Avatar className={classes.avatar} firstName={employee.firstName} image={employee.image || ''} lastName={employee.lastName} />
+          <Typo noWrap variant={typoVariant}>
             {employee.firstName} {employee.lastName}
           </Typo>
         </div>
       </TableCell>
-      <TableCell>
-        <Typo variant={typoVariant}>
-          <b>{employee.tasksFinished}</b> av <b>{employee.totalTasks}</b>
-        </Typo>
-      </TableCell>
-      <TableCell>
-        <Typo variant={typoVariant}>{employee.profession.title}</Typo>
-      </TableCell>
-      <TableCell>
-        <Box alignItems='flex-end' display='flex' flexDirection='row'>
-          <Avatar alt={'Logged in user photo'} className={classes.avatar} src={'/dummy_avatar.png'} />
+      <Hidden mdDown>
+        <TableCell>
           <Typo variant={typoVariant}>
-            {employee.hrManager.firstName} {employee.hrManager.lastName}
+            <b>{employee.tasksFinished}</b> av <b>{employee.totalTasks}</b>
           </Typo>
-        </Box>
-      </TableCell>
+        </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>
+          <Typo variant={typoVariant}>{employee.profession.title}</Typo>
+        </TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell>
+          <Box alignItems='center' display='flex' flexDirection='row'>
+            <Avatar
+              className={classes.avatar}
+              firstName={employee.hrManager.firstName}
+              image={employee.hrManager.imageUrl}
+              lastName={employee.hrManager.lastName}
+            />
+            <Typo noWrap variant={typoVariant}>
+              {employee.hrManager.firstName} {employee.hrManager.lastName}
+            </Typo>
+          </Box>
+        </TableCell>
+      </Hidden>
     </TableRow>
   );
 };

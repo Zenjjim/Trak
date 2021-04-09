@@ -4,6 +4,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 import classnames from 'classnames';
+import Avatar from 'components/Avatar';
 import Typo from 'components/Typo';
 import { useUser } from 'context/User';
 import moment from 'moment';
@@ -16,8 +17,6 @@ import ScrollableFeed from 'react-scrollable-feed';
 import theme from 'theme';
 import urls, { link, section } from 'URLS';
 import { IEmployee, INotification } from 'utils/types';
-
-import Avatar from './Avatar';
 const SIDEBAR_WIDTH = 190;
 
 const useStyles = makeStyles({

@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Button, Divider, Drawer as MuiDrawer, Hidden, IconButton, List, ListItem, ListItemText, Skeleton } from '@material-ui/core';
+import { Badge, Box, Button, Divider, Drawer as MuiDrawer, Hidden, IconButton, List, ListItem, ListItemText, Skeleton } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { makeStyles } from '@material-ui/styles';
@@ -16,6 +16,8 @@ import ScrollableFeed from 'react-scrollable-feed';
 import theme from 'theme';
 import urls, { link, section } from 'URLS';
 import { IEmployee, INotification } from 'utils/types';
+
+import Avatar from './Avatar';
 const SIDEBAR_WIDTH = 190;
 
 const useStyles = makeStyles({
@@ -164,7 +166,11 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
       <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>
         <Box flex={3} mb={theme.spacing(1)}>
           <Badge badgeContent={notifications.filter((notification) => !notification.read).length} color='error'>
-            <Avatar alt={'Logged in user photo'} src={user?.imageUrl || '/dummy_avatar.png'} />
+            {user ? (
+              <Avatar firstName={user?.firstName} image={user?.imageUrl} lastName={user?.lastName} />
+            ) : (
+              <Skeleton height={40} variant='circular' width={40} />
+            )}
           </Badge>
         </Box>
         <Box alignItems='center' display='flex' flex={4}>

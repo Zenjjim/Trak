@@ -11,19 +11,13 @@ const useStyles = makeStyles({
     top: '50%',
   },
   animateLogo: {
-    animation: `$pulse 3000ms ${theme.transitions.easing.easeIn} infinite`,
+    animation: `$pulse 1500ms ${theme.transitions.easing.easeIn} infinite`,
   },
   '@keyframes pulse': {
     '0%': {
       transform: 'scale(0.9)',
     },
-    '25%': {
-      transform: 'scale(1)',
-    },
     '50%': {
-      transform: 'scale(0.9)',
-    },
-    '75%': {
       transform: 'scale(1)',
     },
     '100%': {

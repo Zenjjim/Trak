@@ -1,9 +1,9 @@
-import { Box, Button, Paper } from '@material-ui/core';
+import { Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import Image from 'next/image';
 import { signIn } from 'next-auth/client';
+import GoogleButton from 'react-google-button';
 import theme from 'theme';
-
 const useStyles = makeStyles({
   root: {
     marginTop: theme.spacing(2),
@@ -24,7 +24,7 @@ const LogIn = () => {
       <Box className={classes.gutterBottom} display='flex' justifyContent='center'>
         <Image height={34} src={'/trak_logo.svg'} width={124} />
       </Box>
-      <Button onClick={signIn}>Logg inn med Google</Button>
+      <GoogleButton onClick={signIn} type='light' />
     </Paper>
   );
 };

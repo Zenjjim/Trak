@@ -79,6 +79,14 @@ const PUT = async (req, res, phase_id) => {
 };
 const DELETE = async (res, phase_id) => {
   try {
+    await prisma.task.updateMany({
+      where: {
+        phaseId: phase_id.toString(),
+      },
+      data: {
+        active: false,
+      },
+    });
     const deletedPhase = await prisma.phase.update({ where: { id: phase_id.toString() }, data: { active: false } });
     res.status(HttpStatusCode.OK).json(deletedPhase);
   } catch (err) {

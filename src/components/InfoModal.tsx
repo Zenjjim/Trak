@@ -10,8 +10,10 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import Linkify from 'react-linkify';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
+
 const useStyles = makeStyles({
   chip: {
     marginRight: theme.spacing(1),
@@ -190,7 +192,20 @@ const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps
             </div>
           )}
         </Box>
-        <Typo>{employeeTask ? <>{employeeTask?.task.description}</> : <Skeleton height={theme.spacing(24)} />}</Typo>
+        <Typo>
+          {employeeTask ? (
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a href={decoratedHref} key={key} target='blank'>
+                  {decoratedText}
+                </a>
+              )}>
+              {employeeTask?.task.description}
+            </Linkify>
+          ) : (
+            <Skeleton height={theme.spacing(24)} />
+          )}
+        </Typo>
       </>
     </Modal>
   );

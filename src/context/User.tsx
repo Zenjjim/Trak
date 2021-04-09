@@ -14,10 +14,7 @@ function useUser() {
 }
 function UserProvider(props) {
   const [session] = useSession();
-  const { data: user }: responseInterface<IEmployee, unknown> | { data: undefined } = session?.user
-    ? // eslint-disable-next-line
-      useSWR(`/api/employee/${session?.user?.id}`, fetcher)
-    : { data: undefined };
+  const { data: user }: responseInterface<IEmployee, unknown> = useSWR(session?.user ? `/api/employee/${session?.user?.id}` : null, fetcher);
 
   return <UserContext.Provider value={{ user: user }} {...props} />;
 }

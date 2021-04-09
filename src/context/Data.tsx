@@ -15,20 +15,10 @@ function useData() {
 function DataProvider(props) {
   const [session] = useSession();
 
-  const { data: professions }: responseInterface<IProfession[], unknown> | { data: undefined } = session?.user
-    ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useSWR(`/api/professions`, fetcher)
-    : { data: undefined };
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { data: tags }: responseInterface<ITag[], unknown> | { data: undefined } = session?.user ? useSWR(`/api/tags`, fetcher) : { data: undefined };
-  const { data: employees }: responseInterface<IEmployee[], unknown> | { data: undefined } = session?.user
-    ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useSWR(`/api/employees`, fetcher)
-    : { data: undefined };
-  const { data: processTemplates }: responseInterface<IProcessTemplate[], unknown> | { data: undefined } = session?.user
-    ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useSWR(`/api/processTemplates`, fetcher)
-    : { data: undefined };
+  const { data: professions }: responseInterface<IProfession[], unknown> = useSWR(session?.user ? `/api/professions` : null, fetcher);
+  const { data: tags }: responseInterface<ITag[], unknown> = useSWR(session?.user ? `/api/tags` : null, fetcher);
+  const { data: employees }: responseInterface<IEmployee[], unknown> = useSWR(session?.user ? `/api/employees` : null, fetcher);
+  const { data: processTemplates }: responseInterface<IProcessTemplate[], unknown> = useSWR(session?.user ? `/api/processTemplates` : null, fetcher);
   return <DataContext.Provider value={{ professions: professions, tags: tags, employees: employees, processTemplates: processTemplates }} {...props} />;
 }
 export { DataProvider, useData };

@@ -31,12 +31,8 @@ const useStyles = makeStyles({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   try {
-    const mySettings = await prisma.employeeSettings.upsert({
+    const mySettings = await prisma.employeeSettings.findUnique({
       where: {
-        employeeId: session?.user?.id,
-      },
-      update: {},
-      create: {
         employeeId: session?.user?.id,
       },
     });

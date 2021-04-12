@@ -28,6 +28,15 @@ export default NextAuth({
           },
         });
         if (user && profile.verified_email) {
+          await prisma.employeeSettings.upsert({
+            where: {
+              employeeId: user.id,
+            },
+            update: {},
+            create: {
+              employeeId: user.id,
+            },
+          });
           return true;
         }
         // eslint-disable-next-line no-empty

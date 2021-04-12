@@ -51,7 +51,7 @@ const Phase = ({ phaseId, title, tasksFinished, totalTasks, employeeTasks, first
         </Hidden>
       </Box>
       {employeeTasks.map((employeeTask) => {
-        return <TaskRow employeeTask={employeeTask} key={employeeTask.taskId} />;
+        return <TaskRow employeeTask={employeeTask} key={employeeTask.id} />;
       })}
       <AddButton onClick={() => setCreateModalIsOpen(true)} text='Legg til oppgave' />
       <ChangeDueDateModal closeModal={() => setModalIsOpen(false)} employeeTasks={employeeTasks} modalIsOpen={modalIsOpen} />

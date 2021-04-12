@@ -90,6 +90,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           },
           task: {
             select: {
+              id: true,
               title: true,
               tags: true,
               description: true,
@@ -124,11 +125,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         select: {
           tasks: {
             select: {
+              id: true,
               employeeTask: {
                 where: {
                   employeeId: parsedId,
                 },
                 select: {
+                  id: true,
                   dueDate: true,
                 },
               },
@@ -244,12 +247,13 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               open={Boolean(anchorEl)}>
               {history.map((process) => {
                 return process.years.map((year) => {
+                  const linkText = `${year} ${process.title}`;
                   return (
-                    <Link href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`} key={`${process.title} ${year}`} passHref>
-                      <MenuItem button component='a' onClick={handleClose}>
-                        {year} {process.title}
-                      </MenuItem>
-                    </Link>
+                    <MenuItem key={`${process.title} ${year}`} onClick={handleClose}>
+                      <Link href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`}>
+                        <a style={{ textDecoration: 'none', color: theme.palette.text.primary }}>{linkText}</a>
+                      </Link>
+                    </MenuItem>
                   );
                 });
               })}

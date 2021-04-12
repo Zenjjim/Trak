@@ -57,8 +57,10 @@ const Phase = ({ phaseId, title, tasksFinished, totalTasks, employeeTasks, first
       })}
       {nonGlobalTasks.length ? (
         <>
-          <Typo variant='body2'>Egendefinerte oppgaver</Typo>
-          <Divider />
+          <Typo style={{ marginTop: `${theme.spacing(1)}` }} variant='body2'>
+            Egendefinerte oppgaver
+          </Typo>
+          <Divider style={{ marginBottom: `${theme.spacing(1)}` }} />
           {nonGlobalTasks.map((employeeTask) => {
             return <TaskRow employeeTask={employeeTask} key={employeeTask.taskId} />;
           })}

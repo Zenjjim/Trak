@@ -245,7 +245,7 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               {history.map((process) => {
                 return process.years.map((year) => {
                   return (
-                    <Link passHref href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`} key={`${process.title} ${year}`}>
+                    <Link href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`} key={`${process.title} ${year}`} passHref>
                       <MenuItem button component='a' onClick={handleClose}>
                         {year} {process.title}
                       </MenuItem>

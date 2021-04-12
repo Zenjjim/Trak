@@ -6,7 +6,7 @@ import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
 import useSnackbar from 'context/Snackbar';
 import { EmployeeContext } from 'pages/ansatt/[id]';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
 import { toggleCheckBox } from 'utils/utils';
@@ -38,6 +38,8 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
   const { employee } = useContext(EmployeeContext);
   const [completed, setCompleted] = useState<boolean>(employeeTask.completed);
   const showSnackbar = useSnackbar();
+
+  useMemo(() => setCompleted(employeeTask.completed), [employeeTask, employeeTask.completed]);
 
   return (
     <Box display='flex'>

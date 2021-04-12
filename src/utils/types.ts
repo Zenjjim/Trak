@@ -60,7 +60,6 @@ export type IPhase = {
   tasks?: ITask[];
   dueDate?: Date;
   dueDateDayOffset?: number;
-  cronDate?: Date;
 };
 
 export type IProcessTemplate = {

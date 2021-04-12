@@ -19,7 +19,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       select: {
         id: true,
         title: true,
-        cronDate: true,
         dueDate: true,
         dueDateDayOffset: true,
         processTemplate: {

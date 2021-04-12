@@ -26,7 +26,6 @@ type PhaseData = {
   offset: Offset;
   dueDateDayOffset: number;
   dueDate: string;
-  cronDate?: string;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -56,7 +55,6 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
         dueDateDayOffset: phase?.dueDateDayOffset,
         offset: phase?.offset,
         dueDate: phase?.dueDate,
-        cronDate: phase?.cronDate,
       }),
       [phase],
     ),
@@ -70,7 +68,6 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
           dueDate: moment(res.data.dueDate).format('yyyy-MM-DD'),
           offset: res.data.dueDateDayOffset <= 0 ? Offset.Before : Offset.After,
           dueDateDayOffset: Math.abs(res.data.dueDateDayOffset),
-          cronDate: moment(res.data.cronDate).format('yyyy-MM-DD'),
         });
       });
     }
@@ -82,7 +79,6 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
       dueDateDayOffset: phase?.dueDateDayOffset,
       offset: phase?.offset,
       dueDate: phase?.dueDate,
-      cronDate: phase?.cronDate,
     });
   }, [phase]);
 
@@ -96,7 +92,6 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
         ...formData,
         dueDate: new Date(formData.dueDate),
         dueDateDayOffset: formData.offset === Offset.Before ? -Math.abs(formData.dueDateDayOffset) : Math.abs(formData.dueDateDayOffset),
-        cronDate: new Date(formData.cronDate),
       },
       processTemplateId: processTemplate.id,
     };
@@ -202,22 +197,6 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
                 </>
               }
               name={'dueDate'}
-              register={register}
-              type='date'
-            />
-            <TextField
-              defaultValue={moment().format('yyyy-MM-DD')}
-              errors={errors}
-              inputProps={{ min: `${new Date().getFullYear()}-01-01`, max: `${new Date().getFullYear()}-12-31` }}
-              label={
-                <>
-                  Automatisk opprettelse
-                  <Tooltip title='Dato for automatisk opprettelse av oppgaver i fasen. På denne datoen vil alle oppgavene i fasen bli opprettet for alle ansatte'>
-                    <HelpIcon />
-                  </Tooltip>
-                </>
-              }
-              name={'cronDate'}
               register={register}
               type='date'
             />

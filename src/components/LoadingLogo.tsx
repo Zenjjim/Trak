@@ -10,6 +10,9 @@ const useStyles = makeStyles({
     left: '50%',
     position: 'absolute',
     top: '50%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   animateLogo: {
     animation: `$pulse 1500ms ${theme.transitions.easing.easeIn} infinite`,
@@ -30,7 +33,7 @@ const useStyles = makeStyles({
 const LoadingLogo = () => {
   const classes = useStyles();
   return (
-    <Box align='center' className={classes.root}>
+    <Box className={classes.root}>
       <Image className={classes.animateLogo} height={80} priority src='/trak_logo.svg' width={240} />
       <Typo>Henter data...</Typo>
     </Box>

@@ -48,7 +48,7 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
           {completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
         </IconButton>
         <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>
-          <Typo className={completed && classes.completedTask} color={!completed && 'disabled'} noWrap style={{ maxWidth: '80vw' }} variant='body1'>
+          <Typo className={completed ? classes.completedTask : null} color={!completed && 'disabled'} noWrap style={{ maxWidth: '80vw' }} variant='body1'>
             {employeeTask.task.title}
           </Typo>
         </ButtonBase>

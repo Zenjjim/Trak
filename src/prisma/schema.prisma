@@ -102,6 +102,7 @@ model Task {
   id            String         @id @default(uuid())
   title         String
   description   String?
+  link          String?
   global        Boolean        @default(true)
   phaseId       String?
   responsibleId Int?

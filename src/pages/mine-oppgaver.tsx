@@ -75,6 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         select: {
           id: true,
           title: true,
+          link: true,
           tags: true,
           phase: {
             select: {

@@ -14,6 +14,7 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
       data: {
         title: data.title,
         description: data.description,
+        link: data.link,
         global: global,
         phase: {
           connect: {

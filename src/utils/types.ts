@@ -86,6 +86,7 @@ export type ITask = {
   id: string;
   title: string;
   description: string;
+  link?: string;
   global: boolean;
   phaseId: string;
   phase: IPhase;

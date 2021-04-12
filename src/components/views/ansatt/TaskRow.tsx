@@ -1,12 +1,12 @@
 import { Box, ButtonBase, Hidden, IconButton } from '@material-ui/core';
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@material-ui/icons';
+import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon, Launch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
 import useSnackbar from 'context/Snackbar';
 import { EmployeeContext } from 'pages/ansatt/[id]';
-import { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
 import { toggleCheckBox } from 'utils/utils';
@@ -52,7 +52,13 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
             {employeeTask.task.title}
           </Typo>
         </ButtonBase>
-
+        {employeeTask.task.link && (
+          <a href={employeeTask.task.link} rel='noopener noreferrer' target='_blank'>
+            <IconButton size='small'>
+              <Launch />
+            </IconButton>
+          </a>
+        )}
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={employeeTask.id} modalIsOpen={modalIsOpen} />}
       </Box>
       <Hidden smDown>

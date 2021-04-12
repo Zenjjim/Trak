@@ -38,6 +38,7 @@ const GET = async (res, task_id) => {
         title: true,
         description: true,
         phaseId: true,
+        link: true,
         tags: {
           select: {
             id: true,
@@ -93,6 +94,7 @@ const PUT = async (req, res, task_id) => {
       data: {
         title: data.title,
         description: data.description,
+        link: data.link,
         global: global,
         phase: {
           connect: {

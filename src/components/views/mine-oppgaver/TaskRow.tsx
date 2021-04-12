@@ -1,5 +1,5 @@
 import { ButtonBase, Hidden, IconButton, makeStyles } from '@material-ui/core';
-import { CheckBox, CheckBoxOutlineBlank } from '@material-ui/icons';
+import { CheckBox, CheckBoxOutlineBlank, Launch } from '@material-ui/icons';
 import classnames from 'classnames';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
@@ -65,6 +65,13 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
             {data.task.title}
           </Typo>
         </ButtonBase>
+        {data.task.link && (
+          <a href={data.task.link} rel='noopener noreferrer' target='_blank'>
+            <IconButton size='small'>
+              <Launch />
+            </IconButton>
+          </a>
+        )}
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
       </div>
       <div

@@ -1,4 +1,4 @@
-import { Box, Button, Hidden } from '@material-ui/core';
+import { Box, Button, Divider, Hidden } from '@material-ui/core';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import { makeStyles } from '@material-ui/styles';
 import AddButton from 'components/AddButton';
@@ -30,6 +30,8 @@ const Phase = ({ phaseId, title, tasksFinished, totalTasks, employeeTasks, first
   const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [createTaskModalIsOpen, setCreateModalIsOpen] = useState(false);
+  const globalTasks = employeeTasks.filter((task) => task.task.global);
+  const nonGlobalTasks = employeeTasks.filter((task) => !task.task.global);
   return (
     <Box marginBottom={theme.spacing(2)}>
       <Box alignItems='center' display='flex'>
@@ -50,9 +52,18 @@ const Phase = ({ phaseId, title, tasksFinished, totalTasks, employeeTasks, first
           <Box flex={1}>{first && <Typo variant='body2'>Ansvarlig</Typo>}</Box>
         </Hidden>
       </Box>
-      {employeeTasks.map((employeeTask) => {
-        return <TaskRow employeeTask={employeeTask} key={employeeTask.id} />;
+      {globalTasks.map((employeeTask) => {
+        return <TaskRow employeeTask={employeeTask} key={employeeTask.taskId} />;
       })}
+      {nonGlobalTasks.length ? (
+        <>
+          <Typo variant='body2'>Egendefinerte oppgaver</Typo>
+          <Divider />
+          {nonGlobalTasks.map((employeeTask) => {
+            return <TaskRow employeeTask={employeeTask} key={employeeTask.taskId} />;
+          })}
+        </>
+      ) : undefined}
       <AddButton onClick={() => setCreateModalIsOpen(true)} text='Legg til oppgave' />
       <ChangeDueDateModal closeModal={() => setModalIsOpen(false)} employeeTasks={employeeTasks} modalIsOpen={modalIsOpen} />
       <TaskModal closeModal={() => setCreateModalIsOpen(false)} dueDate={employeeTasks[0]?.dueDate} modalIsOpen={createTaskModalIsOpen} phaseId={phaseId} />

@@ -57,6 +57,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
       () => ({
         title: task?.title,
         description: task?.description,
+        link: task?.link,
         professions: task?.professions,
         tags: task?.tags,
         responsible: task?.responsible,
@@ -77,6 +78,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
     reset({
       title: task?.title,
       description: task?.description,
+      link: task?.link,
       professions: task?.professions,
       tags: task?.tags,
       responsible: task?.responsible,
@@ -174,6 +176,19 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
           name='description'
           register={register}
           rows={4}
+        />
+        <TextField
+          errors={errors}
+          label='Link'
+          name='link'
+          register={register}
+          rules={{
+            pattern: {
+              // eslint-disable-next-line
+              value: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/,
+              message: 'Linken må være en gyldig URL',
+            },
+          }}
         />
         <ToggleButtonGroup control={control} name={'professions'} professions={professions} />
         <TagSelector control={control} label='Tags' name='tags' options={tags} />

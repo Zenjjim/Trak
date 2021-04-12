@@ -1,5 +1,6 @@
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import Typo from 'components/Typo';
 import Image from 'next/image';
 import theme from 'theme';
 
@@ -29,8 +30,9 @@ const useStyles = makeStyles({
 const LoadingLogo = () => {
   const classes = useStyles();
   return (
-    <Box className={classes.root}>
+    <Box align='center' className={classes.root}>
       <Image className={classes.animateLogo} height={80} priority src='/trak_logo.svg' width={240} />
+      <Typo>Henter data...</Typo>
     </Box>
   );
 };

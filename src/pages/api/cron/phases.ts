@@ -64,6 +64,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         employeeTask: {
           select: {
             id: true,
+            completed: true,
+            dueDate: true,
             task: {
               select: {
                 phase: {
@@ -109,8 +111,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     prisma.$disconnect();
 
-    cronDateEmployeeTaskCreator(phases, employees);
-    nonCronDateEmployeeTaskCreator(phases, employees);
+    employeeTaskCreator(phases, employees);
     createNotification(responsibleEmployees);
 
     res.status(HttpStatusCode.OK).end();
@@ -119,34 +120,53 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-const cronDateEmployeeTaskCreator = (phases, employees) => {
-  const today = new Date();
-  phases.forEach((phase) => {
-    if (phase?.cronDate?.getDate() === today.getDate() && phase?.cronDate?.getMonth() === today.getMonth()) {
-      employees.forEach((employee) => {
-        if (!employee?.terminationDate) {
-          if (employee?.hrManagerId) {
-            createEmployeeTasks(employee, phase);
-          }
-        }
-      });
-    }
-  });
-};
-
-const nonCronDateEmployeeTaskCreator = (phases, employees) =>
+const employeeTaskCreator = (phases, employees) => {
+  const lopendePhases = phases.filter((phase) => phase.processTemplate.slug === 'lopende');
+  const firstPhase = lopendePhases.reduce((phaseA, phaseB) => (phaseA?.dueDate < phaseB?.dueDate ? phaseA : phaseB));
   employees.forEach((employee) => {
-    if (!employeeHasProcessTask(employee, 'onboarding')) {
+    if (!employee.hrManagerId) {
+      return;
+    }
+    lopendeEmployeeTaskCreator(employee, lopendePhases, firstPhase);
+    if (employee.dateOfEmployment && !employeeHasProcessTask(employee, 'onboarding')) {
       onboardingEmployeeTaskCreator(phases, employee);
     }
     if (employee.terminationDate && !employeeHasProcessTask(employee, 'offboarding')) {
       offboardingEmployeeTaskCreator(phases, employee);
     }
   });
+};
+
+const lopendeEmployeeTaskCreator = (employee, lopendePhases, firstPhase) => {
+  const lopendeTasks = employee.employeeTask.filter((employeeTask) => employeeTask.task.phase.processTemplate.slug === 'lopende');
+  const anyActiveTasks = lopendeTasks.some((employeeTask) => !employeeTask.completed);
+  if (!anyActiveTasks) {
+    const latestDate = lopendeTasks?.reduce((taskA, taskB) => (taskA?.dueDate > taskB?.dueDate ? taskA : taskB), undefined);
+    const latestMomentDate = moment(latestDate?.dueDate);
+    firstPhase.dueDate = moment(firstPhase.dueDate).set('year', latestMomentDate.year()).format();
+    if (latestDate) {
+      const validPhases = lopendePhases.filter((phase) => {
+        const phaseDate = moment(phase.dueDate);
+        if (phaseDate.month() === latestMomentDate.month()) {
+          return phaseDate.day() > phaseDate.day();
+        }
+        return phaseDate.month() > latestMomentDate.month();
+      });
+      if (validPhases.length) {
+        const firstValidPhases = validPhases[0];
+        firstValidPhases.dueDate = moment(firstValidPhases.dueDate).set('year', latestMomentDate.year()).format();
+        return createEmployeeTasks(employee, firstValidPhases);
+      } else {
+        firstPhase.dueDate = moment(firstPhase.dueDate).add(1, 'y').format();
+      }
+    }
+    createEmployeeTasks(employee, firstPhase);
+  }
+};
 
 const onboardingEmployeeTaskCreator = (phases, employee) =>
   phases.forEach((phase) => {
-    if (phase.processTemplate.slug === 'onboarding' && employee.dateOfEmployment) {
+    if (phase.processTemplate.slug === 'onboarding') {
       phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
       createEmployeeTasks(employee, phase);
       const employeeWantsNewEmployeeNotificiation = employee.hrManager.employeeSettings.notificationSettings.includes('HIRED');

@@ -40,7 +40,7 @@ enum NotificationType {
 model EmployeeSettings {
   employeeId           Int                @id
   employee             Employee           @relation("settings", fields: [employeeId], references: [id])
-  slack                String?            @unique
+  slack                Boolean            @default(true)
   notificationSettings NotificationType[]
 }
 

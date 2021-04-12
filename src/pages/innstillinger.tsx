@@ -1,6 +1,5 @@
 import { Button, Checkbox as MuiCheckbox, FormControlLabel, FormGroup, makeStyles } from '@material-ui/core';
 import axios from 'axios';
-import TextField from 'components/form/TextField';
 import Typo from 'components/Typo';
 import useSnackbar from 'context/Snackbar';
 import { useUser } from 'context/User';
@@ -32,19 +31,18 @@ const useStyles = makeStyles({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   try {
-    const mySettings = await prisma.employeeSettings.findUnique({
+    const mySettings = await prisma.employeeSettings.upsert({
       where: {
+        employeeId: session?.user?.id,
+      },
+      update: {},
+      create: {
         employeeId: session?.user?.id,
       },
     });
     return { props: { mySettings } };
   } catch (err) {
-    const mySettings = await prisma.employeeSettings.create({
-      data: {
-        employeeId: session?.user?.id,
-      },
-    });
-    return { props: { mySettings } };
+    return { props: {} };
   }
 };
 
@@ -55,7 +53,7 @@ const Settings = ({ mySettings }: InferGetServerSidePropsType<typeof getServerSi
 
   const defaultNotificationSettingsValue = mySettings.notificationSettings.reduce((object, key) => ((object[key] = true), object), {});
 
-  const { register, errors, control, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm({
     reValidateMode: 'onChange',
     defaultValues: useMemo(
       () => ({
@@ -104,7 +102,7 @@ const Settings = ({ mySettings }: InferGetServerSidePropsType<typeof getServerSi
         </div>
         <form noValidate onSubmit={onSubmit}>
           <div>
-            <TextField errors={errors} fullWidth={false} label='Slack member id' name='slack' register={register} />
+            <Checkbox control={control} key={'slack'} label='Jeg ønsker varslinger på Slack' name={'slack'} />
             <div style={{ padding: `${theme.spacing(4)} 0` }}>
               <Typo variant='h2'>Send notifikasjon når:</Typo>
               <FormGroup>

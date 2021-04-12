@@ -18,7 +18,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
       });
       if (slackData) {
-        slackMessager(slackData.channel, slackData.text);
+        slackMessager(slackData.email, slackData.text);
       }
       res.status(HttpStatusCode.CREATED).json(newNotification);
     } catch (err) {

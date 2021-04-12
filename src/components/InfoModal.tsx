@@ -65,14 +65,14 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
           dueDate: employeeTask.dueDate,
           responsibleId: formData.responsible?.id,
         });
-        const employeeWantsDelegateNotifications = formData.responsible.employeeSettings.notificationSettings.includes('DELEGATE');
+        const employeeWantsDelegateNotifications = formData.responsible.employeeSettings?.notificationSettings?.includes('DELEGATE');
         if (employeeWantsDelegateNotifications) {
           await axios.post('/api/notification', {
             description: `Du har blitt delegert arbeidsoppgaven "${employeeTask.task.title}" av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
             employeeId: formData.responsible?.id,
             ...(formData.responsible.employeeSettings?.slack && {
               slackData: {
-                channel: formData.responsible.employeeSettings.slack,
+                email: formData.responsible.email,
                 text: `Du har blitt delegert arbeidsoppgaven ${employeeTask.task.title} av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
               },
             }),
@@ -85,7 +85,7 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
           showSnackbar('Ansvarlig byttet', 'success');
         });
       } catch (error) {
-        showSnackbar(error.response.data?.message || 'Noe gikk galt', 'error');
+        showSnackbar(error.response?.data?.message || 'Noe gikk galt', 'error');
       }
     }
   });

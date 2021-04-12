@@ -252,16 +252,24 @@ export const filterAndSearchEmployees = (searchText: string, employeeFilters: Em
   return result;
 };
 
-export const slackMessager = async (channel, text) => {
+export const slackMessager = async (email, text) => {
   try {
-    await axios.post(
-      'https://slack.com/api/chat.postMessage',
-      qs.stringify({
-        token: process.env.SLACK_TOKEN,
-        channel: channel,
-        text: text,
-      }),
-    );
+    const response = await axios.get(`https://slack.com/api/users.lookupByEmail?email=${email}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.SLACK_TOKEN}`,
+      },
+    });
+    const userInSlackWorkspace = response.data.user;
+    if (userInSlackWorkspace) {
+      await axios.post(
+        'https://slack.com/api/chat.postMessage',
+        qs.stringify({
+          token: process.env.SLACK_TOKEN,
+          channel: response.data.user.id,
+          text: text,
+        }),
+      );
+    }
   } catch (err) {
     // eslint-disable-next-line
     console.log(err);

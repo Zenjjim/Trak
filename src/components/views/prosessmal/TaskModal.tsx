@@ -179,7 +179,14 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
         />
         <TextField
           errors={errors}
-          label='Link'
+          label={
+            <>
+              Link{' '}
+              <Tooltip title={`Link til nettsted/e-post for å få rask tilgang fra oppgaveoversikten`}>
+                <HelpIcon fontSize='small' />
+              </Tooltip>
+            </>
+          }
           name='link'
           register={register}
           rules={{

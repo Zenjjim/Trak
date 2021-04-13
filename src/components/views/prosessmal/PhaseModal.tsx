@@ -154,17 +154,19 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
         />
         {(processTemplate.slug === 'onboarding' || processTemplate.slug === 'offboarding') && (
           <div>
-            <Typo variant='body1'>
-              Forfaller{' '}
-              <Tooltip title={`Når oppgavene i fasen skal forfalle basert på ${processTemplate.slug === 'onboarding' ? `ansettelsdato` : `termineringsdato`} `}>
-                <HelpIcon fontSize='small' />
-              </Tooltip>
-            </Typo>
             <Box display='flex'>
               <TextField
                 errors={errors}
                 inputProps={{ min: 0 }}
-                label=''
+                label={
+                  <>
+                    Forfaller{' '}
+                    <Tooltip
+                      title={`Når oppgavene i fasen skal forfalle basert på ${processTemplate.slug === 'onboarding' ? `ansettelsdato` : `termineringsdato`} `}>
+                      <HelpIcon fontSize='small' />
+                    </Tooltip>
+                  </>
+                }
                 name='dueDateDayOffset'
                 placeholder='Antall dager'
                 register={register}

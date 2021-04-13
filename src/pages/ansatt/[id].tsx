@@ -226,9 +226,6 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
             {year} {history.find((element) => element.slug === process)?.title}
           </Typo>
           <Box display='flex'>
-            <Button aria-controls='filer' aria-haspopup='true' className={classes.spaceRight} color='primary' onClick={() => null}>
-              Filer
-            </Button>
             <Button
               aria-controls='historikk meny'
               aria-haspopup='true'

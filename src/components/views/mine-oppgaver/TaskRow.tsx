@@ -68,7 +68,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         </ButtonBase>
         {data.task.link && (
           <Tooltip title={data.task.link}>
-            <a href={`${validator.isEmail(data.task.link) && 'mailto:'}${data.task.link}`} rel='noopener noreferrer' target='_blank'>
+            <a href={`${validator.isEmail(data.task.link) ? 'mailto:' : ''}${data.task.link}`} rel='noopener noreferrer' target='_blank'>
               <IconButton size='small'>{validator.isEmail(data.task.link) ? <Mail /> : <Launch />}</IconButton>
             </a>
           </Tooltip>

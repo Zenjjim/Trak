@@ -55,7 +55,7 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
         </ButtonBase>
         {employeeTask.task.link && (
           <Tooltip title={employeeTask.task.link}>
-            <a href={`${validator.isEmail(employeeTask.task.link) && 'mailto:'}${employeeTask.task.link}`} rel='noopener noreferrer' target='_blank'>
+            <a href={`${validator.isEmail(employeeTask.task.link) ? 'mailto:' : ''}${employeeTask.task.link}`} rel='noopener noreferrer' target='_blank'>
               <IconButton size='small'>{validator.isEmail(employeeTask.task.link) ? <Mail /> : <Launch />}</IconButton>
             </a>
           </Tooltip>

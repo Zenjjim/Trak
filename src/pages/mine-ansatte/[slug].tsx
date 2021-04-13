@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       slug: true,
       phases: {
         orderBy: {
-          createdAt: 'asc',
+          dueDate: 'asc',
         },
         select: {
           id: true,
@@ -82,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       id: true,
       firstName: true,
       lastName: true,
+      activeYear: true,
       profession: {
         select: {
           title: true,
@@ -112,6 +113,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               phase: {
                 select: {
                   title: true,
+                  processTemplate: {
+                    select: {
+                      slug: true,
+                    },
+                  },
                 },
               },
             },
@@ -130,9 +136,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) => {
   filteredEmployees.forEach((employee: IEmployee) => {
     employee['tasksFinished'] = employee.employeeTask.filter(
-      (employeeTask: IEmployeeTask) => employeeTask.completed && employeeTask.task.phase.title === phase.title,
+      (employeeTask: IEmployeeTask) =>
+        employeeTask.completed &&
+        employeeTask.task.phase.title === phase.title &&
+        (employeeTask.task.phase.processTemplate.slug === 'lopende'
+          ? new Date(employeeTask.dueDate).getFullYear() === new Date(employee.activeYear).getFullYear()
+          : true),
     ).length;
-    employee['totalTasks'] = employee.employeeTask.filter((employeeTask: IEmployeeTask) => employeeTask.task.phase.title === phase.title).length;
+
+    employee['totalTasks'] = employee.employeeTask.filter(
+      (employeeTask: IEmployeeTask) =>
+        employeeTask.task.phase.title === phase.title &&
+        (employeeTask.task.phase.processTemplate.slug === 'lopende'
+          ? new Date(employeeTask.dueDate).getFullYear() === new Date(employee.activeYear).getFullYear()
+          : true),
+    ).length;
   });
 };
 

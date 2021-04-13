@@ -19,6 +19,7 @@ model Employee {
   terminationDate         DateTime?
   imageUrl                String?
   hrManagerId             Int?
+  activeYear              DateTime          @default(now()) @db.Date
   hrManager               Employee?         @relation("EmployeeToEmployee", fields: [hrManagerId], references: [id])
   profession              Profession        @relation(fields: [professionId], references: [id])
   employees               Employee[]        @relation("EmployeeToEmployee")

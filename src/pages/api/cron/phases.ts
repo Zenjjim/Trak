@@ -3,6 +3,7 @@ import HttpStatusCode from 'http-status-typed';
 import { groupBy } from 'lodash';
 import moment from 'moment';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { IEmployee } from 'utils/types';
 import { addDays, slackMessager } from 'utils/utils';
 const prisma = new PrismaClient();
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -15,6 +16,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const phases = await prisma.phase.findMany({
       where: {
         active: true,
+      },
+      orderBy: {
+        dueDate: 'asc',
       },
       select: {
         id: true,
@@ -160,7 +164,9 @@ const lopendeEmployeeTaskCreator = (employee, lopendePhases, firstPhase) => {
         firstValidPhases.dueDate = moment(firstValidPhases.dueDate).set('year', latestMomentDate.year()).format();
         return createEmployeeTasks(employee, firstValidPhases);
       } else {
-        firstPhase.dueDate = moment(firstPhase.dueDate).add(1, 'y').format();
+        const newDueDate = moment(firstPhase.dueDate).add(1, 'y');
+        firstPhase.dueDate = newDueDate.format();
+        updateActiveYear(employee, newDueDate.toDate());
       }
     }
     createEmployeeTasks(employee, firstPhase);
@@ -212,6 +218,17 @@ const createEmployeeTasks = async (employee, phase) => {
   });
 
   await prisma.employeeTask.createMany({ data: data, skipDuplicates: true });
+};
+
+const updateActiveYear = async (employee: IEmployee, newYear: Date) => {
+  await prisma.employee.update({
+    where: {
+      id: employee.id,
+    },
+    data: {
+      activeYear: newYear,
+    },
+  });
 };
 
 const createNotification = async (responsibleEmployees) => {

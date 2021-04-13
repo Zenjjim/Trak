@@ -33,6 +33,7 @@ export type EmployeeRow = {
   tasksFinished: number;
   totalTasks: number;
   employeeTask: IEmployeeTask[];
+  activeYear: Date;
 };
 
 type UserRowProps = {
@@ -47,7 +48,7 @@ const UserRow = ({ employee, slug }: UserRowProps) => {
 
   return (
     <TableRow className={classes.pointer} hover>
-      <TableCell onClick={() => router.push(`/ansatt/${employee.id}?år=${new Date(employee.employeeTask[0].dueDate).getFullYear()}&prosess=${slug}`)}>
+      <TableCell onClick={() => router.push(`/ansatt/${employee.id}?år=${new Date(employee.activeYear).getFullYear()}&prosess=${slug}`)}>
         <div className={classes.userRow} tabIndex={0}>
           <Avatar className={classes.avatar} firstName={employee.firstName} image={employee.image || ''} lastName={employee.lastName} />
           <Typo noWrap variant={typoVariant}>

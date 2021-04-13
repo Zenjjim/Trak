@@ -69,7 +69,13 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
       </div>
       <div
         className={classnames(classes.avatarRoot, classes.onClick)}
-        onClick={() => router.push(`/ansatt/${data.employee.id}?år=${new Date(data.dueDate).getFullYear()}&prosess=${data.task.phase.processTemplate.slug}`)}>
+        onClick={() =>
+          router.push(
+            `/ansatt/${data.employee.id}?${
+              data.task.phase.processTemplate.slug === 'lopende' ? `år=${new Date(data.employee.activeYear).getFullYear()}&` : ''
+            }prosess=${data.task.phase.processTemplate.slug}`,
+          )
+        }>
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />
         <Typo noWrap>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
       </div>

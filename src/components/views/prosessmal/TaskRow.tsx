@@ -1,5 +1,6 @@
-import { Avatar, IconButton, makeStyles, TableCell, TableRow } from '@material-ui/core';
+import { IconButton, makeStyles, TableCell, TableRow } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
+import Avatar from 'components/Avatar';
 import TaskModal from 'components/views/prosessmal/TaskModal';
 import { useState } from 'react';
 import { IPhase, ITask } from 'utils/types';
@@ -46,9 +47,12 @@ const TaskRow = ({ task, phase }: TaskProps) => {
       <TableCell style={{ width: '20rem' }}>
         {task.responsible && (
           <div className={classes.flexCenter}>
-            <Avatar className={classes.avatarSize} src={task.responsible.imageUrl}>
-              X
-            </Avatar>
+            <Avatar
+              className={classes.avatarSize}
+              firstName={task.responsible.firstName}
+              image={task.responsible.imageUrl}
+              lastName={task.responsible.lastName}
+            />
             {`${task.responsible.firstName} ${task.responsible.lastName}`}
           </div>
         )}

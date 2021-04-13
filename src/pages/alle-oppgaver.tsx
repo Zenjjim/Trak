@@ -64,6 +64,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           firstName: true,
           lastName: true,
           imageUrl: true,
+          activeYear: true,
         },
       },
       task: {

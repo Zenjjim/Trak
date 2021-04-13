@@ -38,13 +38,14 @@ const useStyles = makeStyles({
   },
 });
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { id, år: year, prosess: process } = query;
+  const { id, år: year = null, prosess: process } = query;
   const parsedId = typeof id === 'string' && parseInt(id);
-  if (!id || !process || !year) {
+  if ((process === 'lopende' && !year) || !id || !process) {
     return {
       notFound: true,
     };
   }
+
   const employeeQuery = await prisma.employee.findUnique({
     where: {
       id: parsedId,
@@ -64,10 +65,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       },
       employeeTask: {
         where: {
-          dueDate: {
-            gte: moment(year.toString()).startOf('year').toDate(),
-            lte: moment(year.toString()).endOf('year').toDate(),
-          },
+          ...(process === 'lopende' && {
+            dueDate: {
+              gte: moment(year.toString()).startOf('year').toDate(),
+              lte: moment(year.toString()).endOf('year').toDate(),
+            },
+          }),
           task: {
             phase: {
               processTemplate: {
@@ -185,7 +188,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const history = allTasks.map((process) => {
     const years = flattenDeep(process.years);
     const uniqeYears = uniq(years);
-    return { title: process.title, slug: process.slug, years: uniqeYears };
+    return { title: process.title, slug: process.slug, years: process.slug === 'lopende' ? uniqeYears : Array(uniqeYears.length ? 1 : 0) };
   });
 
   return { props: { employee, phasesWithTasks, year, process, history } };
@@ -247,10 +250,11 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               open={Boolean(anchorEl)}>
               {history.map((process) => {
                 return process.years.map((year) => {
-                  const linkText = `${year} ${process.title}`;
+                  const linkText = `${process.slug === 'lopende' ? year : ''} ${process.title}`;
+                  const link = `/ansatt/${employee.id}?${process.slug === 'lopende' ? `år=${year}&` : ''}prosess=${process.slug}`;
                   return (
                     <MenuItem key={`${process.title} ${year}`} onClick={handleClose}>
-                      <Link href={`/ansatt/${employee.id}?år=${year}&prosess=${process.slug}`}>
+                      <Link href={link}>
                         <a style={{ textDecoration: 'none', color: theme.palette.text.primary }}>{linkText}</a>
                       </Link>
                     </MenuItem>

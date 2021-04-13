@@ -11,7 +11,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IProcessTemplate, Offset } from 'utils/types';
+import { IProcessTemplate, Offset, Process } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
 
 type PhaseModalProps = {
@@ -152,7 +152,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
             required: 'Prosesstittel er påkrevd',
           }}
         />
-        {(processTemplate.slug === 'onboarding' || processTemplate.slug === 'offboarding') && (
+        {(processTemplate.slug === Process.ONBOARDING || processTemplate.slug === Process.OFFBOARDING) && (
           <div>
             <Box display='flex'>
               <TextField
@@ -162,7 +162,9 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
                   <>
                     Forfaller{' '}
                     <Tooltip
-                      title={`Når oppgavene i fasen skal forfalle basert på ${processTemplate.slug === 'onboarding' ? `ansettelsdato` : `termineringsdato`} `}>
+                      title={`Når oppgavene i fasen skal forfalle basert på ${
+                        processTemplate.slug === Process.ONBOARDING ? `ansettelsdato` : `termineringsdato`
+                      } `}>
                       <HelpIcon fontSize='small' />
                     </Tooltip>
                   </>
@@ -180,11 +182,11 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
                 type='number'
               />
               <BeforeToogle control={control} name='offset' />
-              <Typo variant='body1'>{processTemplate.slug === 'onboarding' ? 'ansettelsesdato' : 'termineringsdato'}</Typo>
+              <Typo variant='body1'>{processTemplate.slug === Process.ONBOARDING ? 'ansettelsesdato' : 'termineringsdato'}</Typo>
             </Box>
           </div>
         )}
-        {processTemplate.slug === 'lopende' && (
+        {processTemplate.slug === Process.LOPENDE && (
           <>
             <TextField
               defaultValue={moment().format('yyyy-MM-DD')}

@@ -106,6 +106,12 @@ export enum Actions {
   UpdateDueDate = 'updateDueDate',
 }
 
+export enum Process {
+  ONBOARDING = 'onboarding',
+  LOPENDE = 'lopende',
+  OFFBOARDING = 'offboarding',
+}
+
 export type IEmployeeExtended = IEmployee & { tasksFinished: number; totalTasks: number };
 
 export type IPhaseWithEmployees = {

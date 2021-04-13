@@ -4,6 +4,7 @@ import { groupBy } from 'lodash';
 import moment from 'moment';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { IEmployee } from 'utils/types';
+import { Process } from 'utils/types';
 import { addDays, slackMessager } from 'utils/utils';
 const prisma = new PrismaClient();
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -128,24 +129,24 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 }
 
 const employeeTaskCreator = (phases, employees) => {
-  const lopendePhases = phases.filter((phase) => phase.processTemplate.slug === 'lopende');
+  const lopendePhases = phases.filter((phase) => phase.processTemplate.slug === Process.LOPENDE);
   const firstPhase = lopendePhases.reduce((phaseA, phaseB) => (phaseA?.dueDate < phaseB?.dueDate ? phaseA : phaseB));
   employees.forEach((employee) => {
     if (!employee.hrManagerId) {
       return;
     }
     lopendeEmployeeTaskCreator(employee, lopendePhases, firstPhase);
-    if (employee.dateOfEmployment && !employeeHasProcessTask(employee, 'onboarding')) {
+    if (employee.dateOfEmployment && !employeeHasProcessTask(employee, Process.ONBOARDING)) {
       onboardingEmployeeTaskCreator(phases, employee);
     }
-    if (employee.terminationDate && !employeeHasProcessTask(employee, 'offboarding')) {
+    if (employee.terminationDate && !employeeHasProcessTask(employee, Process.OFFBOARDING)) {
       offboardingEmployeeTaskCreator(phases, employee);
     }
   });
 };
 
 const lopendeEmployeeTaskCreator = (employee, lopendePhases, firstPhase) => {
-  const lopendeTasks = employee.employeeTask.filter((employeeTask) => employeeTask.task.phase.processTemplate.slug === 'lopende');
+  const lopendeTasks = employee.employeeTask.filter((employeeTask) => employeeTask.task.phase.processTemplate.slug === Process.LOPENDE);
   const anyActiveTasks = lopendeTasks.some((employeeTask) => !employeeTask.completed);
   if (!anyActiveTasks) {
     const latestDate = lopendeTasks?.reduce((taskA, taskB) => (taskA?.dueDate > taskB?.dueDate ? taskA : taskB), undefined);
@@ -175,7 +176,7 @@ const lopendeEmployeeTaskCreator = (employee, lopendePhases, firstPhase) => {
 
 const onboardingEmployeeTaskCreator = (phases, employee) => {
   phases.forEach((phase) => {
-    if (phase.processTemplate.slug === 'onboarding') {
+    if (phase.processTemplate.slug === Process.ONBOARDING) {
       phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
       createEmployeeTasks(employee, phase);
     }
@@ -188,7 +189,7 @@ const onboardingEmployeeTaskCreator = (phases, employee) => {
 };
 const offboardingEmployeeTaskCreator = (phases, employee) => {
   phases.forEach((phase) => {
-    if (phase.processTemplate.slug === 'offboarding') {
+    if (phase.processTemplate.slug === Process.OFFBOARDING) {
       phase.dueDate = addDays(employee.terminationDate, phase.dueDateDayOffset);
       createEmployeeTasks(employee, phase);
     }

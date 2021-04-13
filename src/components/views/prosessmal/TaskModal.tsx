@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IEmployee, IPhase, ITag, ITask } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
+import validator from 'validator';
 
 type TaskModalProps = {
   phase: IPhase;
@@ -190,10 +191,8 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
           name='link'
           register={register}
           rules={{
-            pattern: {
-              // eslint-disable-next-line
-              value: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/,
-              message: 'Linken må være en gyldig URL',
+            validate: {
+              isLinkOrEmail: (tekst) => validator.isEmail(tekst) || validator.isURL(tekst) || 'Linken må være en gyldig URL eller E-post',
             },
           }}
         />

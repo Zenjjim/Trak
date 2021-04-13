@@ -72,7 +72,8 @@
     "react-scrollable-feed": "^1.3.0",
     "safe-json-stringify": "^1.2.0",
     "sortof": "^0.7.0",
-    "swr": "^0.4.2"
+    "swr": "^0.4.2",
+    "validator": "^13.5.2"
   },
   "devDependencies": {
     "@getbigger-io/prisma-fixtures-cli": "^1.0.9",

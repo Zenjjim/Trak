@@ -1,5 +1,5 @@
 import { Box, ButtonBase, Hidden, IconButton, Tooltip } from '@material-ui/core';
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon, Launch } from '@material-ui/icons';
+import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon, Launch, Mail } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
@@ -10,6 +10,7 @@ import React, { useContext, useMemo, useState } from 'react';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
 import { toggleCheckBox } from 'utils/utils';
+import validator from 'validator';
 
 const useStyles = makeStyles({
   avatar: {
@@ -54,10 +55,8 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
         </ButtonBase>
         {employeeTask.task.link && (
           <Tooltip title={employeeTask.task.link}>
-            <a href={employeeTask.task.link} rel='noopener noreferrer' target='_blank'>
-              <IconButton size='small'>
-                <Launch />
-              </IconButton>
+            <a href={`${validator.isEmail(employeeTask.task.link) && 'mailto:'}${employeeTask.task.link}`} rel='noopener noreferrer' target='_blank'>
+              <IconButton size='small'>{validator.isEmail(employeeTask.task.link) ? <Mail /> : <Launch />}</IconButton>
             </a>
           </Tooltip>
         )}

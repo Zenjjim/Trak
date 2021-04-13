@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Linkify from 'react-linkify';
+import ReactMarkdown from 'react-markdown';
 import theme from 'theme';
 import { IEmployeeTask } from 'utils/types';
 
@@ -199,7 +200,7 @@ const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps
                   {decoratedText}
                 </a>
               )}>
-              {employeeTask?.task.description}
+              <ReactMarkdown>{employeeTask?.task.description}</ReactMarkdown>
             </Linkify>
           ) : (
             <Skeleton height={theme.spacing(24)} />

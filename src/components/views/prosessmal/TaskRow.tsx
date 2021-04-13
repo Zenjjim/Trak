@@ -2,6 +2,7 @@ import { IconButton, makeStyles, TableCell, TableRow } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import Avatar from 'components/Avatar';
 import TaskModal from 'components/views/prosessmal/TaskModal';
+import markdownToTxt from 'markdown-to-txt';
 import { useState } from 'react';
 import { IPhase, ITask } from 'utils/types';
 
@@ -43,7 +44,7 @@ const TaskRow = ({ task, phase }: TaskProps) => {
   return (
     <TableRow className={classes.hideLastBorder} key={task.id}>
       <TableCell style={{ width: '25rem' }}>{task.title}</TableCell>
-      <TableCell style={{ width: '55rem' }}>{task.description}</TableCell>
+      <TableCell style={{ width: '55rem' }}>{markdownToTxt(task.description)}</TableCell>
       <TableCell style={{ width: '20rem' }}>
         {task.responsible && (
           <div className={classes.flexCenter}>

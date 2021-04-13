@@ -1,4 +1,5 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Button, makeStyles, Tooltip } from '@material-ui/core';
+import HelpIcon from '@material-ui/icons/Help';
 import axios from 'axios';
 import EmployeeSelector from 'components/form/EmployeeSelector';
 import TagSelector from 'components/form/TagSelector';
@@ -88,7 +89,29 @@ const TaskModal = ({ modalIsOpen, closeModal, phaseId, dueDate }: TaskModalProps
             required: 'Oppgavetittel er påkrevd',
           }}
         />
-        <TextField errors={errors} label='Oppgavebeskrivelse' multiline name='description' register={register} rows={4} />
+        <TextField
+          errors={errors}
+          label={
+            <>
+              Oppgavebeskrivelse{' '}
+              <Tooltip
+                title={
+                  <>
+                    Dette feltet støtter{' '}
+                    <a href='https://www.markdownguide.org/cheat-sheet/' rel='noreferrer' target='_blank'>
+                      markdown
+                    </a>
+                  </>
+                }>
+                <HelpIcon fontSize='small' />
+              </Tooltip>
+            </>
+          }
+          multiline
+          name='description'
+          register={register}
+          rows={4}
+        />
         <TagSelector control={control} label='Tags' name='tags' options={tags} />
         <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' />
       </div>

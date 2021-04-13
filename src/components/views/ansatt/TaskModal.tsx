@@ -98,7 +98,7 @@ const TaskModal = ({ modalIsOpen, closeModal, phaseId, dueDate }: TaskModalProps
                 title={
                   <>
                     Dette feltet støtter{' '}
-                    <a href='https://www.markdownguide.org/cheat-sheet/' rel='noreferrer' target='_blank'>
+                    <a href='https://www.markdownguide.org/cheat-sheet/' rel='noreferrer noopener' target='_blank'>
                       markdown
                     </a>
                   </>

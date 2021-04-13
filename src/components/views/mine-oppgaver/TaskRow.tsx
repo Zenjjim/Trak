@@ -9,7 +9,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import theme from 'theme';
-import { IEmployeeTask } from 'utils/types';
+import { IEmployeeTask, Process } from 'utils/types';
 import { toggleCheckBox } from 'utils/utils';
 import validator from 'validator';
 
@@ -80,7 +80,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         onClick={() =>
           router.push(
             `/ansatt/${data.employee.id}?${
-              data.task.phase.processTemplate.slug === 'lopende' ? `år=${new Date(data.employee.activeYear).getFullYear()}&` : ''
+              data.task.phase.processTemplate.slug === Process.LOPENDE ? `år=${new Date(data.employee.activeYear).getFullYear()}&` : ''
             }prosess=${data.task.phase.processTemplate.slug}`,
           )
         }>

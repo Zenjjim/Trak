@@ -11,7 +11,7 @@ import { getSession } from 'next-auth/client';
 import { useEffect, useMemo, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
+import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate, Process } from 'utils/types';
 import { filterAndSearchEmployees } from 'utils/utils';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -139,7 +139,7 @@ export const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) 
       (employeeTask: IEmployeeTask) =>
         employeeTask.completed &&
         employeeTask.task.phase.title === phase.title &&
-        (employeeTask.task.phase.processTemplate.slug === 'lopende'
+        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE
           ? new Date(employeeTask.dueDate).getFullYear() === new Date(employee.activeYear).getFullYear()
           : true),
     ).length;
@@ -147,7 +147,7 @@ export const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) 
     employee['totalTasks'] = employee.employeeTask.filter(
       (employeeTask: IEmployeeTask) =>
         employeeTask.task.phase.title === phase.title &&
-        (employeeTask.task.phase.processTemplate.slug === 'lopende'
+        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE
           ? new Date(employeeTask.dueDate).getFullYear() === new Date(employee.activeYear).getFullYear()
           : true),
     ).length;

@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { createContext, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
-import { IEmployeeTask, ITask } from 'utils/types';
+import { IEmployeeTask, ITask, Process } from 'utils/types';
 
 export const EmployeeContext = createContext(undefined);
 
@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id, år: year = null, prosess: process } = query;
   const parsedId = typeof id === 'string' && parseInt(id);
-  if ((process === 'lopende' && !year) || !id || !process) {
+  if ((process === Process.LOPENDE && !year) || !id || !process) {
     return {
       notFound: true,
     };
@@ -65,7 +65,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       },
       employeeTask: {
         where: {
-          ...(process === 'lopende' && {
+          ...(process === Process.LOPENDE && {
             dueDate: {
               gte: moment(year.toString()).startOf('year').toDate(),
               lte: moment(year.toString()).endOf('year').toDate(),
@@ -190,7 +190,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const history = allTasks.map((process) => {
     const years = flattenDeep(process.years);
     const uniqeYears = uniq(years);
-    return { title: process.title, slug: process.slug, years: process.slug === 'lopende' ? uniqeYears : Array(uniqeYears.length ? 1 : 0) };
+    return { title: process.title, slug: process.slug, years: process.slug === Process.LOPENDE ? uniqeYears : Array(uniqeYears.length ? 1 : 0) };
   });
 
   return { props: { employee, phasesWithTasks, year, process, history } };
@@ -249,8 +249,8 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               open={Boolean(anchorEl)}>
               {history.map((process) => {
                 return process.years.map((year) => {
-                  const linkText = `${process.slug === 'lopende' ? year : ''} ${process.title}`;
-                  const link = `/ansatt/${employee.id}?${process.slug === 'lopende' ? `år=${year}&` : ''}prosess=${process.slug}`;
+                  const linkText = `${process.slug === Process.LOPENDE ? year : ''} ${process.title}`;
+                  const link = `/ansatt/${employee.id}?${process.slug === Process.LOPENDE ? `år=${year}&` : ''}prosess=${process.slug}`;
                   return (
                     <MenuItem key={`${process.title} ${year}`} onClick={handleClose}>
                       <Link href={link}>

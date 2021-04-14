@@ -7,9 +7,11 @@ items:
     email: 'max.torre.schau@gmail.com'
     birthDate: '{{date.past}}'
     profession: '@profession3'
+    imageUrl: 'https://maxtorreschau.no/static/media/portrett2.d131cf2d.jpg'
   employee2:
     firstName: 'Zaim'
     lastName: 'Imran'
     email: 'zaim.imran@gmail.com'
     birthDate: '{{date.past}}'
     profession: '@profession3'
+    imageUrl: 'https://avatars.githubusercontent.com/u/23628986?v=4'

@@ -68,6 +68,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       firstName: true,
       lastName: true,
       activeYear: true,
+      imageUrl: true,
       profession: {
         select: {
           title: true,

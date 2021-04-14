@@ -28,7 +28,7 @@ export type EmployeeRow = {
   firstName: string;
   lastName: string;
   profession: IProfession;
-  image?: string;
+  imageUrl?: string;
   hrManager: IEmployee;
   tasksFinished: number;
   totalTasks: number;
@@ -50,7 +50,7 @@ const UserRow = ({ employee, slug }: UserRowProps) => {
     <TableRow className={classes.pointer} hover>
       <TableCell onClick={() => router.push(`/ansatt/${employee.id}?år=${new Date(employee.activeYear).getFullYear()}&prosess=${slug}`)}>
         <div className={classes.userRow} tabIndex={0}>
-          <Avatar className={classes.avatar} firstName={employee.firstName} image={employee.image || ''} lastName={employee.lastName} />
+          <Avatar className={classes.avatar} firstName={employee.firstName} image={employee.imageUrl} lastName={employee.lastName} />
           <Typo noWrap variant={typoVariant}>
             {employee.firstName} {employee.lastName}
           </Typo>

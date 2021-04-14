@@ -8,6 +8,7 @@ items:
     birthDate: '{{date.past}}'
     profession: '@profession1'
     hrManager: '@employee1'
+    imageUrl: '{{image.avatar}}'
   employee{6..8}:
     firstName: '{{name.firstName}}'
     lastName: '{{name.lastName}}'
@@ -15,3 +16,4 @@ items:
     birthDate: '{{date.past}}'
     profession: '@profession2'
     hrManager: '@employee2'
+    imageUrl: '{{image.avatar}}'

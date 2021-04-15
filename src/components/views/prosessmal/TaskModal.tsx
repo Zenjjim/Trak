@@ -192,7 +192,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
           register={register}
           rules={{
             validate: {
-              isLinkOrEmail: (tekst) => validator.isEmail(tekst) || validator.isURL(tekst) || 'Linken må være en gyldig URL eller E-post',
+              isLinkOrEmail: (tekst) => validator.isEmail(tekst) || validator.isURL(tekst) || !tekst || 'Linken må være en gyldig URL eller E-post',
             },
           }}
         />

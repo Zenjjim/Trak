@@ -79,9 +79,9 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         className={classnames(classes.avatarRoot, classes.onClick)}
         onClick={() =>
           router.push(
-            `/ansatt/${data.employee.id}?${
-              data.task.phase.processTemplate.slug === Process.LOPENDE ? `år=${new Date(data.employee.activeYear).getFullYear()}&` : ''
-            }prosess=${data.task.phase.processTemplate.slug}`,
+            `/ansatt/${data.employee.id}?${data.task.phase.processTemplate.slug === Process.LOPENDE ? `år=${new Date().getFullYear()}&` : ''}prosess=${
+              data.task.phase.processTemplate.slug
+            }`,
           )
         }>
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />

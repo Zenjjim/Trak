@@ -31,7 +31,6 @@ export type IEmployee = {
   profession: IProfession;
   hrManager: IEmployee;
   hrManagerId?: number;
-  activeYear: Date;
   employees: IEmployee[];
   employeeSettings: IEmployeeSettings;
   employeeTask: IEmployeeTask[];

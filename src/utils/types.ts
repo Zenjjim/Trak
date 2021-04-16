@@ -41,6 +41,9 @@ export type IEmployeeTask = {
   employeeId?: number;
   responsibleId?: number;
   dueDate: Date;
+  completedBy?: IEmployee;
+  completedById?: number;
+  completedDate?: Date;
 };
 
 export type INotification = {

@@ -27,6 +27,7 @@ model Employee {
   responsibleEmployeeTask EmployeeTask[]    @relation("responsible_employee_tasks")
   notifications           Notification[]    @relation("employee")
   responsibleTask         Task[]            @relation("responsible_tasks")
+  completedTasks          EmployeeTask[]    @relation("completed_by")
 }
 
 enum NotificationType {
@@ -45,15 +46,18 @@ model EmployeeSettings {
 }
 
 model EmployeeTask {
-  id            String   @id @default(uuid())
+  id            String    @id @default(uuid())
   taskId        String
-  completed     Boolean  @default(false)
+  completed     Boolean   @default(false)
   employeeId    Int
   responsibleId Int
   dueDate       DateTime
-  employee      Employee @relation("tasks", fields: [employeeId], references: [id])
-  responsible   Employee @relation("responsible_employee_tasks", fields: [responsibleId], references: [id])
-  task          Task     @relation(fields: [taskId], references: [id])
+  completedDate DateTime?
+  completedById Int?
+  completedBy   Employee? @relation("completed_by", fields: [completedById], references: [id])
+  employee      Employee  @relation("tasks", fields: [employeeId], references: [id])
+  responsible   Employee  @relation("responsible_employee_tasks", fields: [responsibleId], references: [id])
+  task          Task      @relation(fields: [taskId], references: [id])
 }
 
 model Notification {

@@ -3,6 +3,7 @@ import capitalize from 'capitalize-first-letter';
 import Fuse from 'fuse.js';
 import { compact, differenceBy } from 'lodash';
 import moment from 'moment';
+import { SingletonRouter } from 'next/router';
 import { TimeSectionType } from 'pages/mine-oppgaver';
 import qs from 'qs';
 import { Dispatch, SetStateAction } from 'react';
@@ -10,10 +11,19 @@ import { thisMonth, thisWeek, today, tomorrow } from 'sortof';
 import { IEmployee, IEmployeeExtended, IEmployeeTask, IPhaseWithEmployees, ITag } from 'utils/types';
 
 moment.locale('nb');
+/**
+ * @param  {string} url
+ */
+export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export const fetcher = (url) => fetch(url).then((res) => res.json());
-
-export const axiosBuilder = (axiosFunc: Promise<unknown>, text: string, router, showProgressbar, showSnackbar, closeModal) => {
+export const axiosBuilder = (
+  axiosFunc: Promise<unknown>,
+  text: string,
+  router: SingletonRouter,
+  showProgressbar: (boolean) => void,
+  showSnackbar: (arg0: string, arg1: string) => void,
+  closeModal: () => void,
+) => {
   showProgressbar(true);
   axiosFunc
     .then(() => {
@@ -28,7 +38,12 @@ export const axiosBuilder = (axiosFunc: Promise<unknown>, text: string, router, 
       showSnackbar(error.response.data.message, 'error');
     });
 };
-
+/**
+ * @param  {IEmployeeTask} employeeTask
+ * @param  {boolean} completed
+ * @param  {Dispatch<SetStateAction<boolean>>} setCompleted
+ * @param  {(arg0:string,arg1:string)=>void} showSnackbar
+ */
 export const toggleCheckBox = (
   employeeTask: IEmployeeTask,
   completed: boolean,
@@ -49,6 +64,11 @@ export const toggleCheckBox = (
       showSnackbar(error.response.data?.message, 'error');
     });
 };
+/**
+ * @param  {Date} date
+ * @param  {number} days - Nr of days to add
+ * @returns {Date} -
+ */
 
 export const addDays = (date: Date, days: number) => {
   const copy = new Date(Number(date));
@@ -56,10 +76,22 @@ export const addDays = (date: Date, days: number) => {
   return copy;
 };
 
-export const splitIntoTimeSections = (tasks) => {
+/**
+ * @typedef {Object} splitIntoTimeSectionsData
+ * @property {string} title - Section title
+ * @property {IEmployeeTask[]} data - Section data
+ * @property {boolean} error - If header should be red
+ * @property {string?} date - The date of section
+ */
+
+/**
+ * @param  {IEmployeeTask[]} employeeTasks - List of employeetasks
+ * @return {splitIntoTimeSectionsData[]}
+ */
+export const splitIntoTimeSections = (employeeTasks: IEmployeeTask[]) => {
   const todaysDate = moment().startOf('day').toDate();
-  const taskPast = tasks.filter((task) => moment(task.dueDate).isBefore(todaysDate));
-  const withoutPast = differenceBy(tasks, taskPast, 'id');
+  const taskPast = employeeTasks.filter((task) => moment(task.dueDate).isBefore(todaysDate));
+  const withoutPast = differenceBy(employeeTasks, taskPast, 'id');
   const taskToday = today(withoutPast, 'dueDate');
   const withoutToday = differenceBy(withoutPast, taskToday, 'id');
   const taskTomorrow = tomorrow(withoutToday, 'dueDate');
@@ -108,11 +140,11 @@ export const splitIntoTimeSections = (tasks) => {
   ];
   return compact(data);
 };
-
-type EmployeeFilter = {
-  professions: string[];
-};
-
+/**
+ * @param  {string} text
+ * @param  {IPhaseWithEmployees[]} phases
+ * @param  {boolean} [withResponsible=false]
+ */
 export const searchEmployees = (text: string, phases: IPhaseWithEmployees[], withResponsible = false) => {
   const searchOptions = {
     keys: ['searchName', 'firstName', 'lastName', ...(withResponsible ? ['hrManager.searchName', 'hrManager.firstName', 'hrManager.lastName'] : [])],
@@ -137,7 +169,11 @@ export const searchEmployees = (text: string, phases: IPhaseWithEmployees[], wit
   });
   return filteredEmployees;
 };
-
+/**
+ * @param  {string} text
+ * @param  {TimeSectionType[]} timeSections
+ * @param  {boolean} [withResponsible=false]
+ */
 export const searchTask = (text: string, timeSections: TimeSectionType[], withResponsible = false) => {
   const searchOptions = {
     keys: [
@@ -171,6 +207,10 @@ export const searchTask = (text: string, timeSections: TimeSectionType[], withRe
   return result;
 };
 
+/**
+ * @param  {TaskFilters} taskFilters
+ * @param  {TimeSectionType[]} timeSections
+ */
 const filterTasks = (taskFilters: TaskFilters, timeSections: TimeSectionType[]) => {
   const result = timeSections.map((timeSection) => {
     const tagsId = taskFilters.tags.map((element) => element.id);
@@ -197,12 +237,21 @@ const filterTasks = (taskFilters: TaskFilters, timeSections: TimeSectionType[]) 
   });
   return result;
 };
-
+/**
+ * @typedef {Object} TaskFilters
+ * @property {ITag[]} tags
+ * @property {string[]} processTemplates
+ */
 export type TaskFilters = {
   tags: ITag[];
   processTemplates: string[];
 };
-
+/**
+ * @param  {string} searchText
+ * @param  {TaskFilters} taskFilters
+ * @param  {TimeSectionType[]} timeSections
+ * @param  {boolean} [withResponsible=false]
+ */
 export const filterAndSearchTasks = (searchText: string, taskFilters: TaskFilters, timeSections: TimeSectionType[], withResponsible = false) => {
   const noSearchText = !searchText;
   const noFilters = !taskFilters.processTemplates.length && !taskFilters.tags.length;
@@ -222,14 +271,34 @@ export const filterAndSearchTasks = (searchText: string, taskFilters: TaskFilter
     return result;
   }
 };
-// eslint-disable-next-line
+
+/**
+ * @typedef {Object} EmployeeFilter
+ * @property {string[]} professions
+ */
+
+type EmployeeFilter = {
+  professions: string[];
+};
+
+/**
+ * @param  {EmployeeFilter} employeeFilter
+ * @param  {IPhaseWithEmployees[]} phases
+ */
+
 const filterEmployees = (employeeFilter: EmployeeFilter, phases: IPhaseWithEmployees[]) => {
   const result = phases.map((phase) => {
     return { ...phase, employees: phase.employees.filter((employee: IEmployeeExtended) => employeeFilter.professions.includes(employee.profession.title)) };
   });
   return result;
 };
-
+/**
+ * @param  {string} searchText
+ * @param  {EmployeeFilter} employeeFilters
+ * @param  {IPhaseWithEmployees[]} phases
+ * @param  {boolean} [withResponsible=false]
+ * @return {IPhaseWithEmployees[]}
+ */
 export const filterAndSearchEmployees = (searchText: string, employeeFilters: EmployeeFilter, phases: IPhaseWithEmployees[], withResponsible = false) => {
   const noSearchText = !searchText;
   const noFilters = !employeeFilters.professions.length;
@@ -251,8 +320,11 @@ export const filterAndSearchEmployees = (searchText: string, employeeFilters: Em
   const result = searchEmployees(searchText, filteredEmployees, withResponsible);
   return result;
 };
-
-export const slackMessager = async (email, text) => {
+/**
+ * @param  {string} email
+ * @param  {string} text
+ */
+export const slackMessager = async (email: string, text: string) => {
   try {
     const response = await axios.get(`https://slack.com/api/users.lookupByEmail?email=${email}`, {
       headers: {

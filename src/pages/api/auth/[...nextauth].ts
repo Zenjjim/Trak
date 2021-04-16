@@ -35,6 +35,7 @@ export default NextAuth({
             update: {},
             create: {
               employeeId: user.id,
+              notificationSettings: ['DELEGATE', 'DEADLINE', 'WEEK_BEFORE_DEADLINE', 'HIRED', 'TERMINATION'],
             },
           });
           return true;

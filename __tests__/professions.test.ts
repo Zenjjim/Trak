@@ -3,7 +3,7 @@ import { createMocks } from 'node-mocks-http';
 import professionAPI from 'pages/api/professions';
 
 describe('/api/professions', () => {
-  test('returns all tags', async () => {
+  test('returns all professions', async () => {
     const { req, res } = createMocks({
       method: 'GET',
     });

@@ -31,10 +31,14 @@ describe('/api/employeeTask', () => {
         body: {
           data: {
             completed: true,
+            dueDate: employeeTask.dueDate,
+            responsibleId: employeeTask.responsibleId,
           },
         },
       });
+
       await employeeTaskAPI(req, res);
+
       expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
     });
   });

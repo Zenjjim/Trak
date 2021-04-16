@@ -16,6 +16,6 @@ describe('/api/employee', () => {
 
     await employeeAPI(req, res);
     expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
-    expect(JSON.parse(res._getData()).length).toBeGreaterThanOrEqual(2);
+    expect(JSON.parse(res._getData()).length).toBeGreaterThanOrEqual(1);
   });
 });

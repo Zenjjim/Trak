@@ -52,4 +52,21 @@ describe('/api/tasks', () => {
 
     expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
+
+  test('update one task', async () => {
+    const { req, res } = createMocks({
+      method: 'PUT',
+      query: {
+        task_id: task.id,
+      },
+      data: {
+        data: task,
+        phaseId: task.phaseId,
+        global: true,
+      },
+    });
+    await singleTaskAPI(req, res);
+
+    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
+  });
 });

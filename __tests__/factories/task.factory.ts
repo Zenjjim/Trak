@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { randomString } from './../utils/utils';
+import { randomString } from '../utils/utils';
 import { phaseFactory } from './phase.factory';
 
 const prisma = new PrismaClient();

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
 import { groupBy } from 'lodash';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { IEmployee, IEmployeeTask, IPhase } from 'utils/types';
 import { Process } from 'utils/types';
@@ -116,9 +116,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       },
     });
     prisma.$disconnect();
-    employeeTaskCreator(phases, employees);
 
+    employeeTaskCreator(phases, employees);
     createNotification(responsibleEmployees);
+
     res.status(HttpStatusCode.OK).end();
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
@@ -127,11 +128,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
 const employeeTaskCreator = (phases, employees) => {
   const lopendePhases = phases.filter((phase) => phase.processTemplate.slug === Process.LOPENDE);
-  employees.forEach(async (employee) => {
+  const today = moment();
+  employees.forEach((employee) => {
     if (!employee.hrManagerId) {
       return;
     }
-    await lopendeEmployeeTaskCreator(employee, lopendePhases);
+    lopendeEmployeeTaskCreator(employee, lopendePhases, today);
     if (employee.dateOfEmployment && !employeeHasProcessTask(employee, Process.ONBOARDING)) {
       onboardingEmployeeTaskCreator(phases, employee);
     }
@@ -141,8 +143,7 @@ const employeeTaskCreator = (phases, employees) => {
   });
 };
 
-const lopendeEmployeeTaskCreator = async (employee: IEmployee, lopendePhases: IPhase[]) => {
-  const today = moment();
+const lopendeEmployeeTaskCreator = (employee: IEmployee, lopendePhases: IPhase[], today: Moment) => {
   const comingPhases = lopendePhases.filter((phase) => {
     const dueDate = moment(phase.dueDate);
     if (dueDate.month() === today.month()) {
@@ -170,7 +171,7 @@ const lopendeEmployeeTaskCreator = async (employee: IEmployee, lopendePhases: IP
 
   if (!hasTasksInNextPhase) {
     nextPhase.dueDate = moment(nextPhase.dueDate).set('y', today.year()).toDate();
-    await createEmployeeTasks(employee, nextPhase);
+    createEmployeeTasks(employee, nextPhase);
   }
 };
 
@@ -220,7 +221,7 @@ const createEmployeeTasks = async (employee, phase) => {
   await prisma.employeeTask.createMany({ data: data, skipDuplicates: true });
 };
 
-const createNotification = async (responsibleEmployees) => {
+const createNotification = (responsibleEmployees) => {
   try {
     const today = new Date();
     const nextWeek = new Date().setDate(today.getDate() + 7);

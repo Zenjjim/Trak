@@ -45,7 +45,6 @@ const EmployeeSelectorComponent = ({
     employees: undefined,
     employeeTask: undefined,
     employeeSettings: undefined,
-    activeYear: new Date(),
   },
 }: EmployeeSelectorComponentProps) => {
   return (

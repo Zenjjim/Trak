@@ -3,7 +3,7 @@ import HttpStatusCode from 'http-status-typed';
 import { groupBy } from 'lodash';
 import moment from 'moment';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { IEmployee } from 'utils/types';
+import { IEmployee, IEmployeeTask, IPhase } from 'utils/types';
 import { Process } from 'utils/types';
 import { addDays, slackMessager } from 'utils/utils';
 const prisma = new PrismaClient();
@@ -88,7 +88,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
-
     const responsibleEmployees = await prisma.employee.findMany({
       where: {
         responsibleEmployeeTask: {
@@ -116,12 +115,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
-
     prisma.$disconnect();
-
     employeeTaskCreator(phases, employees);
-    createNotification(responsibleEmployees);
 
+    createNotification(responsibleEmployees);
     res.status(HttpStatusCode.OK).end();
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
@@ -130,12 +127,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
 const employeeTaskCreator = (phases, employees) => {
   const lopendePhases = phases.filter((phase) => phase.processTemplate.slug === Process.LOPENDE);
-  const firstPhase = lopendePhases.reduce((phaseA, phaseB) => (phaseA?.dueDate < phaseB?.dueDate ? phaseA : phaseB));
-  employees.forEach((employee) => {
+  employees.forEach(async (employee) => {
     if (!employee.hrManagerId) {
       return;
     }
-    lopendeEmployeeTaskCreator(employee, lopendePhases, firstPhase);
+    await lopendeEmployeeTaskCreator(employee, lopendePhases);
     if (employee.dateOfEmployment && !employeeHasProcessTask(employee, Process.ONBOARDING)) {
       onboardingEmployeeTaskCreator(phases, employee);
     }
@@ -145,32 +141,36 @@ const employeeTaskCreator = (phases, employees) => {
   });
 };
 
-const lopendeEmployeeTaskCreator = (employee, lopendePhases, firstPhase) => {
-  const lopendeTasks = employee.employeeTask.filter((employeeTask) => employeeTask.task.phase.processTemplate.slug === Process.LOPENDE);
-  const anyActiveTasks = lopendeTasks.some((employeeTask) => !employeeTask.completed);
-  if (!anyActiveTasks) {
-    const latestDate = lopendeTasks?.reduce((taskA, taskB) => (taskA?.dueDate > taskB?.dueDate ? taskA : taskB), undefined);
-    const latestMomentDate = moment(latestDate?.dueDate);
-    firstPhase.dueDate = moment(firstPhase.dueDate).set('year', latestMomentDate.year()).format();
-    if (latestDate) {
-      const validPhases = lopendePhases.filter((phase) => {
-        const phaseDate = moment(phase.dueDate);
-        if (phaseDate.month() === latestMomentDate.month()) {
-          return phaseDate.day() > phaseDate.day();
-        }
-        return phaseDate.month() > latestMomentDate.month();
-      });
-      if (validPhases.length) {
-        const firstValidPhases = validPhases[0];
-        firstValidPhases.dueDate = moment(firstValidPhases.dueDate).set('year', latestMomentDate.year()).format();
-        return createEmployeeTasks(employee, firstValidPhases);
-      } else {
-        const newDueDate = moment(firstPhase.dueDate).add(1, 'y');
-        firstPhase.dueDate = newDueDate.format();
-        updateActiveYear(employee, newDueDate.toDate());
-      }
+const lopendeEmployeeTaskCreator = async (employee: IEmployee, lopendePhases: IPhase[]) => {
+  const today = moment();
+  const comingPhases = lopendePhases.filter((phase) => {
+    const dueDate = moment(phase.dueDate);
+    if (dueDate.month() === today.month()) {
+      return dueDate.day() > today.day();
     }
-    createEmployeeTasks(employee, firstPhase);
+
+    return dueDate.month() > today.month();
+  });
+  if (!comingPhases.length) {
+    return;
+  }
+
+  const nextPhase = comingPhases?.reduce((phaseA, phaseB) => {
+    const dueDatePhaseA = moment(phaseA.dueDate);
+    const dueDatePhaseB = moment(phaseB.dueDate);
+    if (dueDatePhaseA.month() === dueDatePhaseB.month()) {
+      return dueDatePhaseA.day() > dueDatePhaseB.day() ? phaseB : phaseA;
+    }
+
+    return dueDatePhaseA.month() > dueDatePhaseB.month() ? phaseB : phaseA;
+  });
+  const hasTasksInNextPhase = employee.employeeTask.some(
+    (employeeTask: IEmployeeTask) => employeeTask.task.phase.id === nextPhase.id && moment(employeeTask.dueDate).year() === today.year(),
+  );
+
+  if (!hasTasksInNextPhase) {
+    nextPhase.dueDate = moment(nextPhase.dueDate).set('y', today.year()).toDate();
+    await createEmployeeTasks(employee, nextPhase);
   }
 };
 
@@ -217,19 +217,7 @@ const createEmployeeTasks = async (employee, phase) => {
       };
     }
   });
-
   await prisma.employeeTask.createMany({ data: data, skipDuplicates: true });
-};
-
-const updateActiveYear = async (employee: IEmployee, newYear: Date) => {
-  await prisma.employee.update({
-    where: {
-      id: employee.id,
-    },
-    data: {
-      activeYear: newYear,
-    },
-  });
 };
 
 const createNotification = async (responsibleEmployees) => {

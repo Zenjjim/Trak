@@ -3,7 +3,7 @@ import capitalize from 'capitalize-first-letter';
 import Fuse from 'fuse.js';
 import { compact, differenceBy } from 'lodash';
 import moment from 'moment';
-import { SingletonRouter } from 'next/router';
+import { NextRouter } from 'next/router';
 import { TimeSectionType } from 'pages/mine-oppgaver';
 import qs from 'qs';
 import { Dispatch, SetStateAction } from 'react';
@@ -19,7 +19,7 @@ export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export const axiosBuilder = (
   axiosFunc: Promise<unknown>,
   text: string,
-  router: SingletonRouter,
+  router: NextRouter,
   showProgressbar: (boolean) => void,
   showSnackbar: (arg0: string, arg1: string) => void,
   closeModal: () => void,

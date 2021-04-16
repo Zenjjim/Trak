@@ -82,7 +82,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       id: true,
       firstName: true,
       lastName: true,
-      activeYear: true,
       imageUrl: true,
       profession: {
         select: {
@@ -140,17 +139,13 @@ export const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) 
       (employeeTask: IEmployeeTask) =>
         employeeTask.completed &&
         employeeTask.task.phase.title === phase.title &&
-        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE
-          ? new Date(employeeTask.dueDate).getFullYear() === new Date(employee.activeYear).getFullYear()
-          : true),
+        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE ? new Date(employeeTask.dueDate).getFullYear() === new Date().getFullYear() : true),
     ).length;
 
     employee['totalTasks'] = employee.employeeTask.filter(
       (employeeTask: IEmployeeTask) =>
         employeeTask.task.phase.title === phase.title &&
-        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE
-          ? new Date(employeeTask.dueDate).getFullYear() === new Date(employee.activeYear).getFullYear()
-          : true),
+        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE ? new Date(employeeTask.dueDate).getFullYear() === new Date().getFullYear() : true),
     ).length;
   });
 };

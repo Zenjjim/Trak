@@ -13,19 +13,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Caching node modules
-        id: nodeModulesCache
-        uses: actions/cache@v2
+      - uses: actions/cache@v2
         with:
-          path: ${{ steps.nodeModulesCache.outputs.dir }}
+          path: '**/node_modules'
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
       - name: Installing dependencies
         uses: borales/actions-yarn@v2.0.0
         with:
           cmd: install
-        if: steps.nodeModulesCache.outputs.cache-hit != 'true'
       - name: Building Next
         uses: borales/actions-yarn@v2.0.0
         with:

@@ -2,26 +2,16 @@
 
 import { PrismaClient } from '@prisma/client';
 
-const prismaClientPropertyName = `__prevent-name-collision__prisma`;
-type GlobalThisWithPrismaClient = typeof globalThis & {
-  [prismaClientPropertyName]: PrismaClient;
-};
+let prisma;
 
-const getPrismaClient = () => {
-  if (process.env.NODE_ENV === `production`) {
-    return new PrismaClient();
-  } else {
-    const newGlobalThis = globalThis as GlobalThisWithPrismaClient;
-    if (!newGlobalThis[prismaClientPropertyName]) {
-      newGlobalThis[prismaClientPropertyName] = new PrismaClient({
-        log: ['query', 'info', 'warn', 'error'],
-        rejectOnNotFound: true,
-      });
-    }
-    return newGlobalThis[prismaClientPropertyName];
+if (process.env.NODE_ENV === `production`) {
+  prisma = new PrismaClient();
+} else {
+  if (!global['prisma']) {
+    global['prisma'] = new PrismaClient();
   }
-};
 
-const prisma = getPrismaClient();
+  prisma = global['prisma'];
+}
 
 export default prisma;

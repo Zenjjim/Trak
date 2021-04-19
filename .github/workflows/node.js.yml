@@ -20,7 +20,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Installing dependencies
       - uses: borales/actions-yarn@v2.0.0
         with:
           cmd: install

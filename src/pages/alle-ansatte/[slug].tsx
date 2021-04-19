@@ -4,21 +4,24 @@ import Typo from 'components/Typo';
 import Filter from 'components/views/mine-ansatte/Filter';
 import PhaseCard from 'components/views/mine-ansatte/PhaseCard';
 import prisma from 'lib/prisma';
+import moment from 'moment';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
 import theme from 'theme';
-import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate } from 'utils/types';
+import { IEmployee, IEmployeeTask, IPhase, IProcessTemplate, Process } from 'utils/types';
 import { filterAndSearchEmployees } from 'utils/utils';
 
+const TODAY = moment();
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const phases = prisma.processTemplate.findMany({
     where: {
       slug: params.slug.toString(),
     },
     select: {
+      id: true,
       slug: true,
       title: true,
       phases: {
@@ -28,6 +31,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         select: {
           id: true,
           title: true,
+          dueDate: true,
           tasks: {
             select: {
               employeeTask: {
@@ -97,7 +101,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
             select: {
               phase: {
                 select: {
+                  id: true,
+                  dueDate: true,
                   title: true,
+                  processTemplate: {
+                    select: {
+                      slug: true,
+                    },
+                  },
                 },
               },
             },
@@ -113,23 +124,49 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   return { props: { allPhases, myEmployees } };
 };
-
 export const addFinishedTasks = (filteredEmployees: IEmployee[], phase: IPhase) => {
   filteredEmployees.forEach((employee: IEmployee) => {
     employee['tasksFinished'] = employee.employeeTask.filter(
-      (employeeTask: IEmployeeTask) => employeeTask.completed && employeeTask.task.phase.title === phase.title,
+      (employeeTask: IEmployeeTask) =>
+        employeeTask.completed &&
+        employeeTask.task.phase.title === phase.title &&
+        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE ? new Date(employeeTask.dueDate).getFullYear() === TODAY.year() : true),
     ).length;
-    employee['totalTasks'] = employee.employeeTask.filter((employeeTask: IEmployeeTask) => employeeTask.task.phase.title === phase.title).length;
+
+    employee['totalTasks'] = employee.employeeTask.filter(
+      (employeeTask: IEmployeeTask) =>
+        employeeTask.task.phase.title === phase.title &&
+        (employeeTask.task.phase.processTemplate.slug === Process.LOPENDE ? new Date(employeeTask.dueDate).getFullYear() === TODAY.year() : true),
+    ).length;
   });
 };
 
 export const getPhasesWithEmployees = (processTemplate: IProcessTemplate, myEmployees) => {
   const displayedEmployees = [];
+
+  const currentPhase = processTemplate.phases.find((phase: IPhase) => {
+    const dueDate = moment(phase.dueDate);
+    if (dueDate.month() === TODAY.month()) {
+      return dueDate.day() > TODAY.day();
+    }
+
+    return dueDate.month() > TODAY.month();
+  });
+
   return [
     ...processTemplate.phases.map((phase: IPhase) => {
-      const employeesWithUncompletedTasks = myEmployees.filter((employee: IEmployee) =>
-        employee.employeeTask.some((employeeTask: IEmployeeTask) => !employeeTask.completed && employeeTask.task.phase.title === phase.title),
-      );
+      const employeesWithUncompletedTasks = myEmployees.filter((employee: IEmployee) => {
+        if (processTemplate.slug === Process.LOPENDE) {
+          const tasksInPhase = employee.employeeTask.filter(
+            (employeeTask: IEmployeeTask) => employeeTask.task.phase.title === phase.title && moment(employeeTask.dueDate).year() === TODAY.year(),
+          );
+          const phaseCompleted = tasksInPhase.every((employeeTask) => employeeTask.completed) && tasksInPhase.length;
+          if (phaseCompleted && phase.id === currentPhase.id) {
+            return employee;
+          }
+        }
+        return employee.employeeTask.some((employeeTask: IEmployeeTask) => !employeeTask.completed && employeeTask.task.phase.title === phase.title);
+      });
       const filteredEmployees = employeesWithUncompletedTasks.filter((employee: IEmployee) => {
         if (displayedEmployees.includes(employee.id)) {
           return false;
@@ -138,6 +175,7 @@ export const getPhasesWithEmployees = (processTemplate: IProcessTemplate, myEmpl
           return true;
         }
       });
+
       addFinishedTasks(filteredEmployees, phase);
 
       return { employees: filteredEmployees, title: phase.title, id: phase.id };

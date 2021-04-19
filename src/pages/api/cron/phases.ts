@@ -145,7 +145,7 @@ const employeeTaskCreator = (phases, employees) => {
 
 const lopendeEmployeeTaskCreator = (employee: IEmployee, lopendePhases: IPhase[], today: Moment) => {
   const comingPhases = lopendePhases.filter((phase) => {
-    const dueDate = moment(phase.dueDate);
+    const dueDate = moment(phase.dueDate).subtract(1, 'week');
     if (dueDate.month() === today.month()) {
       return dueDate.day() > today.day();
     }

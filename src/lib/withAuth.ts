@@ -16,6 +16,7 @@ const withAuth = (handler) => {
             email: true,
           },
         });
+        prisma.$disconnect();
         return handler(req, res, user);
       }
       const token = await jwt.getToken({ req, secret });
@@ -31,6 +32,7 @@ const withAuth = (handler) => {
           },
         });
         if (user) {
+          prisma.$disconnect();
           return handler(req, res, user);
         }
       }

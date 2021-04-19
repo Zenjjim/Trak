@@ -10,14 +10,14 @@ export const config = {
   },
 };
 
-export default withAuth(async function (req: NextApiRequest, res: NextApiResponse) {
+export default withAuth(async function (req: NextApiRequest, res: NextApiResponse, user) {
   const {
     query: { id },
   } = req;
   if (req.method === 'GET') {
     GET(res, id);
   } else if (req.method === 'PUT') {
-    PUT(req, res, id);
+    PUT(req, res, id, user);
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
@@ -34,6 +34,9 @@ const GET = async (res, id) => {
         id: true,
         completed: true,
         dueDate: true,
+        completedBy: true,
+        completedById: true,
+        completedDate: true,
         employee: {
           select: {
             id: true,
@@ -97,11 +100,17 @@ type employeeTaskUpdateData = {
   };
 };
 
-const PUT = async (req, res, id) => {
+const PUT = async (req, res, id, user) => {
   const {
     body: { completed, dueDate, responsibleId },
   }: employeeTaskUpdateData = req;
   try {
+    const employeeTask = await prisma.employeeTask.findUnique({
+      where: {
+        id: id.toString(),
+      },
+    });
+
     const updatedEmployeeTask = await prisma.employeeTask.update({
       where: {
         id: id.toString(),
@@ -114,6 +123,23 @@ const PUT = async (req, res, id) => {
             id: responsibleId,
           },
         },
+        ...(responsibleId === employeeTask.responsibleId && {
+          ...(completed
+            ? {
+                completedBy: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                completedDate: new Date(),
+              }
+            : {
+                completedBy: {
+                  disconnect: true,
+                },
+                completedDate: null,
+              }),
+        }),
       },
     });
     res.status(HttpStatusCode.OK).json(updatedEmployeeTask);

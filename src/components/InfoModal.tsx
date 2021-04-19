@@ -172,6 +172,17 @@ const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps
             <b>Forfallsdato:</b>
           </Typo>
           <Typo variant='body1'>{employeeTask ? moment(new Date(employeeTask?.dueDate)).format('DD.MM.YYYY') : <Skeleton width={theme.spacing(32)} />}</Typo>
+          {employeeTask?.completedBy && employeeTask?.completedDate && (
+            <>
+              <Typo variant='body1'>
+                <b>Fullført av:</b>{' '}
+              </Typo>
+              <Typo variant='body1'>
+                {employeeTask.completedBy.firstName} {employeeTask.completedBy.lastName} den{' '}
+                {moment(new Date(employeeTask?.completedDate)).format('DD.MM.YYYY')}
+              </Typo>
+            </>
+          )}
         </div>
         <Box className={classes.gutterBottom}>
           {employeeTask ? (

@@ -4,10 +4,14 @@ import { createMocks } from 'node-mocks-http';
 import tasksAPI from 'pages/api/tasks';
 import singleTaskAPI from 'pages/api/tasks/[task_id]';
 
+import { phaseFactory } from './factories/phase.factory';
 import { randomString } from './utils/utils';
 
 const prisma = new PrismaClient();
 describe('/api/tasks', () => {
+  beforeAll(async () => {
+    await phaseFactory();
+  });
   let task;
   test('create new task', async () => {
     const phases = await prisma.phase.findMany();

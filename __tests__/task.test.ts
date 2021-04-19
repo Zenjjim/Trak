@@ -11,6 +11,12 @@ describe('/api/tasks', () => {
   beforeAll(async () => {
     await phaseFactory();
   });
+
+  afterAll((done) => {
+    prisma.$disconnect();
+    done();
+  });
+
   let task;
   test('create new task', async () => {
     const phases = await prisma.phase.findMany();

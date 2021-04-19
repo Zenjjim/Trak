@@ -13,6 +13,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     });
     res.json(processTemplates);
   } else {
-    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }
 }

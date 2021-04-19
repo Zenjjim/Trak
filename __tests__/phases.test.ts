@@ -1,4 +1,5 @@
 import HttpStatusCode from 'http-status-typed';
+import prisma from 'lib/prisma';
 import { createMocks } from 'node-mocks-http';
 import phasesAPI from 'pages/api/phases';
 import phasesIdAPI from 'pages/api/phases/[phase_id]';
@@ -10,6 +11,11 @@ describe('/api/phases', () => {
   let processTemplate;
   beforeAll(async () => {
     processTemplate = await processTemplateFactory();
+  });
+
+  afterAll((done) => {
+    prisma.$disconnect();
+    done();
   });
   let phase;
   test('Create phase', async () => {

@@ -18,7 +18,7 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
   } else if (req.method === 'PUT') {
     PUT(req, res, id, user);
   } else {
-    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }
 });
 

@@ -45,7 +45,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             dueDate: dueDate,
           },
         });
-        res.json(HttpStatusCode.OK);
+        res.status(HttpStatusCode.OK).end();
       } catch (err) {
         if (err) {
           res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });
@@ -57,6 +57,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       res.status(HttpStatusCode.BAD_REQUEST).end();
     }
   } else {
-    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }
 }

@@ -13,6 +13,6 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
     });
     res.json(professions);
   } else {
-    res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
+    res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }
 });

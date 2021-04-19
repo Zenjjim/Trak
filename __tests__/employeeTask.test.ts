@@ -1,4 +1,5 @@
 import HttpStatusCode from 'http-status-typed';
+import prisma from 'lib/prisma';
 import { createMocks } from 'node-mocks-http';
 import employeeTaskAPI from 'pages/api/employeeTasks/[id]';
 
@@ -8,6 +9,11 @@ describe('/api/employeeTask', () => {
   let employeeTask;
   beforeAll(async () => {
     employeeTask = await employeeTaskFactory();
+  });
+
+  afterAll((done) => {
+    prisma.$disconnect();
+    done();
   });
 
   describe('Get task', () => {

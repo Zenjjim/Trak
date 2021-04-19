@@ -111,12 +111,12 @@ export const splitIntoTimeSections = (employeeTasks: IEmployeeTask[]) => {
     taskToday.length && {
       title: 'I dag',
       data: taskToday,
-      date: moment(taskToday[0]?.dueDate).format('ddd d MMM'),
+      date: moment(taskToday[0]?.dueDate).format('ddd D MMM'),
     },
     taskTomorrow.length && {
       title: 'I morgen',
       data: taskTomorrow,
-      date: moment(taskTomorrow[0]?.dueDate).format('ddd d MMM'),
+      date: moment(taskTomorrow[0]?.dueDate).format('ddd D MMM'),
     },
     taskThisWeek.length && {
       title: 'Denne uken',

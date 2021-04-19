@@ -16,7 +16,7 @@ jobs:
       - name: Cache node modules
         id: nodeModulesCache
         uses: actions/cache@v2
-         with:
+        with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |

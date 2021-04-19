@@ -28,7 +28,8 @@
     "loaddata": "npx fixtures ./src/fixtures",
     "deletedb": "docker rm -f -v trak",
     "push": "npx prisma db push --preview-feature",
-    "fresh": "yarn deletedb && yarn createdb && sleep 1 && yarn push && npx prisma generate && yarn loaddata"
+    "generate": "npx prisma generate",
+    "fresh": "yarn deletedb && yarn createdb && sleep 1 && yarn push && yarn generate && yarn loaddata"
   },
   "husky": {
     "hooks": {

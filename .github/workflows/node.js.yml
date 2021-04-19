@@ -26,11 +26,6 @@ jobs:
         with:
           cmd: install
         if: steps.nodeModulesCache.outputs.cache-hit != 'true'
-      - name: Caching next
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
       - name: Building Next
         uses: borales/actions-yarn@v2.0.0
         with:

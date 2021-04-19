@@ -16,7 +16,6 @@ const withAuth = (handler) => {
             email: true,
           },
         });
-        prisma.$disconnect();
         return handler(req, res, user);
       }
       const token = await jwt.getToken({ req, secret });
@@ -32,13 +31,14 @@ const withAuth = (handler) => {
           },
         });
         if (user) {
-          prisma.$disconnect();
           return handler(req, res, user);
         }
       }
       // eslint-disable-next-line no-empty
     } catch (err) {
       return res.json(err?.message);
+    } finally {
+      prisma.$disconnect();
     }
     return res.status(HttpStatusCode.UNAUTHORIZED).end();
   };

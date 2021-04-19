@@ -73,4 +73,7 @@ describe('/api/tasks', () => {
 
     expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
+  afterAll(() => {
+    prisma.$disconnect();
+  });
 });

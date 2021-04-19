@@ -7,12 +7,9 @@ export default class MyDocument extends Document {
     return (
       <Html lang='en'>
         <Head>
-          <meta content='width=device-width, initial-scale=1' name='viewport' />
-          <meta charSet='utf-8' />
           <meta content={'HR-system for Blank AS'} name='description'></meta>
           <meta content={'TRAK'} key='ogtitle' property='og:title' />
           <meta content={'HR-system for Blank AS'} key='ogdesc' property='og:description' />
-          <title>TRAK</title>
           <meta content={theme.palette.primary.main} name='theme-color' />
           <link href='https://fonts.googleapis.com/css?family=Lato:300,400,500,700&display=swap' rel='stylesheet' />
           <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,500,700&display=swap' rel='stylesheet' />

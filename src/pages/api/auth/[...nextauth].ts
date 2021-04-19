@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
+import { NotificationTypeEnum } from 'utils/types';
 
 const prisma = new PrismaClient();
 
@@ -35,7 +36,13 @@ export default NextAuth({
             update: {},
             create: {
               employeeId: user.id,
-              notificationSettings: ['DELEGATE', 'DEADLINE', 'WEEK_BEFORE_DEADLINE', 'HIRED', 'TERMINATION'],
+              notificationSettings: [
+                NotificationTypeEnum.DELEGATE,
+                NotificationTypeEnum.DEADLINE,
+                NotificationTypeEnum.WEEK_BEFORE_DEADLINE,
+                NotificationTypeEnum.HIRED,
+                NotificationTypeEnum.TERMINATION,
+              ],
             },
           });
           return true;

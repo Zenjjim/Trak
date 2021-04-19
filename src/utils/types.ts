@@ -55,6 +55,15 @@ export enum NotificationType {
   TERMINATION = 'en av mine ansatte skal slutte',
   HIRED = 'jeg får ansvaret for en ny ansatt',
 }
+
+/** @enum {string} */
+export enum NotificationTypeEnum {
+  DELEGATE = 'DELEGATE',
+  DEADLINE = 'DEADLINE',
+  WEEK_BEFORE_DEADLINE = 'WEEK_BEFORE_DEADLINE',
+  TERMINATION = 'TERMINATION',
+  HIRED = 'HIRED',
+}
 /**
  * @typedef {object} IEmployeeTask
  * @property {string} id

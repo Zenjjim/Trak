@@ -19,6 +19,7 @@
     "build": "next build",
     "start": "next start -p $PORT",
     "test": "yarn deletedb && yarn createdb && sleep 1 && yarn push && jest --coverage",
+    "test-github": "jest --coverage",
     "lint": "eslint --fix --max-warnings=0 .",
     "format": "prettier --write --check --config ./.prettierrc './src/**/*.{js,jsx,ts,tsx,css,md,json}'",
     "fastformat": "pretty-quick --staged './**/*.{js,jsx,ts,tsx,css,md,json}'",

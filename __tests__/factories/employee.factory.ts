@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from 'lib/prisma';
 
 import { randomString } from '../utils/utils';
 import { professionFactory } from './profession.factory';
-const prisma = new PrismaClient();
 
 export const employeeFactory = async () => {
   const professions = await professionFactory();
@@ -16,6 +15,5 @@ export const employeeFactory = async () => {
       professionId: professions.id,
     },
   });
-  prisma.$disconnect();
   return employees;
 };

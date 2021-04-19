@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next';
-const prisma = new PrismaClient();
 import HttpStatusCode from 'http-status-typed';
+import prisma from 'lib/prisma';
 import withAuth from 'lib/withAuth';
+import type { NextApiRequest, NextApiResponse } from 'next';
 export const config = {
   api: {
     externalResolver: true,
@@ -22,7 +21,6 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
-  prisma.$disconnect();
 });
 
 const GET = async (res, phase_id) => {

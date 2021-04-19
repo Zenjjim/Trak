@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from 'lib/prisma';
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import { NotificationTypeEnum } from 'utils/types';
-
-const prisma = new PrismaClient();
 
 export default NextAuth({
   providers: [

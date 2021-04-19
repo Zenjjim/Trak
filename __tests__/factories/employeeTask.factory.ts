@@ -1,10 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from 'lib/prisma';
 
 import { employeeFactory } from './employee.factory';
 import { taskFactory } from './task.factory';
-
-const prisma = new PrismaClient();
-
 export const employeeTaskFactory = async () => {
   const task = await taskFactory();
   const employee = await employeeFactory();
@@ -31,6 +28,5 @@ export const employeeTaskFactory = async () => {
       },
     },
   });
-  prisma.$disconnect();
   return employeeTask;
 };

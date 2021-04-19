@@ -1,12 +1,11 @@
-import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
+import prisma from 'lib/prisma';
 import { groupBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { IEmployee, IEmployeeTask, IPhase } from 'utils/types';
 import { Process } from 'utils/types';
 import { addDays, slackMessager } from 'utils/utils';
-const prisma = new PrismaClient();
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const CRON_SECRET = process.env.CRON_SECRET;
 
@@ -115,7 +114,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
-    prisma.$disconnect();
 
     employeeTaskCreator(phases, employees);
     createNotification(responsibleEmployees);

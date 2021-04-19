@@ -1,10 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from 'lib/prisma';
 
 import { randomString } from './../utils/utils';
 import { processTemplateFactory } from './processTemplates.factory';
-
-const prisma = new PrismaClient();
-
 export const phaseFactory = async () => {
   const processTemplate = await processTemplateFactory();
 
@@ -18,6 +15,5 @@ export const phaseFactory = async () => {
       },
     },
   });
-  prisma.$disconnect();
   return phase;
 };

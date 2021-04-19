@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
+import prisma from 'lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Actions } from 'utils/types';
-const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -60,5 +59,4 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }
-  prisma.$disconnect();
 }

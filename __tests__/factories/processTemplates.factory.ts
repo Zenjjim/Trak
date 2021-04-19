@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from 'lib/prisma';
 
 import { randomString } from '../utils/utils';
-const prisma = new PrismaClient();
 
 export const processTemplateFactory = async () => {
   const processTemplate = await prisma.processTemplate.create({
@@ -10,6 +9,5 @@ export const processTemplateFactory = async () => {
       slug: randomString(),
     },
   });
-  prisma.$disconnect();
   return processTemplate;
 };

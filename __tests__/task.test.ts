@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
+import prisma from 'lib/prisma';
 import { createMocks } from 'node-mocks-http';
 import tasksAPI from 'pages/api/tasks';
 import singleTaskAPI from 'pages/api/tasks/[task_id]';
@@ -7,7 +7,6 @@ import singleTaskAPI from 'pages/api/tasks/[task_id]';
 import { phaseFactory } from './factories/phase.factory';
 import { randomString } from './utils/utils';
 
-const prisma = new PrismaClient();
 describe('/api/tasks', () => {
   beforeAll(async () => {
     await phaseFactory();
@@ -72,8 +71,5 @@ describe('/api/tasks', () => {
     await singleTaskAPI(req, res);
 
     expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
-  });
-  afterAll(() => {
-    prisma.$disconnect();
   });
 });

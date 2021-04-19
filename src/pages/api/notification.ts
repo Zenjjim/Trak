@@ -1,9 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import HttpStatusCode from 'http-status-typed';
+import prisma from 'lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { slackMessager } from './../../utils/utils';
-const prisma = new PrismaClient();
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -28,7 +27,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({ message: 'Noe gikk galt med serveren' });
       }
     }
-    prisma.$disconnect();
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED);
   }

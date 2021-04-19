@@ -13,25 +13,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - name: Caching node modules
         id: nodeModulesCache
-        name: Caching node modules
+        uses: actions/cache@v2
         with:
           path: ${{ steps.nodeModulesCache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - uses: borales/actions-yarn@v2.0.0
-        name: Installing dependencies
+      - name: Installing dependencies
+        uses: borales/actions-yarn@v2.0.0
         with:
           cmd: install
         if: steps.nodeModulesCache.outputs.cache-hit != 'true'
-      - uses: actions/cache@v2
-        name: Caching next
+      - name: Caching next
+        uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
-      - uses: borales/actions-yarn@v2.0.0
-        name: Building Next
+      - name: Building Next
+        uses: borales/actions-yarn@v2.0.0
         with:
           cmd: build

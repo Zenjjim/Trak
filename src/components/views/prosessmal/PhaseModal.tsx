@@ -1,6 +1,7 @@
-import { Box, Button, makeStyles, Tooltip } from '@material-ui/core';
+import { Box, Button, makeStyles, MenuItem, Select, Tooltip } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import axios from 'axios';
+import capitalize from 'capitalize-first-letter';
 import BeforeToogle from 'components/form/BeforeToggle';
 import TextField from 'components/form/TextField';
 import Modal from 'components/Modal';
@@ -8,9 +9,10 @@ import Typo from 'components/Typo';
 import useProgressbar from 'context/Progressbar';
 import useSnackbar from 'context/Snackbar';
 import moment from 'moment';
+import monthDays from 'month-days';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { IProcessTemplate, Offset, Process } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
 
@@ -26,6 +28,8 @@ type PhaseData = {
   offset: Offset;
   dueDateDayOffset: number;
   dueDate: string;
+  day: number;
+  month: number;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
   error: {
     color: theme.palette.error.main,
   },
+  marginRight: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undefined }: PhaseModalProps) => {
@@ -45,9 +52,8 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
   const showSnackbar = useSnackbar();
   const showProgressbar = useProgressbar();
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
-
   const [phase, setPhase] = useState<PhaseData | undefined>(undefined);
-  const { register, handleSubmit, control, errors, reset } = useForm({
+  const { register, handleSubmit, control, errors, reset, watch } = useForm({
     reValidateMode: 'onChange',
     defaultValues: useMemo(
       () => ({
@@ -55,42 +61,56 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
         dueDateDayOffset: phase?.dueDateDayOffset,
         offset: phase?.offset,
         dueDate: phase?.dueDate,
+        day: new Date(phase?.dueDate).getDate(),
+        month: new Date(phase?.dueDate).getMonth() + 1,
       }),
       [phase],
     ),
   });
 
+  const watchSelectedMonth = watch('month');
+
+  const daysInMonth = useMemo(() => {
+    return monthDays({ year: 2021, month: watchSelectedMonth });
+  }, [watchSelectedMonth]);
+
   useEffect(() => {
     if (phase_id) {
       axios.get(`/api/phases/${phase_id}`).then((res) => {
+        const dueDate = new Date(res.data.dueDate);
         setPhase({
           ...res.data,
           dueDate: moment(res.data.dueDate).format('yyyy-MM-DD'),
           offset: res.data.dueDateDayOffset <= 0 ? Offset.Before : Offset.After,
           dueDateDayOffset: Math.abs(res.data.dueDateDayOffset),
+          day: dueDate.getDate(),
+          month: dueDate.getMonth(),
         });
       });
     }
   }, [phase_id]);
 
   useEffect(() => {
+    const dueDate = new Date(phase?.dueDate);
     reset({
       title: phase?.title,
       dueDateDayOffset: phase?.dueDateDayOffset,
       offset: phase?.offset,
       dueDate: phase?.dueDate,
+      day: dueDate.getDate() || new Date().getDate(),
+      month: dueDate.getMonth() || new Date().getMonth(),
     });
   }, [phase]);
 
   const axiosPhaseModal = (axiosFunc: Promise<unknown>, text: string) => {
     axiosBuilder(axiosFunc, text, router, showProgressbar, showSnackbar, closeModal);
   };
-
   const onSubmit = handleSubmit((formData: PhaseData) => {
+    const dueDate = processTemplate.slug === Process.LOPENDE ? moment().set({ month: formData.month, date: formData.day }).toDate() : null;
     const data = {
       data: {
         ...formData,
-        dueDate: new Date(formData.dueDate),
+        dueDate: dueDate,
         dueDateDayOffset: formData.offset === Offset.Before ? -Math.abs(formData.dueDateDayOffset) : Math.abs(formData.dueDateDayOffset),
       },
       processTemplateId: processTemplate.id,
@@ -188,22 +208,46 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
         )}
         {processTemplate.slug === Process.LOPENDE && (
           <>
-            <TextField
-              defaultValue={moment().format('yyyy-MM-DD')}
-              errors={errors}
-              inputProps={{ min: `${new Date().getFullYear()}-01-01`, max: `${new Date().getFullYear()}-12-31` }}
-              label={
-                <>
-                  Forfallsdato{' '}
-                  <Tooltip title='Forfallsdato for alle tilhørende oppgaver'>
-                    <HelpIcon />
-                  </Tooltip>
-                </>
-              }
-              name={'dueDate'}
-              register={register}
-              type='date'
-            />
+            <Box>
+              <Typo variant='body1'>
+                Forfallsdato
+                <Tooltip title='Hvilken årlig dato skal oppgavene i fasen forfalle?'>
+                  <HelpIcon fontSize='small' />
+                </Tooltip>
+              </Typo>
+              <Box display='flex' flexDirection='row'>
+                <Controller
+                  as={
+                    <Select className={classes.marginRight} id='select-maaned'>
+                      {moment.months().map((month, index) => (
+                        <MenuItem key={month} value={index}>
+                          {capitalize(month)}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  }
+                  control={control}
+                  name='month'
+                  rules={{ required: true }}
+                />
+                {!isNaN(watchSelectedMonth) && (
+                  <Controller
+                    as={
+                      <Select id='select-dag' label='Dag' placeholder='Dag'>
+                        {[...Array(daysInMonth)].map((val, day) => (
+                          <MenuItem key={day} value={day + 1}>
+                            {day + 1}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    }
+                    control={control}
+                    name='day'
+                    rules={{ required: true }}
+                  />
+                )}
+              </Box>
+            </Box>
           </>
         )}
       </div>

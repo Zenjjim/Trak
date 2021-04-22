@@ -11,8 +11,11 @@ const useStyles = makeStyles({
     marginBottom: theme.spacing(2),
   },
   selectedButton: {
-    '&.Mui-selected': {
+    '&.MuiToggleButton-root': {
       color: theme.palette.primary.main,
+    },
+    '&.Mui-selected': {
+      color: theme.palette.secondary.main,
     },
   },
   wrap: {

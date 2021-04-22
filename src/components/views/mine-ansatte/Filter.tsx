@@ -14,8 +14,11 @@ const useStyles = makeStyles({
     flexWrap: 'wrap',
   },
   selectedButton: {
-    '&.Mui-selected': {
+    '&.MuiToggleButton-root': {
       color: theme.palette.primary.main,
+    },
+    '&.Mui-selected': {
+      color: theme.palette.secondary.main,
     },
   },
 });
@@ -55,7 +58,7 @@ const Filter = ({ choosenProfession, setChoosenProfession }: FilterProps) => {
         })}
       </ToggleButtonGroup>
 
-      <Button disabled={!choosenProfession.length} onClick={clearFilters} variant='outlined'>
+      <Button color='primary' disabled={!choosenProfession.length} onClick={clearFilters} variant='outlined'>
         Tøm filtre
       </Button>
     </Box>

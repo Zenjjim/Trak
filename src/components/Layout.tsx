@@ -36,7 +36,7 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     if (!loading) {
       if (session?.user) {
-        if (router.pathname === '/') {
+        if (router.pathname === '/' || router.pathname === '/#') {
           router.push(urls[0].links[0].link);
         }
       } else {

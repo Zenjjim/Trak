@@ -1,6 +1,5 @@
 import { ButtonBase, Hidden, IconButton, makeStyles, Tooltip } from '@material-ui/core';
 import { CheckBox, CheckBoxOutlineBlank, Launch, Mail } from '@material-ui/icons';
-import classnames from 'classnames';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
@@ -31,6 +30,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'start',
   },
   onClick: {
     width: 'max-content',
@@ -61,7 +61,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         <IconButton onClick={() => toggleCheckBox(data, completed, setCompleted, showSnackbar)} size='small'>
           {completed ? <CheckBox /> : <CheckBoxOutlineBlank />}
         </IconButton>
-        <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>
+        <ButtonBase className={classes.textButton} focusRipple onClick={() => setModalIsOpen(true)}>
           <Typo className={completed ? classes.completedTask : undefined} noWrap style={{ maxWidth: '50vw' }}>
             {data.task.title}
           </Typo>
@@ -69,14 +69,17 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         {data.task.link && (
           <Tooltip title={data.task.link}>
             <a href={`${validator.isEmail(data.task.link) ? 'mailto:' : ''}${data.task.link}`} rel='noopener noreferrer' target='_blank'>
-              <IconButton size='small'>{validator.isEmail(data.task.link) ? <Mail /> : <Launch />}</IconButton>
+              <IconButton disableFocusRipple size='small'>
+                {validator.isEmail(data.task.link) ? <Mail /> : <Launch />}
+              </IconButton>
             </a>
           </Tooltip>
         )}
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
       </div>
-      <div
-        className={classnames(classes.avatarRoot, classes.onClick)}
+      <ButtonBase
+        className={classes.avatarRoot}
+        focusRipple
         onClick={() =>
           router.push(
             `/ansatt/${data.employee.id}?${data.task.phase.processTemplate.slug === Process.LOPENDE ? `år=${new Date().getFullYear()}&` : ''}prosess=${
@@ -86,7 +89,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         }>
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />
         <Typo noWrap>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
-      </div>
+      </ButtonBase>
       <Hidden lgDown>
         <div className={classes.avatarRoot}>
           <Avatar className={classes.avatar} firstName={data.responsible.firstName} image={data.responsible.imageUrl} lastName={data.responsible.lastName} />

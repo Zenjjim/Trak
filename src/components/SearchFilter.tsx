@@ -70,7 +70,6 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
                 ),
               }),
             }}
-            autoFocus
             onBlur={(e) => !e.target.value && setDisplaySearch(false)}
             onChange={(e) => setSearchValue(e.target.value)}
             size='small'

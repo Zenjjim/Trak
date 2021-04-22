@@ -8,6 +8,7 @@ import prisma from 'lib/prisma';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
+import theme from 'theme';
 import { IPhase } from 'utils/types';
 
 const useStyles = makeStyles({
@@ -96,6 +97,7 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
         ))}
       </DataProvider>
       <AddButton onClick={() => setModalIsOpen(true)} text='Legg til fase' />
+      <div style={{ marginBottom: theme.spacing(3) }} />
       {modalIsOpen && <PhaseModal closeModal={() => setModalIsOpen(false)} modalIsOpen={modalIsOpen} processTemplate={processTemplate} />}
     </>
   );

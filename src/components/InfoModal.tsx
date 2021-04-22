@@ -94,9 +94,9 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
     <Typo variant='body1'>
       {employeeTask ? (
         responsibleSelector ? (
-          <form className={classes.centeringRow}>
+          <form className={classes.centeringRow} noValidate>
             <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' required />
-            <Button onClick={onSubmit} type='button'>
+            <Button onClick={onSubmit} type='submit'>
               Lagre
             </Button>
             <Button onClick={() => setResponsibleSelector(false)} type='button'>

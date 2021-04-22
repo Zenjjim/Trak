@@ -162,7 +162,12 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
       className={classes.gutterBottom}
       mx={'-' + theme.spacing(2)}
       padding={theme.spacing(2)}>
-      <Box className={classes.pointerCursor} display='flex' onClick={() => setDisplayNotifications(!displayNotifications)}>
+      <Box
+        className={classes.pointerCursor}
+        display='flex'
+        onClick={() => setDisplayNotifications(!displayNotifications)}
+        onKeyPress={() => setDisplayNotifications(!displayNotifications)}
+        tabIndex={-1}>
         <Box flex={3} mb={theme.spacing(1)}>
           <Badge badgeContent={notifications.filter((notification) => !notification.read).length} color='error'>
             {user ? (
@@ -262,7 +267,7 @@ const Sidebar = () => {
   return (
     <>
       <Hidden mdUp>
-        <div className={classes.collapsNavbar} onClick={() => setDrawer(true)}>
+        <div className={classes.collapsNavbar} onClick={() => setDrawer(true)} onKeyPress={() => setDrawer(true)} role='button' tabIndex={-1}>
           <IconButton style={{ width: '50px', height: '50px' }}>
             <Menu />
           </IconButton>

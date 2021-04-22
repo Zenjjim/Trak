@@ -71,9 +71,7 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
               image={employeeTask.responsible.imageUrl}
               lastName={employeeTask.responsible.lastName}
             />
-            <Typo variant='body1'>
-              {employeeTask.responsible.firstName} {employeeTask.responsible.lastName}
-            </Typo>
+            <Typo variant='body1'>{`${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`}</Typo>
           </Box>
         )}
       </Hidden>

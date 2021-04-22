@@ -24,7 +24,7 @@ const LogIn = () => {
       <Box className={classes.gutterBottom} display='flex' justifyContent='center'>
         <Image height={34} src={'/trak_logo.svg'} width={124} />
       </Box>
-      <GoogleButton onClick={signIn} type='light' />
+      <GoogleButton onClick={() => signIn()} type='light' />
     </Paper>
   );
 };

@@ -242,7 +242,6 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              getContentAnchorEl={null}
               id='history-menu'
               keepMounted
               onClose={handleClose}

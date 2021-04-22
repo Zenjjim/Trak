@@ -192,7 +192,7 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
               }}>
               Innstillinger
             </Button>
-            <Button onClick={signOut}>Logg ut</Button>
+            <Button onClick={() => signOut()}>Logg ut</Button>
           </Box>
 
           {notifications.length === 0 ? (

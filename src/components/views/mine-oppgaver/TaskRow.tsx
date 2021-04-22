@@ -88,12 +88,12 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
           )
         }>
         <Avatar className={classes.avatar} firstName={data.employee.firstName} image={data.employee.imageUrl} lastName={data.employee.lastName} />
-        <Typo noWrap>{`${data.employee.firstName} ${data.employee.lastName}`}</Typo>
+        <Typo noWrap>{`${data.employee.firstName} ${data.employee.lastName[0]}.`}</Typo>
       </ButtonBase>
       <Hidden lgDown>
         <div className={classes.avatarRoot}>
           <Avatar className={classes.avatar} firstName={data.responsible.firstName} image={data.responsible.imageUrl} lastName={data.responsible.lastName} />
-          <Typo noWrap>{`${data.responsible.firstName} ${data.responsible.lastName}`}</Typo>
+          <Typo noWrap>{`${data.responsible.firstName} ${data.responsible.lastName[0]}.`}</Typo>
         </div>
       </Hidden>
       <Hidden mdDown>

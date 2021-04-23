@@ -167,7 +167,8 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
         display='flex'
         onClick={() => setDisplayNotifications(!displayNotifications)}
         onKeyPress={() => setDisplayNotifications(!displayNotifications)}
-        tabIndex={-1}>
+        role='button'
+        tabIndex={0}>
         <Box flex={3} mb={theme.spacing(1)}>
           <Badge badgeContent={notifications.filter((notification) => !notification.read).length} color='error'>
             {user ? (
@@ -181,7 +182,6 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
           {user ? <Typo variant='body2'>{name}</Typo> : <Skeleton variant='text' width={100} />}
         </Box>
       </Box>
-
       {displayNotifications && (
         <>
           <Box alignItems='center' className={classes.gutterBottom} display='flex' flexDirection='column'>
@@ -210,7 +210,7 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
           )}
 
           <Box alignItems='flex-end' display='flex' flexDirection='column-reverse'>
-            <IconButton aria-label='Lukk boks' onClick={() => setDisplayNotifications(false)}>
+            <IconButton aria-expanded={displayNotifications} aria-label='Lukk profil' onClick={() => setDisplayNotifications(false)}>
               <ExpandLessIcon />
             </IconButton>
           </Box>

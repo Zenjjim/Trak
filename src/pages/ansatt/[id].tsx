@@ -1,4 +1,5 @@
 import { Box, Button, Menu, MenuItem } from '@material-ui/core';
+import HistoryIcon from '@material-ui/icons/History';
 import { makeStyles } from '@material-ui/styles';
 import Typo from 'components/Typo';
 import Phase from 'components/views/ansatt/Phase';
@@ -234,7 +235,8 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
               aria-label='Historikk meny'
               color='primary'
               disabled={history.every((element) => !element.years.length)}
-              onClick={handleClick}>
+              onClick={handleClick}
+              startIcon={<HistoryIcon />}>
               Historikk
             </Button>
             <Menu

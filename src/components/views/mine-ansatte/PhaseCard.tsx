@@ -1,17 +1,12 @@
 import { Box, ButtonBase, Hidden, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import classNames from 'classnames';
+import CenteringRow from 'components/CenteringRow';
 import Typo from 'components/Typo';
 import UserRow from 'components/views/mine-ansatte/UserRow';
 import { EmployeeRow } from 'components/views/mine-ansatte/UserRow';
 import React, { useState } from 'react';
 
 const useStyles = makeStyles({
-  centeringRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   pointer: {
     cursor: 'pointer',
   },
@@ -30,12 +25,14 @@ const PhaseCard = ({ title, amount, employees, slug }: PhaseCardProps) => {
   return (
     <>
       <ButtonBase aria-expanded={hidden} aria-label={`Ansatte i ${title}`} focusRipple onClick={() => setIsHidden(!hidden)}>
-        <div className={classNames(classes.centeringRow, classes.pointer)}>
-          <Typo variant='h2'>
-            {title} (<b>{amount}</b>)
-          </Typo>
-          {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-        </div>
+        <CenteringRow className={classes.pointer}>
+          <>
+            <Typo variant='body1'>
+              {title} (<b>{amount}</b>)
+            </Typo>
+            {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+          </>
+        </CenteringRow>
       </ButtonBase>
       <Box display={hidden ? 'none' : 'block'}>
         {employees.length > 0 ? (

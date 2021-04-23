@@ -25,7 +25,7 @@ const Phase = ({ phase, processTemplate }: PhaseProps) => {
   return (
     <div>
       <div className={classes.flexCenter}>
-        <Typo variant='h2'>{phase.title}</Typo>
+        <Typo variant='body1'>{phase.title}</Typo>
         <IconButton aria-label={`Endre fase ${phase.title}`} onClick={() => setModalIsOpen(true)}>
           <Edit />
         </IconButton>

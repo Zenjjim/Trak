@@ -1,6 +1,7 @@
 import { ButtonBase, Checkbox, Hidden, IconButton, makeStyles, Tooltip } from '@material-ui/core';
 import { Launch, Mail } from '@material-ui/icons';
 import Avatar from 'components/Avatar';
+import CenteringRow from 'components/CenteringRow';
 import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
 import useSnackbar from 'context/Snackbar';
@@ -20,11 +21,6 @@ const useStyles = makeStyles({
   },
   completedTask: {
     textDecoration: 'line-through',
-  },
-  centeringRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   avatarRoot: {
     display: 'flex',
@@ -61,7 +57,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
 
   return (
     <>
-      <div className={classes.centeringRow}>
+      <CenteringRow>
         <Checkbox
           checked={completed}
           color='primary'
@@ -83,7 +79,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
           </Tooltip>
         )}
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
-      </div>
+      </CenteringRow>
       <ButtonBase
         className={classes.avatarRoot}
         focusRipple

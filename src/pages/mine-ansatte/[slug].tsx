@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core';
+import PageTitle from 'components/PageTitle';
 import SearchFilter from 'components/SearchFilter';
-import Typo from 'components/Typo';
 import Filter from 'components/views/mine-ansatte/Filter';
 import PhaseCard from 'components/views/mine-ansatte/PhaseCard';
 import prisma from 'lib/prisma';
@@ -214,10 +214,7 @@ const MyEmployees = ({ myEmployees, allPhases }: InferGetServerSidePropsType<typ
       <Head>
         <title>Mine ansatte - {processTemplate.title}</title>
       </Head>
-      <Box>
-        <Typo variant='h1'>Mine ansatte</Typo>
-        <Typo variant='h2'>{processTemplate.title}</Typo>
-      </Box>
+      <PageTitle subtitle={processTemplate.title} title='Mine ansatte' />
       <SearchFilter
         activeFilters={Boolean(choosenProfession.length)}
         filterComponent={<Filter choosenProfession={choosenProfession} setChoosenProfession={setChoosenProfession} />}

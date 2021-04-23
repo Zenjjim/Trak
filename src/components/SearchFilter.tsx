@@ -4,13 +4,9 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import theme from 'theme';
+
+import CenteringRow from './CenteringRow';
 const useStyles = makeStyles({
-  centeringRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
   textField: {
     height: theme.spacing(4),
   },
@@ -51,7 +47,7 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
   const open = Boolean(anchorEl);
   const id = open ? 'filter' : undefined;
   return (
-    <div className={classes.centeringRow}>
+    <CenteringRow justifyContent='flex-end'>
       {displaySearch ? (
         <Fade in timeout={100}>
           <TextField
@@ -108,7 +104,7 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
         }}>
         {filterComponent}
       </Popover>
-    </div>
+    </CenteringRow>
   );
 };
 

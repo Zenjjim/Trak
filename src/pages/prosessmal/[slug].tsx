@@ -1,6 +1,5 @@
-import { makeStyles } from '@material-ui/core';
 import AddButton from 'components/AddButton';
-import Typo from 'components/Typo';
+import PageTitle from 'components/PageTitle';
 import Phase from 'components/views/prosessmal/Phase';
 import PhaseModal from 'components/views/prosessmal/PhaseModal';
 import { DataProvider } from 'context/Data';
@@ -10,18 +9,6 @@ import Head from 'next/head';
 import { useState } from 'react';
 import theme from 'theme';
 import { IPhase } from 'utils/types';
-
-const useStyles = makeStyles({
-  header: {
-    marginBottom: '2rem',
-  },
-  title: {
-    lineHeight: 0.7,
-  },
-  template_title: {
-    marginLeft: '7px',
-  },
-});
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const processTemplate = await prisma.processTemplate.findUnique({
@@ -77,7 +64,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 };
 
 const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   return (
@@ -85,12 +71,7 @@ const ProcessTemplate = ({ processTemplate }: InferGetServerSidePropsType<typeof
       <Head>
         <title>Prosessmal {processTemplate && `- ${processTemplate.title}`}</title>
       </Head>
-      <div className={classes.header}>
-        <Typo className={classes.title} variant='h1'>
-          Prosessmal
-        </Typo>
-        <Typo className={classes.template_title}>{processTemplate?.title}</Typo>
-      </div>
+      <PageTitle subtitle={processTemplate?.title} title='Prosessmal' />
       <DataProvider>
         {processTemplate?.phases.map((phase: IPhase) => (
           <Phase key={phase.id} phase={phase} processTemplate={processTemplate} />

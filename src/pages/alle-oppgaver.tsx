@@ -1,6 +1,6 @@
 import 'moment/locale/nb';
 
-import { makeStyles } from '@material-ui/core';
+import PageTitle from 'components/PageTitle';
 import SearchFilter from 'components/SearchFilter';
 import Typo from 'components/Typo';
 import Filter from 'components/views/mine-oppgaver/Filter';
@@ -12,25 +12,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import safeJsonStringify from 'safe-json-stringify';
-import theme from 'theme';
 import { IEmployeeTask, ITag } from 'utils/types';
 import { filterAndSearchTasks, splitIntoTimeSections } from 'utils/utils';
-
-const useStyles = makeStyles({
-  header: {
-    marginBottom: '2rem',
-  },
-  title: {
-    lineHeight: 0.7,
-  },
-  template_title: {
-    marginLeft: '3px',
-  },
-  gutterBottom: {
-    marginBottom: theme.spacing(2),
-  },
-});
-
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { fullfort: completed } = query;
   const isCompleted = completed.toString() === 'true';
@@ -101,7 +84,6 @@ export type TimeSectionType = {
 };
 
 const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const classes = useStyles();
   const router = useRouter();
 
   const { fullfort: completed } = router.query;
@@ -123,12 +105,8 @@ const MyTasks = ({ myTasks }: InferGetServerSidePropsType<typeof getServerSidePr
         <title>Alle oppgaver</title>
       </Head>
       <>
-        <div className={classes.header}>
-          <Typo className={classes.title} variant='h1'>
-            Alle oppgaver
-          </Typo>
-          <Typo className={classes.template_title}>{completed.toString() === 'true' ? 'Fullførte' : 'Aktive'} oppgaver</Typo>
-        </div>
+        <PageTitle subtitle={`${completed.toString() === 'true' ? 'Fullførte' : 'Aktive'} oppgaver`} title='Alle oppgaver' />
+
         <SearchFilter
           activeFilters={Boolean(choosenTags.length || choosenProcessTemplates.length)}
           filterComponent={

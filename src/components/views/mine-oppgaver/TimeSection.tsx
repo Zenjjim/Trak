@@ -1,6 +1,7 @@
 import { Divider, Hidden, IconButton } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
+import CenteringRow from 'components/CenteringRow';
 import Typo from 'components/Typo';
 import TaskRow from 'components/views/mine-oppgaver/TaskRow';
 import { TimeSectionType } from 'pages/mine-oppgaver';
@@ -15,6 +16,7 @@ type TimeSectionProps = {
 const useStyles = makeStyles({
   grid: {
     display: 'grid',
+    gridGap: theme.spacing(0.5),
     gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
     alignItems: 'end',
     marginBottom: theme.spacing(1),
@@ -34,11 +36,6 @@ const useStyles = makeStyles({
       gridColumn: 'span 2',
     },
   },
-  centeringRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   disabled: {
     color: theme.palette.text.disabled,
   },
@@ -55,23 +52,25 @@ const TimeSection = ({ section, index }: TimeSectionProps) => {
   }
   return (
     <div className={classes.grid}>
-      <div className={classes.centeringRow}>
-        <Typo>
-          <b style={section.error && { color: theme.palette.error.main }}>{section.title}</b>
-          <span className={classes.disabled}>
-            {section.title && section.date && ' - '}
-            {section.date}
-          </span>
-        </Typo>
-        <IconButton
-          aria-controls={`${section.title || section.date} oppgaver`}
-          aria-expanded={open}
-          aria-label={`${section.title || section.date} oppgaver`}
-          onClick={() => setOpen(!open)}
-          size='small'>
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </IconButton>
-      </div>
+      <CenteringRow>
+        <>
+          <Typo>
+            <b style={section.error && { color: theme.palette.error.main }}>{section.title}</b>
+            <span className={classes.disabled}>
+              {section.title && section.date && ' - '}
+              {section.date}
+            </span>
+          </Typo>
+          <IconButton
+            aria-controls={`${section.title || section.date} oppgaver`}
+            aria-expanded={open}
+            aria-label={`${section.title || section.date} oppgaver`}
+            onClick={() => setOpen(!open)}
+            size='small'>
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </>
+      </CenteringRow>
       <Typo color='disabled' variant='body2'>
         {first && 'Gjelder'}
       </Typo>

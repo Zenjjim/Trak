@@ -141,6 +141,14 @@ theme.components = {
       },
     },
   },
+  MuiSelect: {
+    styleOverrides: {
+      root: {
+        paddingTop: theme.spacing(0.5),
+        paddingBottom: theme.spacing(0.5),
+      },
+    },
+  },
 };
 
 export default theme;

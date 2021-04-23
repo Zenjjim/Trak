@@ -5,7 +5,7 @@ import theme from 'theme';
 import { Offset } from 'utils/types';
 
 const useStyles = makeStyles({
-  marginRight: {
+  select: {
     marginRight: theme.spacing(1),
   },
 });
@@ -33,7 +33,7 @@ type ToggleComponentProps = {
 const SelectComponent = ({ setValue, value }: ToggleComponentProps) => {
   const classes = useStyles();
   return (
-    <Select className={classes.marginRight} onChange={() => setValue(value === Offset.Before ? Offset.After : Offset.Before)} value={value}>
+    <Select className={classes.select} onChange={() => setValue(value === Offset.Before ? Offset.After : Offset.Before)} value={value}>
       <MenuItem value={Offset.Before}>før</MenuItem>
       <MenuItem value={Offset.After}>etter</MenuItem>
     </Select>

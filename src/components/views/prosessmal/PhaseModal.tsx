@@ -174,13 +174,14 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
         />
         {(processTemplate.slug === Process.ONBOARDING || processTemplate.slug === Process.OFFBOARDING) && (
           <div>
-            <Box display='flex'>
+            <Box alignItems='center' display='flex'>
               <TextField
+                className={classes.marginRight}
                 errors={errors}
                 inputProps={{ min: 0 }}
                 label={
                   <>
-                    Forfaller{' '}
+                    Forfaller
                     <Tooltip
                       title={`Når oppgavene i fasen skal forfalle basert på ${
                         processTemplate.slug === Process.ONBOARDING ? `ansettelsdato` : `termineringsdato`

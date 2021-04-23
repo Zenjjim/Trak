@@ -45,7 +45,7 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
   return (
     <Box display='flex'>
       <Box alignItems='center' display='flex' flex={2}>
-        <IconButton onClick={() => toggleCheckBox(employeeTask, completed, setCompleted, showSnackbar)} size='small'>
+        <IconButton aria-checked={completed} onClick={() => toggleCheckBox(employeeTask, completed, setCompleted, showSnackbar)} role='checkbox' size='small'>
           {completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
         </IconButton>
         <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>

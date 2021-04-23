@@ -229,8 +229,9 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
           </Typo>
           <Box display='flex'>
             <Button
-              aria-controls='historikk meny'
+              aria-controls='historikk_meny'
               aria-haspopup='true'
+              aria-label='Historikk meny'
               color='primary'
               disabled={history.every((element) => !element.years.length)}
               onClick={handleClick}>
@@ -242,7 +243,7 @@ const Employee = ({ employee, phasesWithTasks, year, process, history }: InferGe
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              id='history-menu'
+              id='historikk_meny'
               keepMounted
               onClose={handleClose}
               open={Boolean(anchorEl)}>

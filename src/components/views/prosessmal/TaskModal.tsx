@@ -147,6 +147,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
       <div className={classes.grid}>
         <TextField
           errors={errors}
+          inputProps={{ 'aria-label': 'Rediger oppgavetittel' }}
           label='Oppgavetittel'
           name='title'
           register={register}
@@ -157,6 +158,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
         />
         <TextField
           errors={errors}
+          inputProps={{ 'aria-label': 'Rediger oppggavebeskrivelse' }}
           label={
             <>
               Oppgavebeskrivelse{' '}
@@ -180,6 +182,7 @@ const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: Task
         />
         <TextField
           errors={errors}
+          inputProps={{ 'aria-label': 'Rediger hurtiglink' }}
           label={
             <>
               Link{' '}

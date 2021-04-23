@@ -63,7 +63,12 @@ const TimeSection = ({ section, index }: TimeSectionProps) => {
             {section.date}
           </span>
         </Typo>
-        <IconButton onClick={() => setOpen(!open)} size='small'>
+        <IconButton
+          aria-controls={`${section.title || section.date} oppgaver`}
+          aria-expanded={open}
+          aria-label={`${section.title || section.date} oppgaver`}
+          onClick={() => setOpen(!open)}
+          size='small'>
           {open ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
       </div>

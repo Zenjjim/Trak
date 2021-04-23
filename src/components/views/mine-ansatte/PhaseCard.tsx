@@ -29,7 +29,7 @@ const PhaseCard = ({ title, amount, employees, slug }: PhaseCardProps) => {
   const [hidden, setIsHidden] = useState(!employees.length);
   return (
     <>
-      <ButtonBase focusRipple onClick={() => setIsHidden(!hidden)}>
+      <ButtonBase aria-expanded={hidden} aria-label={`Ansatte i ${title}`} focusRipple onClick={() => setIsHidden(!hidden)}>
         <div className={classNames(classes.centeringRow, classes.pointer)}>
           <Typo variant='h2'>
             {title} (<b>{amount}</b>)

@@ -91,6 +91,7 @@ const TaskModal = ({ modalIsOpen, closeModal, phaseId, dueDate }: TaskModalProps
       <div className={classes.grid}>
         <TextField
           errors={errors}
+          inputProps={{ 'aria-label': 'Skriv inn oppgavetittel' }}
           label='Oppgavetittel'
           name='title'
           register={register}
@@ -101,6 +102,7 @@ const TaskModal = ({ modalIsOpen, closeModal, phaseId, dueDate }: TaskModalProps
         />
         <TextField
           errors={errors}
+          inputProps={{ 'aria-label': 'Skriv inn oppgavebeskrivelse' }}
           label={
             <>
               Oppgavebeskrivelse{' '}
@@ -124,6 +126,7 @@ const TaskModal = ({ modalIsOpen, closeModal, phaseId, dueDate }: TaskModalProps
         />
         <TextField
           errors={errors}
+          inputProps={{ 'aria-label': 'Skriv inn en hurtliglink eller hurtigepost' }}
           label={
             <>
               Link{' '}

@@ -19,12 +19,18 @@ const useStyles = makeStyles({
 const LogIn = () => {
   const classes = useStyles();
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      signIn();
+    }
+  };
+
   return (
     <Paper className={classes.root}>
       <Box className={classes.gutterBottom} display='flex' justifyContent='center'>
         <Image height={34} src={'/trak_logo.svg'} width={124} />
       </Box>
-      <GoogleButton onClick={() => signIn()} type='light' />
+      <GoogleButton label='Logg inn med Google' onClick={() => signIn()} onKeyDown={(e) => handleKeyDown(e)} type='light' />
     </Paper>
   );
 };

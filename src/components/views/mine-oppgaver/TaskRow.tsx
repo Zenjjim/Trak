@@ -58,7 +58,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
   return (
     <>
       <div className={classes.centeringRow}>
-        <IconButton onClick={() => toggleCheckBox(data, completed, setCompleted, showSnackbar)} size='small'>
+        <IconButton aria-checked={completed} onClick={() => toggleCheckBox(data, completed, setCompleted, showSnackbar)} role='checkbox' size='small'>
           {completed ? <CheckBox /> : <CheckBoxOutlineBlank />}
         </IconButton>
         <ButtonBase className={classes.textButton} focusRipple onClick={() => setModalIsOpen(true)}>

@@ -60,7 +60,7 @@ const TaskRow = ({ task, phase }: TaskProps) => {
       </TableCell>
       <TableCell style={{ width: '10rem' }}>
         <IconButton
-          aria-label='edit'
+          aria-label={`Endre oppgaven ${task.title}`}
           onClick={() => {
             setModalIsOpen(true);
           }}>

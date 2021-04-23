@@ -106,7 +106,7 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
         ) : (
           <>
             {`${employeeTask?.responsible.firstName} ${employeeTask?.responsible.lastName}`}
-            <IconButton onClick={() => setResponsibleSelector(true)} size='small'>
+            <IconButton aria-label='Deleger oppgave' onClick={() => setResponsibleSelector(true)} role='button' size='small'>
               <Edit />
             </IconButton>
           </>

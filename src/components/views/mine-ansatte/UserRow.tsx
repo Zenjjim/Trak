@@ -1,4 +1,4 @@
-import { Box, Hidden, makeStyles, TableCell, TableRow } from '@material-ui/core';
+import { Box, ButtonBase, Hidden, makeStyles, TableCell, TableRow } from '@material-ui/core';
 import Avatar from 'components/Avatar';
 import Typo from 'components/Typo';
 import { useRouter } from 'next/router';
@@ -47,13 +47,16 @@ const UserRow = ({ employee, slug }: UserRowProps) => {
 
   return (
     <TableRow className={classes.pointer} hover>
-      <TableCell onClick={() => router.push(`/ansatt/${employee.id}?år=${new Date().getFullYear()}&prosess=${slug}`)}>
-        <div className={classes.userRow}>
+      <TableCell>
+        <ButtonBase
+          className={classes.userRow}
+          onClick={() => router.push(`/ansatt/${employee.id}?år=${new Date().getFullYear()}&prosess=${slug}`)}
+          tabIndex={0}>
           <Avatar className={classes.avatar} firstName={employee.firstName} image={employee.imageUrl} lastName={employee.lastName} />
           <Typo noWrap variant={typoVariant}>
             {employee.firstName} {employee.lastName}
           </Typo>
-        </div>
+        </ButtonBase>
       </TableCell>
       <Hidden mdDown>
         <TableCell>

@@ -164,6 +164,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
       <div className={classes.grid}>
         <TextField
           errors={errors}
+          inputProps={{ 'aria-label': 'Skriv inn prosesstittel' }}
           label='Prosesstittel'
           name='title'
           register={register}

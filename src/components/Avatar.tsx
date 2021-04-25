@@ -12,7 +12,7 @@ const getInitials = (firstName: string, lastName: string): string => {
 
 const Avatar = ({ firstName, lastName, image, ...args }: AvatarProps) => {
   return (
-    <MuiAvatar src={image} {...args}>
+    <MuiAvatar alt={`Profilbilde av ${firstName} ${lastName}`} src={image} {...args}>
       <Typo variant='body2'>{getInitials(firstName, lastName)}</Typo>
     </MuiAvatar>
   );

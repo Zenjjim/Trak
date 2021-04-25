@@ -241,7 +241,7 @@ const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotificatio
       variant={variant}>
       <Box className={classes.removeScrollbar} display='flex' flexDirection='column' padding={theme.spacing(2)}>
         <Box className={classes.gutterBottom}>
-          <Image height={34} src={'/trak_logo.svg'} width={120} />
+          <Image alt='TRAK sin logo' height={34} src={'/trak_logo.svg'} width={120} />
         </Box>
         <LoggedInUserCard displayNotifications={displayNotifications} setDisplayNotifications={setDisplayNotifications} user={user} />
 

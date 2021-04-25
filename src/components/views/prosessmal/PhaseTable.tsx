@@ -49,7 +49,7 @@ const PhaseTable = ({ phase }: PhaseTableProps) => {
           <TableCell className={classes.headerCell} size='small'>
             Ansvarlig
           </TableCell>
-          <TableCell className={classes.headerCell} size='small'></TableCell>
+          <TableCell className={classes.headerCell} component='td' size='small'></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

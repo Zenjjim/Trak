@@ -210,7 +210,7 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
           )}
 
           <Box alignItems='flex-end' display='flex' flexDirection='column-reverse'>
-            <IconButton onClick={() => setDisplayNotifications(false)}>
+            <IconButton aria-label='Lukk boks' onClick={() => setDisplayNotifications(false)}>
               <ExpandLessIcon />
             </IconButton>
           </Box>

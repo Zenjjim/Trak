@@ -1,4 +1,4 @@
-import { MenuItem, Select } from '@material-ui/core';
+import { InputLabel, MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { Control, Controller } from 'react-hook-form';
 import theme from 'theme';
@@ -33,10 +33,19 @@ type ToggleComponentProps = {
 const SelectComponent = ({ setValue, value }: ToggleComponentProps) => {
   const classes = useStyles();
   return (
-    <Select className={classes.select} onChange={() => setValue(value === Offset.Before ? Offset.After : Offset.Before)} value={value}>
-      <MenuItem value={Offset.Before}>før</MenuItem>
-      <MenuItem value={Offset.After}>etter</MenuItem>
-    </Select>
+    <>
+      <InputLabel htmlFor='select-before' style={{ display: 'none' }}>
+        Før/etter
+      </InputLabel>
+      <Select
+        className={classes.select}
+        inputProps={{ name: 'before-toogle', id: 'select-before', 'aria-label': 'Før/etter' }}
+        onChange={() => setValue(value === Offset.Before ? Offset.After : Offset.Before)}
+        value={value}>
+        <MenuItem value={Offset.Before}>før</MenuItem>
+        <MenuItem value={Offset.After}>etter</MenuItem>
+      </Select>
+    </>
   );
 };
 

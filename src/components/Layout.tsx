@@ -49,7 +49,7 @@ const Layout = ({ children }: LayoutProps) => {
       {session?.user ? (
         <Box display='flex'>
           <Sidebar />
-          <Box className={classes.root} flexGrow={1}>
+          <Box className={classes.root} flexGrow={1} role='main'>
             {children}
           </Box>
         </Box>

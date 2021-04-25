@@ -149,6 +149,13 @@ theme.components = {
       },
     },
   },
+  MuiCheckbox: {
+    styleOverrides: {
+      root: {
+        color: theme.palette.text.primary,
+      },
+    },
+  },
 };
 
 export default theme;

@@ -1,5 +1,5 @@
-import { Box, ButtonBase, Hidden, IconButton, Tooltip } from '@material-ui/core';
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon, Launch, Mail } from '@material-ui/icons';
+import { Box, ButtonBase, Checkbox, Hidden, IconButton, Tooltip } from '@material-ui/core';
+import { Launch, Mail } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
@@ -20,8 +20,17 @@ const useStyles = makeStyles({
   },
   completedTask: {
     textDecoration: 'line-through',
+    '&:hover': {
+      background: theme.palette.text.secondary,
+      borderRadius: theme.spacing(0.5),
+      textDecoration: 'line-through',
+    },
   },
   textButton: {
+    textTransform: 'none',
+    fontSize: theme.typography.body1.fontSize,
+    color: theme.palette.text.primary,
+    whiteSpace: 'nowrap',
     '&:hover': {
       background: theme.palette.text.secondary,
       borderRadius: theme.spacing(0.5),
@@ -45,9 +54,12 @@ const TaskRow = ({ employeeTask }: TaskRowProps) => {
   return (
     <Box display='flex'>
       <Box alignItems='center' display='flex' flex={2}>
-        <IconButton aria-checked={completed} onClick={() => toggleCheckBox(employeeTask, completed, setCompleted, showSnackbar)} role='checkbox' size='small'>
-          {completed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
-        </IconButton>
+        <Checkbox
+          checked={completed}
+          color='primary'
+          inputProps={{ 'aria-label': `Marker oppgave som ${completed ? 'ikke' : ''} fullført` }}
+          onClick={() => toggleCheckBox(employeeTask, completed, setCompleted, showSnackbar)}
+        />
         <ButtonBase className={classes.textButton} onClick={() => setModalIsOpen(true)}>
           <Typo className={completed ? classes.completedTask : null} color={!completed && 'disabled'} noWrap style={{ maxWidth: '80vw' }} variant='body1'>
             {employeeTask.task.title}

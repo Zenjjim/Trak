@@ -22,7 +22,7 @@ type ModalProps = {
 const Modal = ({ header, subheader, buttonGroup, open, onClose, onSubmit, children }: ModalProps) => {
   const classes = useStyles();
   return (
-    <Dialog aria-labelledby='modal' fullWidth onClose={onClose} open={open}>
+    <Dialog aria-labelledby='modal-title' fullWidth onClose={onClose} open={open}>
       <form noValidate onSubmit={onSubmit}>
         {header && (
           <DialogTitle disableTypography id='modal-title'>

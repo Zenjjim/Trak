@@ -1,4 +1,4 @@
-import { Box, Button, makeStyles, MenuItem, Select, Tooltip } from '@material-ui/core';
+import { Box, Button, InputLabel, makeStyles, MenuItem, Select, Tooltip } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import axios from 'axios';
 import capitalize from 'capitalize-first-letter';
@@ -179,7 +179,12 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
               <TextField
                 className={classes.marginRight}
                 errors={errors}
-                inputProps={{ min: 0 }}
+                inputProps={{
+                  min: 0,
+                  'aria-label': `Antall dager før/etter oppgavene skal forfalle basert på ${
+                    processTemplate.slug === Process.ONBOARDING ? 'ansettelsdato' : 'termineringsdato'
+                  } `,
+                }}
                 label={
                   <>
                     Forfaller
@@ -218,9 +223,12 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
                 </Tooltip>
               </Typo>
               <Box display='flex' flexDirection='row'>
+                <InputLabel htmlFor='select-month' style={{ display: 'none' }}>
+                  Måned
+                </InputLabel>
                 <Controller
                   as={
-                    <Select className={classes.marginRight} id='select-maaned'>
+                    <Select className={classes.marginRight} inputProps={{ name: 'select-month', id: 'select-month', 'aria-label': 'month' }}>
                       {moment.months().map((month, index) => (
                         <MenuItem key={month} value={index}>
                           {capitalize(month)}
@@ -233,20 +241,25 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
                   rules={{ required: true }}
                 />
                 {!isNaN(watchSelectedMonth) && (
-                  <Controller
-                    as={
-                      <Select id='select-dag' label='Dag' placeholder='Dag'>
-                        {[...Array(daysInMonth)].map((val, day) => (
-                          <MenuItem key={day} value={day + 1}>
-                            {day + 1}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    }
-                    control={control}
-                    name='day'
-                    rules={{ required: true }}
-                  />
+                  <>
+                    <InputLabel htmlFor='select-day' style={{ display: 'none' }}>
+                      Dag
+                    </InputLabel>
+                    <Controller
+                      as={
+                        <Select inputProps={{ name: 'select-day', id: 'select-day', 'aria-label': 'day' }} label='Dag' placeholder='Dag'>
+                          {[...Array(daysInMonth)].map((val, day) => (
+                            <MenuItem key={day} value={day + 1}>
+                              {day + 1}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      }
+                      control={control}
+                      name='day'
+                      rules={{ required: true }}
+                    />
+                  </>
                 )}
               </Box>
             </Box>

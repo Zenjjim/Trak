@@ -96,10 +96,10 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
         responsibleSelector ? (
           <form className={classes.centeringRow} noValidate>
             <EmployeeSelector control={control} employees={employees} label='Oppgaveansvarlig' name='responsible' required />
-            <Button onClick={onSubmit} type='submit'>
+            <Button aria-label='Lagre' onClick={onSubmit} type='submit'>
               Lagre
             </Button>
-            <Button onClick={() => setResponsibleSelector(false)} type='button'>
+            <Button aria-label='Avbryt' onClick={() => setResponsibleSelector(false)} type='button'>
               Avbryt
             </Button>
           </form>
@@ -142,7 +142,7 @@ const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps
   return (
     <Modal
       buttonGroup={[
-        <Button key={'avbryt'} onClick={closeModal} type='button'>
+        <Button aria-label='Lukk modal' key={'avbryt'} onClick={closeModal} type='button'>
           Avbryt
         </Button>,
       ]}

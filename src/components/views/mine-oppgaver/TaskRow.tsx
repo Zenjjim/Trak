@@ -1,5 +1,5 @@
-import { ButtonBase, Hidden, IconButton, makeStyles, Tooltip } from '@material-ui/core';
-import { CheckBox, CheckBoxOutlineBlank, Launch, Mail } from '@material-ui/icons';
+import { ButtonBase, Checkbox, Hidden, IconButton, makeStyles, Tooltip } from '@material-ui/core';
+import { Launch, Mail } from '@material-ui/icons';
 import Avatar from 'components/Avatar';
 import InfoModal from 'components/InfoModal';
 import Typo from 'components/Typo';
@@ -41,6 +41,10 @@ const useStyles = makeStyles({
     },
   },
   textButton: {
+    textTransform: 'none',
+    fontSize: theme.typography.body1.fontSize,
+    color: theme.palette.text.primary,
+    whiteSpace: 'nowrap',
     '&:hover': {
       background: theme.palette.text.secondary,
       borderRadius: theme.spacing(0.5),
@@ -58,9 +62,12 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
   return (
     <>
       <div className={classes.centeringRow}>
-        <IconButton aria-checked={completed} onClick={() => toggleCheckBox(data, completed, setCompleted, showSnackbar)} role='checkbox' size='small'>
-          {completed ? <CheckBox /> : <CheckBoxOutlineBlank />}
-        </IconButton>
+        <Checkbox
+          checked={completed}
+          color='primary'
+          inputProps={{ 'aria-label': `Marker oppgave som ${completed ? 'ikke' : ''} fullført` }}
+          onClick={() => toggleCheckBox(data, completed, setCompleted, showSnackbar)}
+        />
         <ButtonBase className={classes.textButton} focusRipple onClick={() => setModalIsOpen(true)}>
           <Typo className={completed ? classes.completedTask : undefined} noWrap style={{ maxWidth: '50vw' }}>
             {data.task.title}

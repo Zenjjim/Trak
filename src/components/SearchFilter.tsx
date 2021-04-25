@@ -70,6 +70,7 @@ const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterPr
                 ),
               }),
             }}
+            inputProps={{ 'aria-label': 'Søk' }}
             onBlur={(e) => !e.target.value && setDisplaySearch(false)}
             onChange={(e) => setSearchValue(e.target.value)}
             size='small'

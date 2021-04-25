@@ -59,8 +59,7 @@ const Filter = ({ choosenTags, setChoosenTags, choosenProcessTemplates, setChoos
         }}
         options={tags}
         renderInput={(params) => {
-          const paramsWithAriaLabel = { ...params, inputProps: { ...params.InputProps, 'aria-label': 'Tags' } };
-
+          const paramsWithAriaLabel = { ...params, inputProps: { ...params.inputProps, 'aria-label': 'Tags' } };
           return <TextField {...paramsWithAriaLabel} size='small' />;
         }}
         value={choosenTags}

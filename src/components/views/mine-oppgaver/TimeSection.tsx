@@ -53,23 +53,21 @@ const TimeSection = ({ section, index }: TimeSectionProps) => {
   return (
     <div className={classes.grid}>
       <CenteringRow>
-        <>
-          <Typo>
-            <b style={section.error && { color: theme.palette.error.main }}>{section.title}</b>
-            <span className={classes.disabled}>
-              {section.title && section.date && ' - '}
-              {section.date}
-            </span>
-          </Typo>
-          <IconButton
-            aria-controls={`${section.title || section.date} oppgaver`}
-            aria-expanded={open}
-            aria-label={`${section.title || section.date} oppgaver`}
-            onClick={() => setOpen(!open)}
-            size='small'>
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        </>
+        <Typo>
+          <b style={section.error && { color: theme.palette.error.main }}>{section.title}</b>
+          <span className={classes.disabled}>
+            {section.title && section.date && ' - '}
+            {section.date}
+          </span>
+        </Typo>
+        <IconButton
+          aria-controls={`${section.title || section.date} oppgaver`}
+          aria-expanded={open}
+          aria-label={`${section.title || section.date} oppgaver`}
+          onClick={() => setOpen(!open)}
+          size='small'>
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </IconButton>
       </CenteringRow>
       <Typo color='disabled' variant='body2'>
         {first && 'Gjelder'}

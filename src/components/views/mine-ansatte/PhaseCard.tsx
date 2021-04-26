@@ -26,12 +26,10 @@ const PhaseCard = ({ title, amount, employees, slug }: PhaseCardProps) => {
     <>
       <ButtonBase aria-expanded={hidden} aria-label={`Ansatte i ${title}`} focusRipple onClick={() => setIsHidden(!hidden)}>
         <CenteringRow className={classes.pointer}>
-          <>
-            <Typo variant='body1'>
-              {title} (<b>{amount}</b>)
-            </Typo>
-            {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-          </>
+          <Typo variant='body1'>
+            {title} (<b>{amount}</b>)
+          </Typo>
+          {hidden ? <ExpandMoreIcon /> : <ExpandLessIcon />}
         </CenteringRow>
       </ButtonBase>
       <Box display={hidden ? 'none' : 'block'}>

@@ -3,13 +3,27 @@ import { uniqBy } from 'lodash';
 import { Control, Controller } from 'react-hook-form';
 import { ITag, ITask } from 'utils/types';
 
-type FilterOptions = {
+/**
+ * @typedef {object} FilterOptions
+ * @property {string} id
+ * @property {string} title
+ * @property {string} inputValue
+ * @property {ITask[]} tasks
+ */
+export type FilterOptions = {
   id: string;
   title: string;
   inputValue?: string;
   tasks?: ITask[];
 };
 
+/**
+ * @typedef {object} TagSelectorProps
+ * @property {string} label
+ * @property {Control} control
+ * @property {FilterOptions[]} options
+ * @property {string} name
+ */
 export type TagSelectorProps = {
   label: string;
   control: Control;
@@ -17,7 +31,12 @@ export type TagSelectorProps = {
   name: string;
 };
 
-const TagSelector = ({ label, options, control, name }: TagSelectorProps) => {
+/**
+ * Select a multiple tags with React Hook Form
+ * @param param - Props to TagSelector
+ * @returns - TagSelector
+ */
+export const TagSelector = ({ label, options, control, name }: TagSelectorProps) => {
   return (
     <Controller
       control={control}
@@ -27,6 +46,13 @@ const TagSelector = ({ label, options, control, name }: TagSelectorProps) => {
   );
 };
 
+/**
+ * @typedef {object} TagSelectorComponentProps
+ * @property {string} label
+ * @property {FilterOptions[]} options
+ * @property {FilterOptions[]} value
+ * @property {function} setValue
+ */
 export type TagSelectorComponentProps = {
   label: string;
   options: FilterOptions[];
@@ -34,7 +60,12 @@ export type TagSelectorComponentProps = {
   setValue: (FilterOptions) => void;
 };
 
-const TagSelectorComponent = ({ label, options, value = [], setValue }: TagSelectorComponentProps) => {
+/**
+ * Select multiple tags
+ * @param param Props to TagSelectorComponent
+ * @returns TagSelectorComponent
+ */
+export const TagSelectorComponent = ({ label, options, value = [], setValue }: TagSelectorComponentProps) => {
   const filter = createFilterOptions<FilterOptions>();
   return (
     <Autocomplete

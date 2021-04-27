@@ -66,9 +66,10 @@ const GET = async (res, task_id) => {
       },
     });
     if (!task) {
-      throw new Error();
+      throw new Error('Fant ikke oppgave');
+    } else {
+      res.status(HttpStatusCode.OK).json(task);
     }
-    res.status(HttpStatusCode.OK).json(task);
   } catch (err) {
     if (err) {
       res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });

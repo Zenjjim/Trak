@@ -50,6 +50,9 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
           connect: data.professions.map((profession: IProfession) => ({ id: profession.id })),
         },
       },
+      include: {
+        professions: true,
+      },
     });
     res.status(HttpStatusCode.CREATED).json(newTask);
   } else {

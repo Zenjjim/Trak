@@ -2,7 +2,9 @@ name: Tests
 on:
   pull_request:
     branches: [dev]
-  push: docs/typedoc
+  push:
+    branches:
+      - docs/typedoc
 
 jobs:
   test:

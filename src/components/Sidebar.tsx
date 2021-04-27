@@ -74,7 +74,13 @@ const useStyles = makeStyles({
     cursor: 'pointer',
   },
 });
-const LinkGroup = ({ title, links, divider, setDrawer }: section & { setDrawer: (boolean) => void }) => {
+
+/**
+ * Collection of associated links
+ * @param {section, boolean} params
+ * @returns LinkGroup
+ */
+export const LinkGroup = ({ title, links, divider, setDrawer }: section & { setDrawer: (boolean) => void }) => {
   const router = useRouter();
   const classes = useStyles();
   return (
@@ -100,13 +106,24 @@ const LinkGroup = ({ title, links, divider, setDrawer }: section & { setDrawer: 
   );
 };
 
-type NotificationProps = {
+/**
+ * @typedef {object} NotificationsProps
+ * @property {INotification} notification
+ * @property {Dispatch<INotification[]>} setNotifications
+ * @property {INotification[]} notifications
+ */
+export type NotificationProps = {
   notification: INotification;
   setNotifications: Dispatch<INotification[]>;
   notifications: INotification[];
 };
 
-const Notification = ({ notification, setNotifications, notifications }: NotificationProps) => {
+/**
+ * Display one notifications
+ * @param {NotificationProps} params
+ * @returns Notification
+ */
+export const Notification = ({ notification, setNotifications, notifications }: NotificationProps) => {
   useEffect(() => {
     if (!notification.read) {
       axios.put(`/api/notification/${notification.id}`);
@@ -136,13 +153,24 @@ const Notification = ({ notification, setNotifications, notifications }: Notific
   );
 };
 
-type LoggedInUserCardProps = {
+/**
+ * @typedef {object} LoggedInUserCardProps
+ * @property {IEmployee} user
+ * @property {boolean} displayNotifications
+ * @property {Dispatch<boolean>} setDisplayNotifications
+ */
+export type LoggedInUserCardProps = {
   user?: IEmployee;
   displayNotifications: boolean;
   setDisplayNotifications: Dispatch<boolean>;
 };
 
-const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications }: LoggedInUserCardProps) => {
+/**
+ * Displaying the current user
+ * @param {LoggedInUserCardProps} params
+ * @returns LoggedInUserCard
+ */
+export const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications }: LoggedInUserCardProps) => {
   const classes = useStyles();
   const router = useRouter();
   const name = `${user?.firstName} ${user?.lastName[0]}.`;
@@ -220,7 +248,16 @@ const LoggedInUserCard = ({ user, displayNotifications, setDisplayNotifications 
   );
 };
 
-type DrawerType = {
+/**
+ * @typedef {object} DrawerType
+ * @property {boolean} drawer
+ * @property {function} setDrawer
+ * @property {boolean} displayNotifications
+ * @property {function} setDisplayNotifications
+ * @property {string} variant
+ * @property {IEmployee} user
+ */
+export type DrawerType = {
   drawer: boolean;
   setDrawer: (boolean) => void;
   displayNotifications: boolean;
@@ -228,7 +265,13 @@ type DrawerType = {
   variant: 'permanent' | 'persistent' | 'temporary';
   user: IEmployee;
 };
-const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotifications, variant, user }: DrawerType) => {
+
+/**
+ * Drawer based on Material UI´s drawer
+ * @param {DrawerType} params
+ * @returns Drawer
+ */
+export const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotifications, variant, user }: DrawerType) => {
   const classes = useStyles();
 
   return (
@@ -258,6 +301,10 @@ const Drawer = ({ drawer, setDrawer, displayNotifications, setDisplayNotificatio
   );
 };
 
+/**
+ * Sidebar of the page
+ * @returns Sidebar
+ */
 const Sidebar = () => {
   const classes = useStyles();
   const [drawer, setDrawer] = useState<boolean>(false);

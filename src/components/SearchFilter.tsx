@@ -1,11 +1,10 @@
 import { Badge, Button, Fade, IconButton, InputAdornment, makeStyles, Popover, TextField } from '@material-ui/core';
 import { Search, Tune } from '@material-ui/icons';
 import ClearIcon from '@material-ui/icons/Clear';
+import CenteringRow from 'components/CenteringRow';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import theme from 'theme';
-
-import CenteringRow from './CenteringRow';
 const useStyles = makeStyles({
   textField: {
     height: theme.spacing(4),
@@ -15,11 +14,24 @@ const useStyles = makeStyles({
   },
 });
 
-type SearchFilterProps = {
+/**
+ * @typedef {object} SearchFilterProps
+ * @property {React.ReactNode} filterComponent
+ * @property {function} search
+ * @property {boolean} activeFilters
+ *
+ */
+export type SearchFilterProps = {
   filterComponent: React.ReactNode;
   search: (element: string) => void;
   activeFilters: boolean;
 };
+
+/**
+ * Compoent to be used to allow user to search and filter
+ * @param {SearchFilterProps} params
+ * @returns SearchFilter
+ */
 const SearchFilter = ({ filterComponent, search, activeFilters }: SearchFilterProps) => {
   const classes = useStyles();
   const router = useRouter();

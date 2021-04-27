@@ -9,7 +9,17 @@ const useStyles = makeStyles({
   },
 });
 
-type ModalProps = {
+/**
+ * @typedef {object} ModalProps
+ * @property {React.ReactChild | string} header
+ * @property {React.ReactChild | string} subheader
+ * @property {React.ReactChild[]} buttonGroup
+ * @property {boolean} open
+ * @property {function} onClose
+ * @property {function} onSubmit
+ * @property {React.ReactChild} children
+ */
+export type ModalProps = {
   header?: React.ReactChild | string;
   subheader?: React.ReactChild | string;
   buttonGroup?: React.ReactChild[];
@@ -19,6 +29,11 @@ type ModalProps = {
   children?: React.ReactChild;
 };
 
+/**
+ * Modal to display different data
+ * @param {ModalProps} params
+ * @returns Modal
+ */
 const Modal = ({ header, subheader, buttonGroup, open, onClose, onSubmit, children }: ModalProps) => {
   const classes = useStyles();
   return (

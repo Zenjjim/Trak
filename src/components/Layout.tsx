@@ -26,10 +26,19 @@ const useStyles = makeStyles({
   },
 });
 
-type LayoutProps = {
+/**
+ * @typedef {object} LayoutProps
+ * @property {JSX.Element} children
+ */
+export type LayoutProps = {
   children: JSX.Element;
 };
 
+/**
+ * Setting the overall layout for the application
+ * @param {LayoutProps} params
+ * @returns Layout
+ */
 const Layout = ({ children }: LayoutProps) => {
   const classes = useStyles();
   const [session, loading] = useSession();

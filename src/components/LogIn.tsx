@@ -16,6 +16,10 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Card to use for log in
+ * @returns LogIN
+ */
 const LogIn = () => {
   const classes = useStyles();
 

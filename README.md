@@ -9,8 +9,10 @@
 
 Trak (\ ˈtrack \) er et minimalistisk HR-system som har fokus på at HR skal få mest mulig hjelp til å passe på sine ansatte. Trak hovedfunksjonalitet er å ha oversikt over arbeidsoppgaver, automatisk opprettelse av oppgaver og sende ut notifikasjoner.
 
-## Installasjon
+## Dokumentasjon
+Dokumentasjon til projektet finner du [her](https://zenjjim.github.io/Trak/)
 
+## Installasjon
 ### Forutsetninger
 
 - Node 15.6.0 eller høyere

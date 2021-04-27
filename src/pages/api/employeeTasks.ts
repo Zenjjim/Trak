@@ -1,8 +1,20 @@
 import HttpStatusCode from 'http-status-typed';
 import prisma from 'lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Actions } from 'utils/types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Actions, IEmployeeTask } from 'utils/types';
 
+/**
+ * POST
+ * @param {{taskId:string, dueDate: Date, employeeId: number, responsibleId: number}} data
+ * @returns {IEmployeeTask} Created employeeTask
+ */
+
+/**
+ * PATCH
+ * @param {Date} dueDate
+ * @param {string} employeeTasksId
+ */
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const {
@@ -45,7 +57,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             dueDate: dueDate,
           },
         });
-        res.status(HttpStatusCode.OK).end();
+        res.status(HttpStatusCode.NO_CONTENT).end();
       } catch (err) {
         if (err) {
           res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });

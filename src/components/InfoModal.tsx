@@ -72,9 +72,7 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
             description: `Du har blitt delegert arbeidsoppgaven "${employeeTask.task.title}" av ${employeeTask.responsible.firstName} ${employeeTask.responsible.lastName}`,
             employeeId: formData.responsible?.id,
             ...(formData.responsible.employeeSettings?.slack && {
-              slackData: {
-                email: formData.responsible.email,
-              },
+              email: formData.responsible.email,
             }),
           });
         }

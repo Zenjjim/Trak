@@ -124,7 +124,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-const employeeTaskCreator = (phases, employees) => {
+/**
+ *
+ * @param {IPhase[]} phases
+ * @param {IEmployee[]} employees
+ */
+const employeeTaskCreator = (phases: IPhase[], employees: IEmployee[]) => {
   const lopendePhases = phases.filter((phase) => phase.processTemplate.slug === Process.LOPENDE);
   const today = moment();
   employees.forEach((employee) => {
@@ -140,7 +145,11 @@ const employeeTaskCreator = (phases, employees) => {
     }
   });
 };
-
+/**
+ * @param  {IEmployee} employee
+ * @param  {IPhase[]} lopendePhases
+ * @param  {Moment} today
+ */
 const lopendeEmployeeTaskCreator = (employee: IEmployee, lopendePhases: IPhase[], today: Moment) => {
   const comingPhases = lopendePhases.filter((phase) => {
     const dueDate = moment(phase.dueDate).subtract(1, 'week');
@@ -172,8 +181,11 @@ const lopendeEmployeeTaskCreator = (employee: IEmployee, lopendePhases: IPhase[]
     createEmployeeTasks(employee, nextPhase);
   }
 };
-
-const onboardingEmployeeTaskCreator = (phases, employee) => {
+/**
+ * @param {IPhase[]} phases
+ * @param {IEmployee} employee
+ */
+const onboardingEmployeeTaskCreator = (phases: IPhase[], employee: IEmployee) => {
   phases.forEach((phase) => {
     if (phase.processTemplate.slug === Process.ONBOARDING) {
       phase.dueDate = addDays(employee.dateOfEmployment, phase.dueDateDayOffset);
@@ -186,7 +198,11 @@ const onboardingEmployeeTaskCreator = (phases, employee) => {
     notificationSender(employee.hrManagerId, notificationText, employee.hrManager.employeeSettings.slack && employee.hrManager.email);
   }
 };
-const offboardingEmployeeTaskCreator = (phases, employee) => {
+/**
+ * @param  {IPhase[]} phases
+ * @param  {IEmployee} employee
+ */
+const offboardingEmployeeTaskCreator = (phases: IPhase[], employee: IEmployee) => {
   phases.forEach((phase) => {
     if (phase.processTemplate.slug === Process.OFFBOARDING) {
       phase.dueDate = addDays(employee.terminationDate, phase.dueDateDayOffset);
@@ -199,10 +215,17 @@ const offboardingEmployeeTaskCreator = (phases, employee) => {
     notificationSender(employee.hrManagerId, notificationText, employee.hrManager.employeeSettings.slack && employee.hrManager.email);
   }
 };
-const employeeHasProcessTask = (employee, processTitle) =>
+/**
+ * @param  {IEmployee} employee
+ * @param  {string} processTitle
+ */
+const employeeHasProcessTask = (employee: IEmployee, processTitle: string) =>
   employee.employeeTask.some((employeeTask) => employeeTask.task.phase.processTemplate.slug === processTitle);
-
-const createEmployeeTasks = async (employee, phase) => {
+/**
+ * @param  {IEmployee} employee
+ * @param  {IPhase} phase
+ */
+const createEmployeeTasks = async (employee: IEmployee, phase: IPhase) => {
   const data = phase?.tasks.map((task) => {
     if (task.professions.map(({ id }) => id).includes(employee.professionId)) {
       if (!task.responsibleId && !employee.hrManagerId) {
@@ -218,8 +241,10 @@ const createEmployeeTasks = async (employee, phase) => {
   });
   await prisma.employeeTask.createMany({ data: data, skipDuplicates: true });
 };
-
-const createNotification = (responsibleEmployees) => {
+/**
+ * @param  {(IEmployee&{responsibleEmployeeTask:IEmployeeTask})[]} responsibleEmployees
+ */
+const createNotification = (responsibleEmployees: (IEmployee & { responsibleEmployeeTask: IEmployeeTask })[]) => {
   try {
     const today = new Date();
     const nextWeek = new Date().setDate(today.getDate() + 7);
@@ -249,8 +274,12 @@ const createNotification = (responsibleEmployees) => {
     console.error(err.message);
   }
 };
-
-const notificationSender = async (employeeId, description, email = undefined) => {
+/**
+ * @param  {number} employeeId
+ * @param  {string} description
+ * @param  {string?} email
+ */
+const notificationSender = async (employeeId: number, description: string, email: string = undefined) => {
   await prisma.notification.create({
     data: {
       employeeId: employeeId,

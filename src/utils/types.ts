@@ -29,6 +29,7 @@ export type IEmployee = {
   terminationDate?: Date;
   imageUrl?: string;
   profession: IProfession;
+  professionId?: string;
   hrManager: IEmployee;
   hrManagerId?: number;
   employees: IEmployee[];

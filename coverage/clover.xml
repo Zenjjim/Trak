@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1619530292897" clover="3.2.0">
-  <project timestamp="1619530292897" name="All files">
-    <metrics statements="459" coveredstatements="261" conditionals="376" coveredconditionals="75" methods="101" coveredmethods="52" elements="936" coveredelements="388" complexity="0" loc="459" ncloc="459" packages="9" files="21" classes="21"/>
+<coverage generated="1619530868110" clover="3.2.0">
+  <project timestamp="1619530868110" name="All files">
+    <metrics statements="459" coveredstatements="260" conditionals="376" coveredconditionals="77" methods="101" coveredmethods="52" elements="936" coveredelements="389" complexity="0" loc="459" ncloc="459" packages="9" files="21" classes="21"/>
     <package name="__tests__.factories">
       <metrics statements="52" coveredstatements="52" conditionals="13" coveredconditionals="13" methods="8" coveredmethods="8"/>
       <file name="employee.factory.ts" path="/github/workspace/__tests__/factories/employee.factory.ts">
@@ -181,9 +181,9 @@
       </file>
     </package>
     <package name="src.pages.api.cron">
-      <metrics statements="100" coveredstatements="55" conditionals="113" coveredconditionals="25" methods="22" coveredmethods="11"/>
+      <metrics statements="100" coveredstatements="56" conditionals="113" coveredconditionals="27" methods="22" coveredmethods="11"/>
       <file name="phases.ts" path="/github/workspace/src/pages/api/cron/phases.ts">
-        <metrics statements="100" coveredstatements="55" conditionals="113" coveredconditionals="25" methods="22" coveredmethods="11"/>
+        <metrics statements="100" coveredstatements="56" conditionals="113" coveredconditionals="27" methods="22" coveredmethods="11"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -220,18 +220,18 @@
         <line num="157" count="124" type="stmt"/>
         <line num="160" count="1344" type="stmt"/>
         <line num="162" count="367" type="cond" truecount="2" falsecount="0"/>
-        <line num="163" count="35" type="stmt"/>
-        <line num="166" count="332" type="cond" truecount="3" falsecount="1"/>
-        <line num="167" count="715" type="stmt"/>
-        <line num="168" count="715" type="stmt"/>
-        <line num="169" count="715" type="cond" truecount="1" falsecount="1"/>
-        <line num="170" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="173" count="715" type="cond" truecount="1" falsecount="1"/>
-        <line num="175" count="332" type="stmt"/>
+        <line num="163" count="85" type="stmt"/>
+        <line num="166" count="282" type="cond" truecount="3" falsecount="1"/>
+        <line num="167" count="303" type="stmt"/>
+        <line num="168" count="303" type="stmt"/>
+        <line num="169" count="303" type="cond" truecount="2" falsecount="0"/>
+        <line num="170" count="60" type="cond" truecount="1" falsecount="1"/>
+        <line num="173" count="243" type="cond" truecount="1" falsecount="1"/>
+        <line num="175" count="282" type="stmt"/>
         <line num="176" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="179" count="332" type="cond" truecount="1" falsecount="1"/>
-        <line num="180" count="332" type="stmt"/>
-        <line num="181" count="332" type="stmt"/>
+        <line num="179" count="282" type="cond" truecount="1" falsecount="1"/>
+        <line num="180" count="282" type="stmt"/>
+        <line num="181" count="282" type="stmt"/>
         <line num="188" count="1" type="stmt"/>
         <line num="189" count="0" type="stmt"/>
         <line num="190" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -252,13 +252,13 @@
         <line num="215" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="222" count="1" type="stmt"/>
         <line num="223" count="0" type="stmt"/>
-        <line num="228" count="332" type="stmt"/>
-        <line num="229" count="332" type="cond" truecount="3" falsecount="1"/>
-        <line num="230" count="332" type="cond" truecount="1" falsecount="1"/>
+        <line num="228" count="282" type="stmt"/>
+        <line num="229" count="282" type="cond" truecount="3" falsecount="1"/>
+        <line num="230" count="282" type="cond" truecount="1" falsecount="1"/>
         <line num="231" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="232" count="0" type="stmt"/>
         <line num="234" count="0" type="stmt"/>
-        <line num="242" count="664" type="stmt"/>
+        <line num="242" count="564" type="stmt"/>
         <line num="247" count="1" type="stmt"/>
         <line num="248" count="367" type="stmt"/>
         <line num="249" count="367" type="stmt"/>
@@ -320,9 +320,9 @@
       </file>
     </package>
     <package name="src.pages.api.phases">
-      <metrics statements="35" coveredstatements="22" conditionals="38" coveredconditionals="6" methods="7" coveredmethods="7"/>
+      <metrics statements="35" coveredstatements="21" conditionals="38" coveredconditionals="6" methods="7" coveredmethods="7"/>
       <file name="[phase_id].ts" path="/github/workspace/src/pages/api/phases/[phase_id].ts">
-        <metrics statements="35" coveredstatements="22" conditionals="38" coveredconditionals="6" methods="7" coveredmethods="7"/>
+        <metrics statements="35" coveredstatements="21" conditionals="38" coveredconditionals="6" methods="7" coveredmethods="7"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -347,7 +347,7 @@
         <line num="63" count="1" type="stmt"/>
         <line num="65" count="1" type="stmt"/>
         <line num="68" count="1" type="stmt"/>
-        <line num="78" count="1" type="stmt"/>
+        <line num="78" count="0" type="stmt"/>
         <line num="80" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="81" count="0" type="cond" truecount="0" falsecount="8"/>
         <line num="83" count="0" type="stmt"/>
@@ -361,9 +361,9 @@
       </file>
     </package>
     <package name="src.pages.api.tasks">
-      <metrics statements="37" coveredstatements="22" conditionals="46" coveredconditionals="6" methods="9" coveredmethods="7"/>
+      <metrics statements="37" coveredstatements="21" conditionals="46" coveredconditionals="6" methods="9" coveredmethods="7"/>
       <file name="[task_id].ts" path="/github/workspace/src/pages/api/tasks/[task_id].ts">
-        <metrics statements="37" coveredstatements="22" conditionals="46" coveredconditionals="6" methods="9" coveredmethods="7"/>
+        <metrics statements="37" coveredstatements="21" conditionals="46" coveredconditionals="6" methods="9" coveredmethods="7"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -397,7 +397,7 @@
         <line num="151" count="0" type="stmt"/>
         <line num="159" count="1" type="stmt"/>
         <line num="161" count="1" type="stmt"/>
-        <line num="162" count="1" type="stmt"/>
+        <line num="162" count="0" type="stmt"/>
         <line num="164" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="165" count="0" type="cond" truecount="0" falsecount="8"/>
         <line num="167" count="0" type="stmt"/>

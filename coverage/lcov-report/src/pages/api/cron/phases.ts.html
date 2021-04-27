@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.05% </span>
+                <span class="strong">55.96% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>60/109</span>
+                <span class='fraction'>61/109</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.12% </span>
+                <span class="strong">23.89% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/113</span>
+                <span class='fraction'>27/113</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55% </span>
+                <span class="strong">56% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>55/100</span>
+                <span class='fraction'>56/100</span>
             </div>
         
             
@@ -511,25 +511,25 @@
 <span class="cline-any cline-yes">1344x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">367x</span>
-<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">85x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">332x</span>
-<span class="cline-any cline-yes">715x</span>
-<span class="cline-any cline-yes">715x</span>
-<span class="cline-any cline-yes">715x</span>
+<span class="cline-any cline-yes">282x</span>
+<span class="cline-any cline-yes">303x</span>
+<span class="cline-any cline-yes">303x</span>
+<span class="cline-any cline-yes">303x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">243x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">282x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">715x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">332x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">332x</span>
-<span class="cline-any cline-yes">332x</span>
-<span class="cline-any cline-yes">332x</span>
+<span class="cline-any cline-yes">282x</span>
+<span class="cline-any cline-yes">282x</span>
+<span class="cline-any cline-yes">282x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -576,9 +576,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">332x</span>
-<span class="cline-any cline-yes">332x</span>
-<span class="cline-any cline-yes">332x</span>
+<span class="cline-any cline-yes">282x</span>
+<span class="cline-any cline-yes">282x</span>
+<span class="cline-any cline-yes">282x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -590,7 +590,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">664x</span>
+<span class="cline-any cline-yes">564x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -809,8 +809,8 @@ const lopendeEmployeeTaskCreator = (employee: IEmployee, lopendePhases: IPhase[]
   const nextPhase = comingPhases<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>educe((phaseA, phaseB) =&gt; {
     const dueDatePhaseA = moment(phaseA.dueDate);
     const dueDatePhaseB = moment(phaseB.dueDate);
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (dueDatePhaseA.month() === dueDatePhaseB.month()) {
-<span class="cstat-no" title="statement not covered" >      return dueDatePhaseA.day() &gt; dueDatePhaseB.day() ? phaseB : phaseA;</span>
+    if (dueDatePhaseA.month() === dueDatePhaseB.month()) {
+      return dueDatePhaseA.day() &gt; dueDatePhaseB.day() ? <span class="branch-0 cbranch-no" title="branch not covered" >phaseB </span>: phaseA;
     }
 &nbsp;
     return dueDatePhaseA.month() &gt; dueDatePhaseB.month() ? <span class="branch-0 cbranch-no" title="branch not covered" >phaseB </span>: phaseA;
@@ -940,7 +940,7 @@ const notificationSender = <span class="fstat-no" title="function not covered" >
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 27 2021 13:31:32 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 27 2021 13:41:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

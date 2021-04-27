@@ -57,7 +57,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             dueDate: dueDate,
           },
         });
-        res.status(HttpStatusCode.OK).end();
+        res.status(HttpStatusCode.NO_CONTENT).end();
       } catch (err) {
         if (err) {
           res.status(HttpStatusCode.NOT_FOUND).send({ message: err?.meta?.cause });

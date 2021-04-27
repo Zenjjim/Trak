@@ -1,372 +1,580 @@
-<!doctype html>
-<html class="default no-js">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>trak</title>
-	<meta name="description" content="Documentation for trak">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script async src="assets/js/search.js" id="search-script"></script>
-</head>
-<body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">trak</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<h1>trak</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<p><img src="./public/trak_logo.svg" alt="Trak"></p>
-				<p><img src="https://github.com/blitz-js/superjson/workflows/CI/badge.svg" alt="CI">
-				<img src="https://img.shields.io/github/license/Zenjjim/Trak" alt="CI"></p>
-				<p><img src="https://readme-jokes.vercel.app/api" alt="Jokes Card"></p>
-				<a href="#om-trak" id="om-trak" style="color: inherit; text-decoration: none;">
-					<h2>Om Trak</h2>
-				</a>
-				<p>Trak (\ ˈtrack ) er et minimalistisk HR-system som har fokus på at HR skal få mest mulig hjelp til å passe på sine ansatte. Trak hovedfunksjonalitet er å ha oversikt over arbeidsoppgaver, automatisk opprettelse av oppgaver og sende ut notifikasjoner.</p>
-				<a href="#installasjon" id="installasjon" style="color: inherit; text-decoration: none;">
-					<h2>Installasjon</h2>
-				</a>
-				<a href="#forutsetninger" id="forutsetninger" style="color: inherit; text-decoration: none;">
-					<h3>Forutsetninger</h3>
-				</a>
-				<ul>
-					<li>Node 15.6.0 eller høyere</li>
-					<li>Yarn 1.22.10 eller høyere</li>
-					<li>Docker eller ekstern PostgreSQL database</li>
-				</ul>
-				<a href="#oppsett" id="oppsett" style="color: inherit; text-decoration: none;">
-					<h3>Oppsett</h3>
-				</a>
-				<p>Start med å clone prosjektet og installere avhengigheter:</p>
-				<pre><code><span style="color: #001080">git</span><span style="color: #000000"> </span><span style="color: #001080">clone</span><span style="color: #000000"> https:</span><span style="color: #008000">//github.com/Zenjjim/Trak.git</span>
-<span style="color: #001080">cd</span><span style="color: #000000"> </span><span style="color: #001080">Trak</span>
-<span style="color: #001080">yarn</span>
-</code></pre>
-				<p>Deretter kan du lage en <code>.env</code> i root og fylle med egne legitimasjoner:</p>
-				<pre><code><span style="color: #0070C1">DATABASE_URL</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+  <head>
+    <!--[if gte mso 9
+      ]><xml
+        ><o:OfficeDocumentSettings><o:AllowPNG /><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml
+      ><!
+    [endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <!--[if !mso]><!-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--<![endif]-->
+    <title></title>
+    <!--[if !mso]><!-->
+    <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css" />
+    <!--<![endif]-->
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+      }
 
-<span style="color: #0070C1">CRON_SECRET</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
-<span style="color: #0070C1">JWT_SECRET</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
+      table,
+      td,
+      tr {
+        vertical-align: top;
+        border-collapse: collapse;
+      }
 
-<span style="color: #0070C1">SLACK_TOKEN</span><span style="color: #000000">=</span><span style="color: #001080">xoxb</span><span style="color: #000000">-</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
+      * {
+        line-height: inherit;
+      }
 
-<span style="color: #0070C1">GOOGLE_ID</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
-<span style="color: #0070C1">GOOGLE_SECRET</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
-</code></pre>
-				<blockquote>
-					<p>Google legitimasjon kan lages på <a href="https://console.cloud.google.com/">google console</a> under <em>APIs &amp; Services</em> &gt; <em>Credentials</em> &gt; <em>OAuth 2.0 Client IDs</em></p>
-				</blockquote>
-				<blockquote>
-					<p>Hvis du bruker Docker: <code>DATABASE_URL=postgres://postgres:password@localhost:5432/trak</code></p>
-				</blockquote>
-				<p>(Optional) Dersom du bruker Docker:</p>
-				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">createdb</span>
-</code></pre>
-				<p>Migrering av database:</p>
-				<pre><code><span style="color: #001080">npx</span><span style="color: #000000"> </span><span style="color: #001080">prisma</span><span style="color: #000000"> </span><span style="color: #001080">generate</span>
-<span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">push</span>
-</code></pre>
-				<p>(Optional) Legg inn fixtures:</p>
-				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">loaddata</span>
-</code></pre>
-				<p>Da gjenstår det kun å starte serveren:</p>
-				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">dev</span>
-</code></pre>
-			</div>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="modules.html">Exports</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/contextprovider.html">Context<wbr>Provider</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/urls.html">URLS</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_addbutton.html">components/<wbr>Add<wbr>Button</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_avatar.html">components/<wbr>Avatar</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_centeringrow.html">components/<wbr>Centering<wbr>Row</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_infomodal.html">components/<wbr>Info<wbr>Modal</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_layout.html">components/<wbr>Layout</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_loadinglogo.html">components/<wbr>Loading<wbr>Logo</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_login.html">components/<wbr>Log<wbr>In</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_modal.html">components/<wbr>Modal</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_pagetitle.html">components/<wbr>Page<wbr>Title</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_searchfilter.html">components/<wbr>Search<wbr>Filter</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_sidebar.html">components/<wbr>Sidebar</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_typo.html">components/<wbr>Typo</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_form_beforetoggle.html">components/form/<wbr>Before<wbr>Toggle</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_form_employeeselector.html">components/form/<wbr>Employee<wbr>Selector</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_form_tagselector.html">components/form/<wbr>Tag<wbr>Selector</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_form_textfield.html">components/form/<wbr>Text<wbr>Field</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_form_togglebuttongroup.html">components/form/<wbr>Toggle<wbr>Button<wbr>Group</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_ansatt_changeduedatemodal.html">components/views/ansatt/<wbr>Change<wbr>Due<wbr>Date<wbr>Modal</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_ansatt_phase.html">components/views/ansatt/<wbr>Phase</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_ansatt_taskmodal.html">components/views/ansatt/<wbr>Task<wbr>Modal</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_ansatt_taskrow.html">components/views/ansatt/<wbr>Task<wbr>Row</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_mine_ansatte_filter.html">components/views/mine-<wbr>ansatte/<wbr>Filter</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_mine_ansatte_phasecard.html">components/views/mine-<wbr>ansatte/<wbr>Phase<wbr>Card</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_mine_ansatte_userrow.html">components/views/mine-<wbr>ansatte/<wbr>User<wbr>Row</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_mine_oppgaver_filter.html">components/views/mine-<wbr>oppgaver/<wbr>Filter</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_mine_oppgaver_taskrow.html">components/views/mine-<wbr>oppgaver/<wbr>Task<wbr>Row</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_mine_oppgaver_timesection.html">components/views/mine-<wbr>oppgaver/<wbr>Time<wbr>Section</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_prosessmal_phase.html">components/views/prosessmal/<wbr>Phase</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_prosessmal_phasemodal.html">components/views/prosessmal/<wbr>Phase<wbr>Modal</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_prosessmal_phasetable.html">components/views/prosessmal/<wbr>Phase<wbr>Table</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_prosessmal_taskmodal.html">components/views/prosessmal/<wbr>Task<wbr>Modal</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/components_views_prosessmal_taskrow.html">components/views/prosessmal/<wbr>Task<wbr>Row</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/context_data.html">context/<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/context_progressbar.html">context/<wbr>Progressbar</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/context_snackbar.html">context/<wbr>Snackbar</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/context_user.html">context/<wbr>User</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/lib_prisma.html">lib/prisma</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/lib_withauth.html">lib/with<wbr>Auth</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages.html">pages</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages__app.html">pages/_<wbr>app</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages__document.html">pages/_<wbr>document</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_alle_ansatte__slug_.html">pages/alle-<wbr>ansatte/[slug]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_alle_oppgaver.html">pages/alle-<wbr>oppgaver</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_ansatt__id_.html">pages/ansatt/[id]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_auth_____nextauth_.html">pages/api/auth/[...nextauth]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_cron_phases.html">pages/api/cron/phases</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_employee__id_.html">pages/api/employee/[id]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_employee__id__notifications.html">pages/api/employee/[id]/notifications</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_employee__id__settings.html">pages/api/employee/[id]/settings</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_employeetasks.html">pages/api/employee<wbr>Tasks</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_employeetasks__id_.html">pages/api/employee<wbr>Tasks/[id]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_employees.html">pages/api/employees</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_notification.html">pages/api/notification</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_notification__id_.html">pages/api/notification/[id]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_phases.html">pages/api/phases</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_phases__phase_id_.html">pages/api/phases/[phase_<wbr>id]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_processtemplates.html">pages/api/process<wbr>Templates</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_professions.html">pages/api/professions</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_tags.html">pages/api/tags</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_tasks.html">pages/api/tasks</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_api_tasks__task_id_.html">pages/api/tasks/[task_<wbr>id]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_innstillinger.html">pages/innstillinger</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_login.html">pages/login</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_mine_ansatte__slug_.html">pages/mine-<wbr>ansatte/[slug]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_mine_oppgaver.html">pages/mine-<wbr>oppgaver</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/pages_prosessmal__slug_.html">pages/prosessmal/[slug]</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/theme.html">theme</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/utils_types.html">utils/types</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/utils_utils.html">utils/utils</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-</body>
+      a[x-apple-data-detectors='true'] {
+        color: inherit !important;
+        text-decoration: none !important;
+      }
+    </style>
+    <style type="text/css" id="media-query">
+      @media (max-width: 670px) {
+        .block-grid,
+        .col {
+          min-width: 320px !important;
+          max-width: 100% !important;
+          display: block !important;
+        }
+
+        .block-grid {
+          width: 100% !important;
+        }
+
+        .col {
+          width: 100% !important;
+        }
+
+        .col_cont {
+          margin: 0 auto;
+        }
+
+        img.fullwidth,
+        img.fullwidthOnMobile {
+          max-width: 100% !important;
+        }
+
+        .no-stack .col {
+          min-width: 0 !important;
+          display: table-cell !important;
+        }
+
+        .no-stack.two-up .col {
+          width: 50% !important;
+        }
+
+        .no-stack .col.num2 {
+          width: 16.6% !important;
+        }
+
+        .no-stack .col.num3 {
+          width: 25% !important;
+        }
+
+        .no-stack .col.num4 {
+          width: 33% !important;
+        }
+
+        .no-stack .col.num5 {
+          width: 41.6% !important;
+        }
+
+        .no-stack .col.num6 {
+          width: 50% !important;
+        }
+
+        .no-stack .col.num7 {
+          width: 58.3% !important;
+        }
+
+        .no-stack .col.num8 {
+          width: 66.6% !important;
+        }
+
+        .no-stack .col.num9 {
+          width: 75% !important;
+        }
+
+        .no-stack .col.num10 {
+          width: 83.3% !important;
+        }
+
+        .video-block {
+          max-width: none !important;
+        }
+
+        .mobile_hide {
+          min-height: 0px;
+          max-height: 0px;
+          max-width: 0px;
+          display: none;
+          overflow: hidden;
+          font-size: 0px;
+        }
+
+        .desktop_hide {
+          display: block !important;
+          max-height: none !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #f3e6f8">
+    <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
+      <table
+        class="nl-container"
+        style="
+          table-layout: fixed;
+          vertical-align: top;
+          min-width: 320px;
+          border-spacing: 0;
+          border-collapse: collapse;
+          mso-table-lspace: 0pt;
+          mso-table-rspace: 0pt;
+          background-color: #000000;
+          width: 100%;
+        "
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        width="100%"
+        bgcolor="#000000"
+        valign="top"
+      >
+        <tbody>
+          <tr style="vertical-align: top" valign="top">
+            <td style="word-break: break-word; vertical-align: top" valign="top">
+              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color:#000000"><![endif]-->
+              <div style="background-color: #f3e6f8">
+                <div
+                  class="block-grid"
+                  style="
+                    min-width: 320px;
+                    max-width: 650px;
+                    overflow-wrap: break-word;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                    margin: 0 auto;
+                    background-color: #f1d0ff;
+                  "
+                >
+                  <div
+                    style="
+                      border-collapse: collapse;
+                      display: table;
+                      width: 100%;
+                      background-color: #f1d0ff;
+                      background-image: url('https://d1oco4z2z1fhwp.cloudfront.net/templates/default/2971/bg-white-rombo.png');
+                      background-position: top left;
+                      background-repeat: no-repeat;
+                    "
+                  >
+                    <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3e6f8;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:650px"><tr class="layout-full-width" style="background-color:#f1d0ff"><![endif]-->
+                    <!--[if (mso)|(IE)]><td align="center" width="650" style="background-color:#f1d0ff;width:650px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:45px; padding-bottom:0px;"><![endif]-->
+                    <div class="col num12" style="min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px">
+                      <div class="col_cont" style="width: 100% !important">
+                        <!--[if (!mso)&(!IE)]><!-->
+                        <div
+                          style="
+                            border-top: 0px solid transparent;
+                            border-left: 0px solid transparent;
+                            border-bottom: 0px solid transparent;
+                            border-right: 0px solid transparent;
+                            padding-top: 45px;
+                            padding-bottom: 0px;
+                            padding-right: 0px;
+                            padding-left: 0px;
+                          "
+                        >
+                          <!--<![endif]-->
+                          <div class="img-container center fixedwidth" align="center" style="padding-right: 0px; padding-left: 0px">
+                            <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="center"><![endif]-->
+                            <div style="font-size: 1px; line-height: 15px">&nbsp;</div>
+                            <img
+                              class="center fixedwidth"
+                              align="center"
+                              border="0"
+                              src="https://trak-trak-trak.herokuapp.com/_next/image?url=%2Ftrak_logo.svg&amp;w=256&amp;q=75"
+                              alt="your logo"
+                              title="your logo"
+                              style="
+                                text-decoration: none;
+                                -ms-interpolation-mode: bicubic;
+                                height: auto;
+                                border: 0;
+                                width: 100%;
+                                max-width: 130px;
+                                display: block;
+                              "
+                              width="130"
+                            />
+                            <div style="font-size: 1px; line-height: 25px">&nbsp;</div>
+                            <!--[if mso]></td></tr></table><![endif]-->
+                          </div>
+                          <table
+                            cellpadding="0"
+                            cellspacing="0"
+                            role="presentation"
+                            width="100%"
+                            style="
+                              table-layout: fixed;
+                              vertical-align: top;
+                              border-spacing: 0;
+                              border-collapse: collapse;
+                              mso-table-lspace: 0pt;
+                              mso-table-rspace: 0pt;
+                            "
+                            valign="top"
+                          >
+                            <tr style="vertical-align: top" valign="top">
+                              <td
+                                style="
+                                  word-break: break-word;
+                                  vertical-align: top;
+                                  padding-bottom: 0px;
+                                  padding-left: 0px;
+                                  padding-right: 0px;
+                                  padding-top: 35px;
+                                  text-align: center;
+                                  width: 100%;
+                                "
+                                width="100%"
+                                align="center"
+                                valign="top"
+                              >
+                                <h1
+                                  style="
+                                    color: #8412c0;
+                                    direction: ltr;
+                                    font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+                                    font-size: 28px;
+                                    font-weight: normal;
+                                    letter-spacing: normal;
+                                    line-height: 120%;
+                                    text-align: center;
+                                    margin-top: 0;
+                                    margin-bottom: 0;
+                                  "
+                                >
+                                  <strong>Dokumentasjonsoversikt for TRAK</strong>
+                                </h1>
+                              </td>
+                            </tr>
+                          </table>
+                          <table
+                            class="divider"
+                            border="0"
+                            cellpadding="0"
+                            cellspacing="0"
+                            width="100%"
+                            style="
+                              table-layout: fixed;
+                              vertical-align: top;
+                              border-spacing: 0;
+                              border-collapse: collapse;
+                              mso-table-lspace: 0pt;
+                              mso-table-rspace: 0pt;
+                              min-width: 100%;
+                              -ms-text-size-adjust: 100%;
+                              -webkit-text-size-adjust: 100%;
+                            "
+                            role="presentation"
+                            valign="top"
+                          >
+                            <tbody>
+                              <tr style="vertical-align: top" valign="top">
+                                <td
+                                  class="divider_inner"
+                                  style="
+                                    word-break: break-word;
+                                    vertical-align: top;
+                                    min-width: 100%;
+                                    -ms-text-size-adjust: 100%;
+                                    -webkit-text-size-adjust: 100%;
+                                    padding-top: 20px;
+                                    padding-right: 20px;
+                                    padding-bottom: 20px;
+                                    padding-left: 20px;
+                                  "
+                                  valign="top"
+                                >
+                                  <table
+                                    class="divider_content"
+                                    border="0"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    width="80%"
+                                    style="
+                                      table-layout: fixed;
+                                      vertical-align: top;
+                                      border-spacing: 0;
+                                      border-collapse: collapse;
+                                      mso-table-lspace: 0pt;
+                                      mso-table-rspace: 0pt;
+                                      border-top: 1px solid #e1b4fc;
+                                      width: 80%;
+                                    "
+                                    align="center"
+                                    role="presentation"
+                                    valign="top"
+                                  >
+                                    <tbody>
+                                      <tr style="vertical-align: top" valign="top">
+                                        <td
+                                          style="word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%"
+                                          valign="top"
+                                        >
+                                          <span></span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div class="button-container" align="center" style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px">
+                            <div
+                              style="
+                                text-decoration: none;
+                                display: inline-block;
+                                color: #ffffff;
+                                background-color: #8a3b8f;
+                                border-radius: 4px;
+                                -webkit-border-radius: 4px;
+                                -moz-border-radius: 4px;
+                                width: auto;
+                                width: auto;
+                                border-top: 1px solid #8a3b8f;
+                                border-right: 1px solid #8a3b8f;
+                                border-bottom: 1px solid #8a3b8f;
+                                border-left: 1px solid #8a3b8f;
+                                padding-top: 5px;
+                                padding-bottom: 5px;
+                                font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+                                text-align: center;
+                                mso-border-alt: none;
+                                word-break: keep-all;
+                              "
+                            >
+                              <span style="padding-left: 20px; padding-right: 20px; font-size: 16px; display: inline-block; letter-spacing: undefined"
+                                ><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px"
+                                  ><a style="color: white; text-decoration: none" href="./docs/index.html">Kode dokumentasjon</a></span
+                                ></span
+                              >
+                            </div>
+                            <div
+                              style="
+                                text-decoration: none;
+                                display: inline-block;
+                                color: #ffffff;
+                                background-color: #8a3b8f;
+                                border-radius: 4px;
+                                -webkit-border-radius: 4px;
+                                -moz-border-radius: 4px;
+                                width: auto;
+                                width: auto;
+                                border-top: 1px solid #8a3b8f;
+                                border-right: 1px solid #8a3b8f;
+                                border-bottom: 1px solid #8a3b8f;
+                                border-left: 1px solid #8a3b8f;
+                                padding-top: 5px;
+                                padding-bottom: 5px;
+                                font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+                                text-align: center;
+                                mso-border-alt: none;
+                                word-break: keep-all;
+                              "
+                            >
+                              <span style="padding-left: 20px; padding-right: 20px; font-size: 16px; display: inline-block; letter-spacing: undefined"
+                                ><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px"
+                                  ><a style="color: white; text-decoration: none" href="./coverage/lcov-report/index.html">Test Oversikt</a></span
+                                ></span
+                              >
+                            </div>
+                          </div>
+                          <table
+                            class="divider"
+                            border="0"
+                            cellpadding="0"
+                            cellspacing="0"
+                            width="100%"
+                            style="
+                              table-layout: fixed;
+                              vertical-align: top;
+                              border-spacing: 0;
+                              border-collapse: collapse;
+                              mso-table-lspace: 0pt;
+                              mso-table-rspace: 0pt;
+                              min-width: 100%;
+                              -ms-text-size-adjust: 100%;
+                              -webkit-text-size-adjust: 100%;
+                            "
+                            role="presentation"
+                            valign="top"
+                          >
+                            <tbody>
+                              <tr style="vertical-align: top" valign="top">
+                                <td
+                                  class="divider_inner"
+                                  style="
+                                    word-break: break-word;
+                                    vertical-align: top;
+                                    min-width: 100%;
+                                    -ms-text-size-adjust: 100%;
+                                    -webkit-text-size-adjust: 100%;
+                                    padding-top: 20px;
+                                    padding-right: 20px;
+                                    padding-bottom: 20px;
+                                    padding-left: 20px;
+                                  "
+                                  valign="top"
+                                >
+                                  <table
+                                    class="divider_content"
+                                    border="0"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    width="80%"
+                                    style="
+                                      table-layout: fixed;
+                                      vertical-align: top;
+                                      border-spacing: 0;
+                                      border-collapse: collapse;
+                                      mso-table-lspace: 0pt;
+                                      mso-table-rspace: 0pt;
+                                      border-top: 1px solid #e1b4fc;
+                                      width: 80%;
+                                    "
+                                    align="center"
+                                    role="presentation"
+                                    valign="top"
+                                  >
+                                    <tbody>
+                                      <tr style="vertical-align: top" valign="top">
+                                        <td
+                                          style="word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%"
+                                          valign="top"
+                                        >
+                                          <span></span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <table
+                            class="social_icons"
+                            cellpadding="0"
+                            cellspacing="0"
+                            width="100%"
+                            role="presentation"
+                            style="
+                              table-layout: fixed;
+                              vertical-align: top;
+                              border-spacing: 0;
+                              border-collapse: collapse;
+                              mso-table-lspace: 0pt;
+                              mso-table-rspace: 0pt;
+                            "
+                            valign="top"
+                          >
+                            <tbody>
+                              <tr style="vertical-align: top" valign="top">
+                                <td
+                                  style="
+                                    word-break: break-word;
+                                    vertical-align: top;
+                                    padding-top: 10px;
+                                    padding-right: 10px;
+                                    padding-bottom: 10px;
+                                    padding-left: 10px;
+                                  "
+                                  valign="top"
+                                >
+                                  <table
+                                    class="social_table"
+                                    align="center"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    role="presentation"
+                                    style="
+                                      table-layout: fixed;
+                                      vertical-align: top;
+                                      border-spacing: 0;
+                                      border-collapse: collapse;
+                                      mso-table-tspace: 0;
+                                      mso-table-rspace: 0;
+                                      mso-table-bspace: 0;
+                                      mso-table-lspace: 0;
+                                    "
+                                    valign="top"
+                                  >
+                                    <tbody>
+                                      <tr style="vertical-align: top; display: inline-block; text-align: center" align="center" valign="top">
+                                        <td
+                                          style="word-break: break-word; vertical-align: top; padding-bottom: 0; padding-right: 2.5px; padding-left: 2.5px"
+                                          valign="top"
+                                        >
+                                          <a href="https://github.com/Zenjjim/Trak" target="_blank"
+                                            ><img
+                                              width="32"
+                                              height="32"
+                                              src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/661482_643806/iconmonstr-github-1.svg"
+                                              alt="Github"
+                                              title="Github"
+                                              style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; display: block"
+                                          /></a>
+                                        </td>
+                                        <td
+                                          style="word-break: break-word; vertical-align: top; padding-bottom: 0; padding-right: 2.5px; padding-left: 2.5px"
+                                          valign="top"
+                                        >
+                                          <a href="https://trak-trak-trak.herokuapp.com/" target="_blank"
+                                            ><img
+                                              width="32"
+                                              height="32"
+                                              src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/661482_643806/logo_1.svg"
+                                              alt="Trak website"
+                                              title="Trak"
+                                              style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; display: block"
+                                          /></a>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <!--[if (!mso)&(!IE)]><!-->
+                        </div>
+                        <!--<![endif]-->
+                      </div>
+                    </div>
+                    <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                    <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+                  </div>
+                </div>
+              </div>
+              <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
 </html>

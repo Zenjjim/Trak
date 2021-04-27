@@ -3,6 +3,11 @@ import prisma from 'lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import jwt from 'next-auth/jwt';
 const secret = process.env.JWT_SECRET;
+/**
+ * Wrapper for endpoints which needs to be authorized
+ * @param handler
+ * @returns withAuth-wrapper
+ */
 const withAuth = (handler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {

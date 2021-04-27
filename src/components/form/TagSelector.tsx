@@ -33,7 +33,7 @@ export type TagSelectorProps = {
 
 /**
  * Select a multiple tags with React Hook Form
- * @param param - Props to TagSelector
+ * @param {TagSelectorProps} - Props to TagSelector
  * @returns - TagSelector
  */
 export const TagSelector = ({ label, options, control, name }: TagSelectorProps) => {
@@ -62,7 +62,7 @@ export type TagSelectorComponentProps = {
 
 /**
  * Select multiple tags
- * @param param Props to TagSelectorComponent
+ * @param {TagSelectorComponentProps} Props to TagSelectorComponent
  * @returns TagSelectorComponent
  */
 export const TagSelectorComponent = ({ label, options, value = [], setValue }: TagSelectorComponentProps) => {

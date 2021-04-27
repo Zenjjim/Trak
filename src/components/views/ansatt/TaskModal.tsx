@@ -27,13 +27,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type TaskModalProps = {
+/**
+ * @typedef {object} TaskModalProps
+ * @property {boolean} modalIsOpen
+ * @property {function} closeModal
+ * @property {string} phaseId
+ * @property {Date} dueDate
+ */
+export type TaskModalProps = {
   modalIsOpen: boolean;
   closeModal: () => void;
   phaseId: string;
   dueDate: Date;
 };
 
+/**
+ * Modal to create a new individual task for an employee
+ * @param {TaskModalProps} params
+ * @returns TaskModal
+ */
 const TaskModal = ({ modalIsOpen, closeModal, phaseId, dueDate }: TaskModalProps) => {
   const buttonGroup = [
     <Button key='cancel' onClick={closeModal} type='button'>

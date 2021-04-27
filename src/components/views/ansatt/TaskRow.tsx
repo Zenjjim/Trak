@@ -38,10 +38,19 @@ const useStyles = makeStyles({
   },
 });
 
-type TaskRowProps = {
+/**
+ * @typedef {object} TaskRowProps
+ * @property {IEmployeeTask} employeeTask
+ */
+export type TaskRowProps = {
   employeeTask: IEmployeeTask;
 };
 
+/**
+ * Row displaying an individual task
+ * @param {TaskRowProps} params
+ * @returns TaskRow
+ */
 const TaskRow = ({ employeeTask }: TaskRowProps) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const classes = useStyles();

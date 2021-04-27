@@ -16,12 +16,52 @@ jobs:
         uses: borales/actions-yarn@v2.3.0
         with:
           cmd: install
-      - uses: borales/actions-yarn@v2.3.0
-        with:
-          cmd: docs
-      - run: ls -a
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: docs # The folder the action should deploy.
+
+
+jobs:
+test:
+  runs-on: ubuntu-latest
+
+  services:
+    postgres:
+      image: postgres
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
+      ports:
+        - 5432:5432
+  env:
+    DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+  steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+    - name: Installing dependencies
+      uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: install
+    - uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: push
+    - uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: generate
+    - uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: test-github
+    - uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: docs
+    - run: ls -a
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@4.1.1
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: docs # The folder the action should deploy.

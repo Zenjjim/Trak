@@ -6,7 +6,12 @@ import PhaseTable from 'components/views/prosessmal/PhaseTable';
 import { useState } from 'react';
 import { IPhase, IProcessTemplate } from 'utils/types';
 
-type PhaseProps = {
+/**
+ * @typedef {object} PhaseProps
+ * @property {IPhase} phase
+ * @property {IProcessTemplate} processTemplate
+ */
+export type PhaseProps = {
   phase: IPhase;
   processTemplate: IProcessTemplate;
 };
@@ -18,6 +23,11 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Display a specific phase in a processTemplate
+ * @param {PhaseProps} params
+ * @returns Phase
+ */
 const Phase = ({ phase, processTemplate }: PhaseProps) => {
   const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);

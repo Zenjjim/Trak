@@ -6,7 +6,12 @@ import markdownToTxt from 'markdown-to-txt';
 import { useState } from 'react';
 import { IPhase, ITask } from 'utils/types';
 
-type TaskProps = {
+/**
+ * @typedef {object} TaskProps
+ * @property {ITask} Task
+ * @property {IPhase} phase
+ */
+export type TaskProps = {
   task: ITask;
   phase: IPhase;
 };
@@ -35,6 +40,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Row to display one specific task
+ * @param {TaskProps} params
+ * @returns TaskRow
+ */
 const TaskRow = ({ task, phase }: TaskProps) => {
   const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);

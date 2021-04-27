@@ -23,12 +23,25 @@ const useStyles = makeStyles({
   },
 });
 
-type FilterProps = {
+/**
+ * @typedef {object} FilterOptions
+ * @property {ITag[]} choosenTags
+ * @property {function} setChoosenTags
+ * @property {string[]} choosenProcessTemplates
+ * @property {function} setChoosenProcessTemplates
+ */
+export type FilterProps = {
   choosenTags: ITag[];
   setChoosenTags: (tag: ITag[]) => void;
   choosenProcessTemplates: string[];
   setChoosenProcessTemplates: (element: string[]) => void;
 };
+
+/**
+ * Filter tasks on tags and/or process templates
+ * @param {FilterProps} params
+ * @returns Filter
+ */
 const Filter = ({ choosenTags, setChoosenTags, choosenProcessTemplates, setChoosenProcessTemplates }: FilterProps) => {
   const { tags, processTemplates } = useData();
   const clearFilters = () => {

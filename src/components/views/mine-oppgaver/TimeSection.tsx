@@ -8,7 +8,12 @@ import { TimeSectionType } from 'pages/mine-oppgaver';
 import { useState } from 'react';
 import theme from 'theme';
 
-type TimeSectionProps = {
+/**
+ * @typedef {object} TimeSectionProps
+ * @property {TimeSectionType} section
+ * @property {index} number
+ */
+export type TimeSectionProps = {
   section: TimeSectionType;
   index: number;
 };
@@ -41,6 +46,11 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Card to display tasks in a specific time-range
+ * @param {TimeSectionProps} params
+ * @returns TimeSection
+ */
 const TimeSection = ({ section, index }: TimeSectionProps) => {
   const classes = useStyles();
   const DEFAULT_OPEN_SECTIONS = 3;

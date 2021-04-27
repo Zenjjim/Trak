@@ -1,4 +1,4 @@
-name: Publish Typedoc to Github Pages
+name: Publish Typedoc and Coverage to Github Pages
 on:
   push:
     branches:
@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: TypeStrong/typedoc-action@v1
+      - cmd: yarn docs
+      - cmd: ls -a
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.

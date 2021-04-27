@@ -23,6 +23,19 @@ const useStyles = makeStyles({
     marginRight: theme.spacing(1),
   },
 });
+
+/**
+ * @typedef {object} EmployeeRow
+ * @property {number} id
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {IProfession} profession
+ * @property {string} imageUrl
+ * @property {IEmployee} hrManager
+ * @property {number} tasksFinished
+ * @property {number} totalTasks
+ * @property {IEmployeeTask[]} employeeTask
+ */
 export type EmployeeRow = {
   id: number;
   firstName: string;
@@ -35,11 +48,21 @@ export type EmployeeRow = {
   employeeTask: IEmployeeTask[];
 };
 
-type UserRowProps = {
+/**
+ * @typedef {object} UserRowProps
+ * @property {EmployeeRow} employee
+ * @property {string} slug
+ */
+export type UserRowProps = {
   employee: EmployeeRow;
   slug: string;
 };
 
+/**
+ * Row displaying one employee
+ * @param {UserRowProps} params
+ * @returns UserRow
+ */
 const UserRow = ({ employee, slug }: UserRowProps) => {
   const classes = useStyles();
   const typoVariant = 'body2';

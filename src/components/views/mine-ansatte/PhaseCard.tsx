@@ -12,6 +12,14 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * @typedef {object} PhaseCardProps
+ * @property {string} id
+ * @property {string} title
+ * @property {number} amount
+ * @property {EmployeeRow} employees
+ * @property {string} slug
+ */
 export type PhaseCardProps = {
   id: string;
   title: string;
@@ -19,6 +27,12 @@ export type PhaseCardProps = {
   employees: EmployeeRow[];
   slug: string;
 };
+
+/**
+ * Card to display all employees in a specific phase
+ * @param {PhaseCardProps} params
+ * @returns PhaseCard
+ */
 const PhaseCard = ({ title, amount, employees, slug }: PhaseCardProps) => {
   const classes = useStyles();
   const [hidden, setIsHidden] = useState(!employees.length);

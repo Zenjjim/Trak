@@ -1,11 +1,14 @@
 import HttpStatusCode from 'http-status-typed';
 import prisma from 'lib/prisma';
-import { createMocks } from 'node-mocks-http';
+import { PageConfig } from 'next';
+import { testApiHandler } from 'next-test-api-route-handler';
 import employeeAPI from 'pages/api/employees';
 
 import { employeeFactory } from './factories/employee.factory';
 
 describe('/api/employee', () => {
+  const employeeAPIHandler: typeof employeeAPI & { config?: PageConfig } = employeeAPI;
+
   beforeAll(async () => {
     await employeeFactory();
   });
@@ -16,12 +19,14 @@ describe('/api/employee', () => {
   });
 
   test('returns all employees', async () => {
-    const { req, res } = createMocks({
-      method: 'GET',
+    await testApiHandler({
+      handler: employeeAPIHandler,
+      test: async ({ fetch }) => {
+        const res = await fetch({
+          method: 'GET',
+        });
+        expect(res.status).toBe(HttpStatusCode.OK);
+      },
     });
-
-    await employeeAPI(req, res);
-    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
-    expect(JSON.parse(res._getData()).length).toBeGreaterThanOrEqual(1);
   });
 });

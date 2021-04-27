@@ -1,20 +1,25 @@
 import HttpStatusCode from 'http-status-typed';
 import prisma from 'lib/prisma';
-import { createMocks } from 'node-mocks-http';
+import { PageConfig } from 'next';
+import { testApiHandler } from 'next-test-api-route-handler';
 import professionAPI from 'pages/api/professions';
 
 describe('/api/professions', () => {
+  const professionAPIHandler: typeof professionAPI & { config?: PageConfig } = professionAPI;
+
   afterAll((done) => {
     prisma.$disconnect();
     done();
   });
   test('returns all professions', async () => {
-    const { req, res } = createMocks({
-      method: 'GET',
+    await testApiHandler({
+      handler: professionAPIHandler,
+      test: async ({ fetch }) => {
+        const res = await fetch({
+          method: 'GET',
+        });
+        expect(res.status).toBe(HttpStatusCode.OK);
+      },
     });
-
-    await professionAPI(req, res);
-
-    expect(res._getStatusCode()).toBe(HttpStatusCode.OK);
   });
 });

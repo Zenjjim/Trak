@@ -5,6 +5,10 @@ import { IEmployee } from 'utils/types';
 import { fetcher } from 'utils/utils';
 
 const UserContext = createContext(undefined);
+/**
+ * Hook for accessing the userContext
+ * @returns UserContext
+ */
 function useUser() {
   const context = useContext(UserContext);
   if (!context) {
@@ -12,6 +16,12 @@ function useUser() {
   }
   return context;
 }
+
+/**
+ * UserProvider for the current user
+ * @param props
+ * @returns UserProvider
+ */
 function UserProvider(props) {
   const [session] = useSession();
   const { data: user }: responseInterface<IEmployee, unknown> = useSWR(session?.user ? `/api/employee/${session?.user?.id}` : null, fetcher);

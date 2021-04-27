@@ -30,6 +30,10 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Loading page to be used once fetching data
+ * @returns LoadingLogo
+ */
 const LoadingLogo = () => {
   const classes = useStyles();
   return (

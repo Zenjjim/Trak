@@ -5,6 +5,10 @@ import { IEmployee, IProcessTemplate, IProfession, ITag } from 'utils/types';
 import { fetcher } from 'utils/utils';
 
 const DataContext = createContext(undefined);
+/**
+ * hook to get the DataContext
+ * @returns DataContext
+ */
 function useData() {
   const context = useContext(DataContext);
   if (!context) {
@@ -12,6 +16,11 @@ function useData() {
   }
   return context;
 }
+/**
+ * Provider for miscellaneous data from the database
+ * @param props
+ * @returns DataContext Provider
+ */
 function DataProvider(props) {
   const [session] = useSession();
 

@@ -21,6 +21,11 @@ type Snack = {
 };
 const SnackbarContext = createContext<SnackbarProps | undefined>(undefined);
 
+/**
+ * Provider for snackbar
+ * @param {ReactNode} children
+ * @returns SnackbarProvider
+ */
 const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   const classes = useStyles();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -63,6 +68,10 @@ const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+/**
+ * Hook for accessing the snackbar context
+ * @returns context
+ */
 const useSnackbar = () => {
   const context = useContext(SnackbarContext);
   if (context === undefined) {

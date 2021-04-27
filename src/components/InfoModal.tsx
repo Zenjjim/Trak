@@ -33,7 +33,12 @@ const useStyles = makeStyles({
   },
 });
 
-const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) => {
+/**
+ * Select employee to be responsible
+ * @param {IEmployeeTask} params
+ * @returns ResponsibleSelector
+ */
+export const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) => {
   const [responsibleSelector, setResponsibleSelector] = useState<boolean>(false);
   const { employees } = useData();
   const classes = useStyles();
@@ -116,12 +121,23 @@ const ResponsibleSelector = ({ employeeTask }: { employeeTask: IEmployeeTask }) 
   );
 };
 
-type InfoModalProps = {
+/**
+ * @typedef {object} InfoModalProps
+ * @property {string} employee_task_id
+ * @property {boolean} modalIsOpen
+ * @property {function} closeModal
+ */
+export type InfoModalProps = {
   employee_task_id: string;
   modalIsOpen: boolean;
   closeModal: () => void;
 };
 
+/**
+ * Modal to display all information on a specific task
+ * @param {InfoModalProps} params
+ * @returns InfoModal
+ */
 const InfoModal = ({ employee_task_id, modalIsOpen, closeModal }: InfoModalProps) => {
   const classes = useStyles();
   const [employeeTask, setEmployeeTask] = useState<IEmployeeTask | undefined>(undefined);

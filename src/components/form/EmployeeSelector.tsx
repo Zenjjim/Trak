@@ -2,7 +2,15 @@ import { Autocomplete, TextField } from '@material-ui/core';
 import { Control, Controller } from 'react-hook-form';
 import { IEmployee } from 'utils/types';
 
-type EmployeeSelectorProps = {
+/**
+ * @typedef {object} EmployeeSelectorProps
+ * @property {IEmployee[]} employees
+ * @property {Control} control
+ * @property {string} name
+ * @property {string} label
+ * @property {boolean} required
+ */
+export type EmployeeSelectorProps = {
   employees: IEmployee[];
   control: Control;
   name: string;
@@ -10,7 +18,12 @@ type EmployeeSelectorProps = {
   required?: boolean;
 };
 
-const EmployeeSelector = ({ employees, control, name, label, required = false }: EmployeeSelectorProps) => {
+/**
+ * Select an employee with React Hook Form
+ * @param params Props to EmployeeSelector
+ * @returns EmployeeSelector
+ */
+export const EmployeeSelector = ({ employees, control, name, label, required = false }: EmployeeSelectorProps) => {
   return (
     <Controller
       control={control}
@@ -21,7 +34,15 @@ const EmployeeSelector = ({ employees, control, name, label, required = false }:
   );
 };
 
-type EmployeeSelectorComponentProps = {
+/**
+ * @typedef {object} EmployeeSelectorComponentProps
+ * @property {IEmployee[]} employees
+ * @property {function} setValue
+ * @property {string} label
+ * @property {IEmployee} value
+ * @property {boolean} required
+ */
+export type EmployeeSelectorComponentProps = {
   employees: IEmployee[];
   setValue: (IEmployee) => void;
   label: string;
@@ -29,7 +50,12 @@ type EmployeeSelectorComponentProps = {
   required: boolean;
 };
 
-const EmployeeSelectorComponent = ({
+/**
+ * Select employee with Autocompkete
+ * @param param Props to EmployeeSelectorComponent
+ * @returns EmployeeSelectorComponent
+ */
+export const EmployeeSelectorComponent = ({
   employees,
   setValue,
   label,

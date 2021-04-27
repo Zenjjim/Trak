@@ -10,11 +10,21 @@ const useStyles = makeStyles({
   },
 });
 
-type BeforeToogleProps = {
+/**
+ * @typedef {object} BeforeToogleProps
+ * @property {Control} control
+ * @property {string} name
+ */
+export type BeforeToogleProps = {
   control: Control;
   name: string;
 };
 
+/**
+ * Component to toogle with before/after
+ * @param params Props to BeforeToogle
+ * @returns Before ToogleComponent
+ */
 const BeforeToogle = ({ control, name }: BeforeToogleProps) => {
   return (
     <Controller
@@ -26,11 +36,22 @@ const BeforeToogle = ({ control, name }: BeforeToogleProps) => {
   );
 };
 
-type ToggleComponentProps = {
+/**
+ * @typedef {object} ToogleComponentProps
+ * @property {function} function
+ * @property {string} value
+ */
+export type ToggleComponentProps = {
   setValue: (string) => void;
   value: string;
 };
-const SelectComponent = ({ setValue, value }: ToggleComponentProps) => {
+
+/**
+ * Component to be rendered in the Controller
+ * @param param Props to SelectComponent
+ * @returns SelectComponent
+ */
+export const SelectComponent = ({ setValue, value }: ToggleComponentProps) => {
   const classes = useStyles();
   return (
     <>

@@ -6,10 +6,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { IEmployee, IProfession, ITag, ITask } from 'utils/types';
 
 /**
- * POST methoid
+ * POST method
  * @param {string} phaseId phaseId for where the task should be created
  * @param {boolean} global If the task is a part of the processtemplate or just used for one person
- * @param {{title: string, description: string, link: string, responsible: IEmployee, tags: ITag[], professions: IProfession[]}} data
+ * @param {{title: string, description: string, link: string, responsible?: IEmployee, tags: ITag[], professions: IProfession[]}} data
  * @returns {ITask} Created task
  */
 

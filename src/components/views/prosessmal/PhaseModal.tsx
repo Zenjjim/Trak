@@ -16,14 +16,30 @@ import { Controller, useForm } from 'react-hook-form';
 import { IProcessTemplate, Offset, Process } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
 
-type PhaseModalProps = {
+/**
+ * @typedef {object} PhaseModalProps
+ * @property {IProcessTemplate} processTemplate
+ * @property {boolean} modalIsOpen
+ * @property {function} closeModal
+ * @property {string} phase_id
+ */
+export type PhaseModalProps = {
   processTemplate: IProcessTemplate;
   modalIsOpen: boolean;
   closeModal: () => void;
   phase_id?: string;
 };
 
-type PhaseData = {
+/**
+ * @typedef {object} PhaseData
+ * @property {string} title
+ * @property {Offset} offset
+ * @property {number} dueDateDayOffset
+ * @property {string} dueDate
+ * @property {number} day
+ * @property {number} month
+ */
+export type PhaseData = {
   title: string;
   offset: Offset;
   dueDateDayOffset: number;
@@ -46,6 +62,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Modal to make changes to or create a new phase
+ * @param {PhaseModalProps} params
+ * @returns PhaseModal
+ */
 const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undefined }: PhaseModalProps) => {
   const classes = useStyles();
   const router = useRouter();

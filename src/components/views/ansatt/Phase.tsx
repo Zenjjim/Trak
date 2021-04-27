@@ -17,7 +17,16 @@ const useStyles = makeStyles({
   },
 });
 
-type PhaseProps = {
+/**
+ * @typedef {object} PhaseProps
+ * @property {string} phaseId
+ * @property {string} title
+ * @property {number} tasksFinished
+ * @property {number} totalTasks
+ * @property {IEmployeeTask[]} employeeTasks
+ * @property {boolean} first
+ */
+export type PhaseProps = {
   phaseId: string;
   title: string;
   tasksFinished: number;
@@ -26,6 +35,11 @@ type PhaseProps = {
   first: boolean;
 };
 
+/**
+ * Card to display the different employeeTasks in a specific phase
+ * @param {PhaseProps} params
+ * @returns Phase
+ */
 const Phase = ({ phaseId, title, tasksFinished, totalTasks, employeeTasks, first }: PhaseProps) => {
   const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);

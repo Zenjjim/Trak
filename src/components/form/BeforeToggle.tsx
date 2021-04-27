@@ -22,7 +22,7 @@ export type BeforeToogleProps = {
 
 /**
  * Component to toogle with before/after
- * @param params Props to BeforeToogle
+ * @param {BeforeToogleProps} Props to BeforeToogle
  * @returns Before ToogleComponent
  */
 const BeforeToogle = ({ control, name }: BeforeToogleProps) => {
@@ -48,7 +48,7 @@ export type ToggleComponentProps = {
 
 /**
  * Component to be rendered in the Controller
- * @param param Props to SelectComponent
+ * @param {ToogleComponentProps} Props to SelectComponent
  * @returns SelectComponent
  */
 export const SelectComponent = ({ setValue, value }: ToggleComponentProps) => {

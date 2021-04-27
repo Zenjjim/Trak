@@ -2,13 +2,24 @@ import { Box, Button } from '@material-ui/core';
 import { Control, Controller } from 'react-hook-form';
 import { IProfession } from 'utils/types';
 
-type ToggleButtonGroupProps = {
+/**
+ * @type {object} ToogleButtonGroupProps
+ * @property {IProffesion[]} professions
+ * @property {Control} control
+ * @property {string} name
+ */
+export type ToggleButtonGroupProps = {
   professions: IProfession[];
   control: Control;
   name: string;
 };
 
-const ToggleButtonGroup = ({ professions = [], control, name }: ToggleButtonGroupProps) => {
+/**
+ * Toogle between professions
+ * @param {ToogleButtonGroupsProps} props
+ * @returns ToogleButtonGroup
+ */
+export const ToggleButtonGroup = ({ professions = [], control, name }: ToggleButtonGroupProps) => {
   return (
     <Controller
       control={control}
@@ -19,12 +30,22 @@ const ToggleButtonGroup = ({ professions = [], control, name }: ToggleButtonGrou
   );
 };
 
-type ToggleButtonGroupComponentProps = {
+/**
+ * @typedef {object} ToogleButtonGroupComponentProps
+ * @property {IProfession[]} professions
+ * @property {function} setValue
+ */
+export type ToggleButtonGroupComponentProps = {
   professions: IProfession[];
   value: IProfession[];
   setValue: (IProfession) => void;
 };
 
+/**
+ * Toogle between professions
+ * @param {ToogleButtonGroupComponentProps} params
+ * @returns ToogleButtonGroupComponent
+ */
 const ToggleButtonGroupComponent = ({ professions, value = [], setValue }: ToggleButtonGroupComponentProps) => {
   return (
     <Box display='flex' flexWrap='wrap'>

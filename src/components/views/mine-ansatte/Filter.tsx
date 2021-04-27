@@ -23,11 +23,21 @@ const useStyles = makeStyles({
   },
 });
 
-type FilterProps = {
+/**
+ * @typedef {object} FilterProps
+ * @property {string[]} choosenProfession
+ * @property {function} setChoosenProfession
+ */
+export type FilterProps = {
   choosenProfession: string[];
   setChoosenProfession: (element: string[]) => void;
 };
 
+/**
+ * Filter employees based on their profession
+ * @param {FilterProps} params
+ * @returns Filter
+ */
 const Filter = ({ choosenProfession, setChoosenProfession }: FilterProps) => {
   const classes = useStyles();
   const { professions } = useData();

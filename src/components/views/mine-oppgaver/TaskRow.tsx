@@ -48,6 +48,11 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Display a specific task
+ * @param {IEmployeeTask} params
+ * @returns TaskRow
+ */
 const TaskRow = ({ data }: { data: IEmployeeTask }) => {
   const classes = useStyles();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);

@@ -10,11 +10,23 @@ import { useForm } from 'react-hook-form';
 import { Actions, IEmployeeTask } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
 
-type ChangeDueDateModalProps = {
+/**
+ * @typedef {object} ChangeDueDateModalProps
+ * @property {boolean} modalIsOpen boolean decided wheter the modal is open or not
+ * @property {IEmployeeTask[]} employeeTasks
+ * @property {function} closeModal
+ */
+export type ChangeDueDateModalProps = {
   modalIsOpen: boolean;
   employeeTasks: IEmployeeTask[];
   closeModal: () => void;
 };
+
+/**
+ * Modal to change a set of employeeTasks
+ * @param {ChangeDueDateModalProps} params
+ * @returns ChangeDueDateModal
+ */
 const ChangeDueDateModal = ({ modalIsOpen, closeModal, employeeTasks }: ChangeDueDateModalProps) => {
   const { register, errors, handleSubmit } = useForm();
   const router = useRouter();

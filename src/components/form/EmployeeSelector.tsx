@@ -20,7 +20,7 @@ export type EmployeeSelectorProps = {
 
 /**
  * Select an employee with React Hook Form
- * @param params Props to EmployeeSelector
+ * @param {EmployeeSelectorProps} Props to EmployeeSelector
  * @returns EmployeeSelector
  */
 export const EmployeeSelector = ({ employees, control, name, label, required = false }: EmployeeSelectorProps) => {
@@ -52,7 +52,7 @@ export type EmployeeSelectorComponentProps = {
 
 /**
  * Select employee with Autocompkete
- * @param param Props to EmployeeSelectorComponent
+ * @param {EmployeeSelectorComponentProps} Props to EmployeeSelectorComponent
  * @returns EmployeeSelectorComponent
  */
 export const EmployeeSelectorComponent = ({

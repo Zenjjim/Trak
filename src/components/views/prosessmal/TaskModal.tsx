@@ -17,14 +17,29 @@ import { IEmployee, IPhase, ITag, ITask } from 'utils/types';
 import { axiosBuilder } from 'utils/utils';
 import validator from 'validator';
 
-type TaskModalProps = {
+/**
+ * @typedef {object} TaskModalProps
+ * @property {IPhase} phase
+ * @property {boolean} modalIsOpen
+ * @property {function} closeModal
+ * @property {string} task_id
+ */
+export type TaskModalProps = {
   phase: IPhase;
   modalIsOpen: boolean;
   closeModal: () => void;
   task_id?: string;
 };
 
-type TaskData = {
+/**
+ * @typedef {object} TaskData
+ * @property {string} title
+ * @property {string} description
+ * @property {string[]} professions
+ * @property {IEmployee} responsible
+ * @property {ITag[]} tags
+ */
+export type TaskData = {
   title: string;
   description?: string;
   professions?: string[];
@@ -43,6 +58,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Modal to make changes to or create a new Task
+ * @param {TaskModalProps} params
+ * @returns TaskModal
+ */
 const TaskModal = ({ phase, modalIsOpen, closeModal, task_id = undefined }: TaskModalProps) => {
   const classes = useStyles();
   const router = useRouter();

@@ -3,6 +3,8 @@ import prisma from 'lib/prisma';
 import withAuth from 'lib/withAuth';
 import { toInteger } from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { IEmployeeSettings } from 'utils/types';
 
 export default withAuth(async function (req: NextApiRequest, res: NextApiResponse, user) {
   const {
@@ -17,6 +19,11 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
   }
 });
 
+/**
+ * PUT
+ * @param {number} id
+ * @param {IEmployeeSettings} body
+ */
 const PUT = async (req, res, id) => {
   const {
     body: { slack, notificationSettings },

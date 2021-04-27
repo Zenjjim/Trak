@@ -6,7 +6,6 @@ import { INotification } from 'utils/types';
 import { slackMessager } from 'utils/utils';
 
 /**
- * POST
  * @param {string} description Notification description
  * @param {number} employeeId For which employee should the notification be created
  * @param {string?} email Email connected to slack, for slack notifications

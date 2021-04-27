@@ -2,6 +2,8 @@ import HttpStatusCode from 'http-status-typed';
 import prisma from 'lib/prisma';
 import withAuth from 'lib/withAuth';
 import type { NextApiRequest, NextApiResponse } from 'next';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { IPhase } from 'utils/types';
 export const config = {
   api: {
     externalResolver: true,
@@ -22,7 +24,11 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }
 });
-
+/**
+ * GET
+ * @param {string} phase_id
+ * @returns {IPhase}
+ */
 const GET = async (res, phase_id) => {
   try {
     const phase = await prisma.phase.findUnique({
@@ -48,7 +54,12 @@ const GET = async (res, phase_id) => {
     }
   }
 };
-
+/**
+ * PUT
+ * @param {string} phase_id
+ * @param {{title: string, dueDateDayOffset?: number, dueDate?: Date}} data
+ * @returns {IPhase}
+ */
 const PUT = async (req, res, phase_id) => {
   const {
     body: { data },
@@ -73,6 +84,10 @@ const PUT = async (req, res, phase_id) => {
     }
   }
 };
+/**
+ * DELETE
+ * @param {string} phase_id
+ */
 const DELETE = async (res, phase_id) => {
   try {
     await prisma.task.updateMany({

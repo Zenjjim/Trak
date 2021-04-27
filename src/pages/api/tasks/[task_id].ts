@@ -2,7 +2,8 @@ import HttpStatusCode from 'http-status-typed';
 import prisma from 'lib/prisma';
 import withAuth from 'lib/withAuth';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ITag } from 'utils/types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ITag, ITask } from 'utils/types';
 
 export const config = {
   api: {
@@ -25,6 +26,11 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
   }
 });
 
+/**
+ * GET
+ * @param {string} task_id
+ * @returns {ITask} task
+ */
 const GET = async (res, task_id) => {
   try {
     const task = await prisma.task.findUnique({
@@ -72,6 +78,14 @@ const GET = async (res, task_id) => {
   }
 };
 
+/**
+ * PUT
+ * @param {string} task_id
+ * @param {string} phaseId phaseId for where the task should be created
+ * @param {boolean} global If the task is a part of the processtemplate or just used for one person
+ * @param {{title: string, description: string, link: string, responsible?: IEmployee, tags: ITag[], professions: IProfession[]}} data
+ * @returns {ITask}
+ */
 const PUT = async (req, res, task_id) => {
   const {
     body: { data, phaseId, global },
@@ -138,6 +152,10 @@ const PUT = async (req, res, task_id) => {
     }
   }
 };
+/**
+ * DELETE
+ * @param {string} task_id
+ */
 const DELETE = async (res, task_id) => {
   try {
     const deletedTask = await prisma.task.update({ where: { id: task_id.toString() }, data: { active: false } });

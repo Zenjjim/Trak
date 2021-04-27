@@ -44,7 +44,7 @@ export type IEmployee = {
  */
 export type IEmployeeSettings = {
   employeeId?: number;
-  slack?: string;
+  slack?: boolean;
   notificationSettings: ('DELEGATE' | 'DEADLINE' | 'WEEK_BEFORE_DEADLINE' | 'TERMINATION' | 'HIRED')[];
 };
 /** @enum {string} */

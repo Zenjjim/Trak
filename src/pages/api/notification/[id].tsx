@@ -6,6 +6,10 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
   const {
     query: { id },
   } = req;
+  /**
+   * PUT
+   * @param {string} id
+   */
   if (req.method === 'PUT') {
     const notification = await prisma.notification.update({
       where: {

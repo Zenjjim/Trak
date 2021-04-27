@@ -2,6 +2,8 @@ import HttpStatusCode from 'http-status-typed';
 import prisma from 'lib/prisma';
 import withAuth from 'lib/withAuth';
 import type { NextApiRequest, NextApiResponse } from 'next';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { IEmployeeTask } from 'utils/types';
 
 export const config = {
   api: {
@@ -21,7 +23,11 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }
 });
-
+/**
+ * GET
+ * @param {string} id
+ * @returns {IEmployeeTask}
+ */
 const GET = async (res, id) => {
   try {
     const employeeTask = await prisma.employeeTask.findUnique({
@@ -90,13 +96,19 @@ const GET = async (res, id) => {
   }
 };
 
-type employeeTaskUpdateData = {
+export type employeeTaskUpdateData = {
   body: {
     completed: boolean;
     dueDate: Date;
     responsibleId: number;
   };
 };
+
+/**
+ * PUT
+ * @param {employeeTaskUpdateData} body
+ * @returns {IEmployeeTask}
+ */
 
 const PUT = async (req, res, id, user) => {
   const {

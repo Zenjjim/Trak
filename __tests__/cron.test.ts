@@ -10,6 +10,11 @@ import { randomString } from './utils/utils';
 const CRON_SECRET_TOKEN = process.env.CRON_SECRET;
 const cronAPIHandler: typeof cronAPI & { config?: PageConfig } = cronAPI;
 
+// eslint-disable-next-line no-console
+console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+// eslint-disable-next-line no-console
+console.log(CRON_SECRET_TOKEN);
+
 const cron_test = async (start, end) => {
   let loop = new Date(start);
   while (loop <= end) {

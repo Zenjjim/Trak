@@ -5,6 +5,7 @@ import cronAPI from 'pages/api/cron/phases';
 
 import { employeeFactory } from './factories/employee.factory';
 import { taskFactory } from './factories/task.factory';
+import { randomString } from './utils/utils';
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const cronAPIHandler: typeof cronAPI & { config?: PageConfig } = cronAPI;
@@ -40,6 +41,36 @@ describe('/api/cron/phases/', () => {
     await taskFactory('lopende');
   });
 
+  test('With incorrect cron_secret', async () => {
+    await testApiHandler({
+      handler: cronAPIHandler,
+      test: async ({ fetch }) => {
+        const res = await fetch({
+          method: 'POST',
+          headers: {
+            CRON_SECRET: randomString(),
+          },
+        });
+        expect(res.status).toBe(HttpStatusCode.UNAUTHORIZED);
+      },
+    });
+  });
+
+  test('Method not allowed', async () => {
+    await testApiHandler({
+      handler: cronAPIHandler,
+      test: async ({ fetch }) => {
+        const res = await fetch({
+          method: 'GET',
+          headers: {
+            CRON_SECRET: CRON_SECRET,
+          },
+        });
+        expect(res.status).toBe(HttpStatusCode.METHOD_NOT_ALLOWED);
+      },
+    });
+  });
+
   test('Kvartal 1', async () => {
     jest.setTimeout(30000);
     const start = new Date('01/01/2020');
@@ -53,7 +84,7 @@ describe('/api/cron/phases/', () => {
   });
   test('Kvartal 3', async () => {
     const start = new Date('07/01/2020');
-    const end = new Date('09/31/2020');
+    const end = new Date('09/30/2020');
     await cron_test(start, end);
   });
   test('Kvartal 4', async () => {

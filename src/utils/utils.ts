@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import axios from 'axios';
 import capitalize from 'capitalize-first-letter';
 import Fuse from 'fuse.js';

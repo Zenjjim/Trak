@@ -44,10 +44,10 @@ jobs:
       - uses: borales/actions-yarn@v2.3.0
         with:
           cmd: docs
-      - run: sudo mv docs pages
-      - run: sudo mv coverage pages
+      - run: sudo mv docs docs_pages
+      - run: sudo mv coverage docs_pages
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: pages # The folder the action should deploy.
+          folder: docs_pages # The folder the action should deploy.

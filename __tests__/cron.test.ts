@@ -7,7 +7,7 @@ import { employeeFactory } from './factories/employee.factory';
 import { taskFactory } from './factories/task.factory';
 import { randomString } from './utils/utils';
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const CRON_SECRET_TOKEN = process.env.CRON_SECRET;
 const cronAPIHandler: typeof cronAPI & { config?: PageConfig } = cronAPI;
 
 const cron_test = async (start, end) => {
@@ -20,7 +20,7 @@ const cron_test = async (start, end) => {
         const res = await fetch({
           method: 'POST',
           headers: {
-            CRON_SECRET: CRON_SECRET,
+            CRON_SECRET: CRON_SECRET_TOKEN,
           },
         });
         expect(res.status).toBe(HttpStatusCode.OK);
@@ -63,7 +63,7 @@ describe('/api/cron/phases/', () => {
         const res = await fetch({
           method: 'GET',
           headers: {
-            CRON_SECRET: CRON_SECRET,
+            CRON_SECRET: CRON_SECRET_TOKEN,
           },
         });
         expect(res.status).toBe(HttpStatusCode.METHOD_NOT_ALLOWED);

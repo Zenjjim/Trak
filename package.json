@@ -19,7 +19,7 @@
     "build": "next build",
     "start": "next start -p $PORT",
     "test": "yarn deletedb && yarn createdb && sleep 1 && yarn push && jest --coverage",
-    "test-github": "jest --coverage",
+    "test-github": "jest --coverage --forceExit",
     "docs": "npx typedoc",
     "lint": "eslint --fix --max-warnings=0 .",
     "format": "prettier --write --check --config ./.prettierrc './src/**/*.{js,jsx,ts,tsx,css,md,json}'",

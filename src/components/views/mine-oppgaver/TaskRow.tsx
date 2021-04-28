@@ -27,6 +27,7 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'start',
+    height: '100%',
   },
   onClick: {
     width: 'max-content',

@@ -9,12 +9,6 @@ import { randomString } from './utils/utils';
 
 const CRON_SECRET_TOKEN = process.env.CRON_SECRET;
 const cronAPIHandler: typeof cronAPI & { config?: PageConfig } = cronAPI;
-
-// eslint-disable-next-line no-console
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-// eslint-disable-next-line no-console
-console.log(CRON_SECRET_TOKEN);
-
 const cron_test = async (start, end) => {
   let loop = new Date(start);
   while (loop <= end) {
@@ -25,7 +19,7 @@ const cron_test = async (start, end) => {
         const res = await fetch({
           method: 'POST',
           headers: {
-            CRON_SECRET: CRON_SECRET_TOKEN,
+            cron_secret: CRON_SECRET_TOKEN,
           },
         });
         expect(res.status).toBe(HttpStatusCode.OK);

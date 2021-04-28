@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'babel', 'simple-import-sort', 'jsx-a11y', 'json'],
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'babel', 'simple-import-sort', 'jsx-a11y', 'json', 'no-floating-promise'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
@@ -67,6 +67,7 @@ module.exports = {
     'no-implicit-coercion': 'error',
     'no-invalid-this': 'off',
     'no-lonely-if': 'error',
+    'no-floating-promise/no-floating-promise': 2,
     'no-multi-spaces': 'error',
     'no-multiple-empty-lines': [
       'error',

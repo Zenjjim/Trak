@@ -56,6 +56,7 @@
     "capitalize-first-letter": "^1.0.0",
     "classnames": "^2.2.6",
     "eslint-plugin-json": "^2.1.2",
+    "eslint-plugin-no-floating-promise": "^1.0.2",
     "faker": "^5.4.0",
     "fuse.js": "^6.4.6",
     "http-status-typed": "^1.0.0",

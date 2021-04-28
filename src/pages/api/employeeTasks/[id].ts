@@ -16,9 +16,9 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
     query: { id },
   } = req;
   if (req.method === 'GET') {
-    GET(res, id);
+    return GET(res, id);
   } else if (req.method === 'PUT') {
-    PUT(req, res, id, user);
+    return PUT(req, res, id, user);
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }

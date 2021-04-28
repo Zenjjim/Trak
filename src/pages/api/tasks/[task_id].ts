@@ -16,11 +16,11 @@ export default withAuth(async function (req: NextApiRequest, res: NextApiRespons
     query: { task_id },
   } = req;
   if (req.method === 'GET') {
-    GET(res, task_id);
+    return GET(res, task_id);
   } else if (req.method === 'PUT') {
-    PUT(req, res, task_id);
+    return PUT(req, res, task_id);
   } else if (req.method === 'DELETE') {
-    DELETE(res, task_id);
+    return DELETE(res, task_id);
   } else {
     res.status(HttpStatusCode.METHOD_NOT_ALLOWED).end();
   }

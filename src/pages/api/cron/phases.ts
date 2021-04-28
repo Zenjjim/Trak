@@ -8,6 +8,15 @@ import { Process } from 'utils/types';
 import { addDays, slackMessager } from 'utils/utils';
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const CRON_SECRET = process.env.CRON_SECRET;
+
+  // eslint-disable-next-line no-console
+  console.log('!!!!!!!!!!');
+  // eslint-disable-next-line no-console
+  console.log(req.headers.cron_secret);
+  // eslint-disable-next-line no-console
+  console.log('!!!!!!!!!!');
+  // eslint-disable-next-line no-console
+  console.log(CRON_SECRET);
   if (req.headers.cron_secret !== CRON_SECRET) {
     res.status(HttpStatusCode.UNAUTHORIZED).end();
   }

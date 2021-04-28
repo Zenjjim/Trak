@@ -22,6 +22,7 @@ jobs:
           - 5432:5432
     env:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+      CRON_SECRET: ${{secrets.CRON_SECRET}}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
@@ -49,5 +50,5 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: docs_pages # The folder the action should deploy.
+          branch: gh-pages
+          folder: docs_pages

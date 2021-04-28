@@ -22,6 +22,7 @@ jobs:
           - 5432:5432
     env:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+      CRON_SECRET: ${{secrets.CRON_SECRET}}
 
     steps:
       - uses: actions/checkout@v2

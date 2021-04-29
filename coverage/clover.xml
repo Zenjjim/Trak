@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1619684816018" clover="3.2.0">
-  <project timestamp="1619684816018" name="All files">
+<coverage generated="1619699500877" clover="3.2.0">
+  <project timestamp="1619699500877" name="All files">
     <metrics statements="341" coveredstatements="268" conditionals="282" coveredconditionals="128" methods="67" coveredmethods="53" elements="690" coveredelements="449" complexity="0" loc="341" ncloc="341" packages="9" files="20" classes="20"/>
     <package name="__tests__.factories">
       <metrics statements="52" coveredstatements="52" conditionals="13" coveredconditionals="13" methods="8" coveredmethods="8"/>
@@ -217,21 +217,21 @@
         <line num="153" count="1101" type="stmt"/>
         <line num="154" count="4404" type="stmt"/>
         <line num="155" count="4404" type="cond" truecount="2" falsecount="0"/>
-        <line num="156" count="363" type="stmt"/>
-        <line num="159" count="4041" type="stmt"/>
+        <line num="156" count="366" type="stmt"/>
+        <line num="159" count="4038" type="stmt"/>
         <line num="161" count="1101" type="cond" truecount="2" falsecount="0"/>
-        <line num="162" count="39" type="stmt"/>
-        <line num="165" count="1062" type="cond" truecount="3" falsecount="1"/>
-        <line num="166" count="1356" type="stmt"/>
-        <line num="167" count="1356" type="stmt"/>
-        <line num="168" count="1356" type="cond" truecount="1" falsecount="1"/>
+        <line num="162" count="183" type="stmt"/>
+        <line num="165" count="918" type="cond" truecount="3" falsecount="1"/>
+        <line num="166" count="1641" type="stmt"/>
+        <line num="167" count="1641" type="stmt"/>
+        <line num="168" count="1641" type="cond" truecount="1" falsecount="1"/>
         <line num="169" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="172" count="1356" type="cond" truecount="1" falsecount="1"/>
-        <line num="174" count="1062" type="stmt"/>
-        <line num="175" count="354" type="cond" truecount="1" falsecount="1"/>
-        <line num="178" count="1062" type="cond" truecount="1" falsecount="1"/>
-        <line num="179" count="1062" type="stmt"/>
-        <line num="180" count="1062" type="stmt"/>
+        <line num="172" count="1641" type="cond" truecount="1" falsecount="1"/>
+        <line num="174" count="918" type="stmt"/>
+        <line num="175" count="306" type="cond" truecount="1" falsecount="1"/>
+        <line num="178" count="918" type="cond" truecount="1" falsecount="1"/>
+        <line num="179" count="918" type="stmt"/>
+        <line num="180" count="918" type="stmt"/>
         <line num="187" count="1" type="stmt"/>
         <line num="188" count="0" type="stmt"/>
         <line num="189" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -252,13 +252,13 @@
         <line num="214" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="221" count="1" type="stmt"/>
         <line num="222" count="0" type="stmt"/>
-        <line num="227" count="1062" type="stmt"/>
-        <line num="228" count="1062" type="cond" truecount="3" falsecount="1"/>
-        <line num="229" count="1062" type="cond" truecount="1" falsecount="1"/>
+        <line num="227" count="918" type="stmt"/>
+        <line num="228" count="918" type="cond" truecount="3" falsecount="1"/>
+        <line num="229" count="918" type="cond" truecount="1" falsecount="1"/>
         <line num="230" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="231" count="0" type="stmt"/>
         <line num="233" count="0" type="stmt"/>
-        <line num="241" count="2124" type="stmt"/>
+        <line num="241" count="1836" type="stmt"/>
         <line num="246" count="1" type="stmt"/>
         <line num="247" count="367" type="stmt"/>
         <line num="248" count="367" type="stmt"/>

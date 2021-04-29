@@ -62,34 +62,34 @@
 				<p><img src="https://github.com/blitz-js/superjson/workflows/CI/badge.svg" alt="CI">
 				<img src="https://img.shields.io/github/license/Zenjjim/Trak" alt="CI"></p>
 				<p><img src="https://readme-jokes.vercel.app/api" alt="Jokes Card"></p>
-				<a href="#om-trak" id="om-trak" style="color: inherit; text-decoration: none;">
-					<h2>Om Trak</h2>
+				<a href="#about-trak" id="about-trak" style="color: inherit; text-decoration: none;">
+					<h2>About Trak</h2>
 				</a>
-				<p>Trak (\ ˈtrack ) er et minimalistisk HR-system som har fokus på at HR skal få mest mulig hjelp til å passe på sine ansatte. Trak hovedfunksjonalitet er å ha oversikt over arbeidsoppgaver, automatisk opprettelse av oppgaver og sende ut notifikasjoner.</p>
-				<a href="#dokumentasjon" id="dokumentasjon" style="color: inherit; text-decoration: none;">
-					<h2>Dokumentasjon</h2>
+				<p>Trak (\ ˈtrack ) is a minimalistic HR system with focus on helping HR getting take care of their employees. Trak&#39;s main functionality is keeping trak of both employees and  assignments with automated creation of tasks and constant reminders.</p>
+				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+					<h2>Documentation</h2>
 				</a>
-				<p>Dokumentasjon til projektet finner du <a href="https://zenjjim.github.io/Trak/">her</a></p>
-				<a href="#installasjon" id="installasjon" style="color: inherit; text-decoration: none;">
-					<h2>Installasjon</h2>
+				<p>Documentation can be found <a href="https://zenjjim.github.io/Trak/">here</a></p>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
 				</a>
-				<a href="#forutsetninger" id="forutsetninger" style="color: inherit; text-decoration: none;">
-					<h3>Forutsetninger</h3>
+				<a href="#prerequisites" id="prerequisites" style="color: inherit; text-decoration: none;">
+					<h3>Prerequisites</h3>
 				</a>
 				<ul>
-					<li>Node 15.6.0 eller høyere</li>
-					<li>Yarn 1.22.10 eller høyere</li>
-					<li>Docker eller ekstern PostgreSQL database</li>
+					<li>Node 15.6.0 or higher</li>
+					<li>Yarn 1.22.10 or higher</li>
+					<li>Docker or external PostgreSQL database</li>
 				</ul>
-				<a href="#oppsett" id="oppsett" style="color: inherit; text-decoration: none;">
-					<h3>Oppsett</h3>
+				<a href="#setup" id="setup" style="color: inherit; text-decoration: none;">
+					<h3>Setup</h3>
 				</a>
-				<p>Start med å clone prosjektet og installere avhengigheter:</p>
+				<p>Start by cloning the project and installing dependencies:</p>
 				<pre><code><span style="color: #001080">git</span><span style="color: #000000"> </span><span style="color: #001080">clone</span><span style="color: #000000"> https:</span><span style="color: #008000">//github.com/Zenjjim/Trak.git</span>
 <span style="color: #001080">cd</span><span style="color: #000000"> </span><span style="color: #001080">Trak</span>
 <span style="color: #001080">yarn</span>
 </code></pre>
-				<p>Deretter kan du lage en <code>.env</code> i root og fylle med egne legitimasjoner:</p>
+				<p>Then create a <code>.env</code>-file in root and fill with secrets:</p>
 				<pre><code><span style="color: #0070C1">DATABASE_URL</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
 
 <span style="color: #0070C1">CRON_SECRET</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
@@ -101,22 +101,22 @@
 <span style="color: #0070C1">GOOGLE_SECRET</span><span style="color: #000000">=</span><span style="color: #0070C1">SUPER_SECRET_SECRET</span>
 </code></pre>
 				<blockquote>
-					<p>Google legitimasjon kan lages på <a href="https://console.cloud.google.com/">google console</a> under <em>APIs &amp; Services</em> &gt; <em>Credentials</em> &gt; <em>OAuth 2.0 Client IDs</em></p>
+					<p>Google tokens can be created at <a href="https://console.cloud.google.com/">google console</a> under <em>APIs &amp; Services</em> &gt; <em>Credentials</em> &gt; <em>OAuth 2.0 Client IDs</em></p>
 				</blockquote>
 				<blockquote>
-					<p>Hvis du bruker Docker: <code>DATABASE_URL=postgres://postgres:password@localhost:5432/trak</code></p>
+					<p>(Optional) If using Docker: <code>DATABASE_URL=postgres://postgres:password@localhost:5432/trak</code></p>
 				</blockquote>
-				<p>(Optional) Dersom du bruker Docker:</p>
+				<p>(Optional) If using Docker:</p>
 				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">createdb</span>
 </code></pre>
-				<p>Migrering av database:</p>
+				<p>Database setup:</p>
 				<pre><code><span style="color: #001080">npx</span><span style="color: #000000"> </span><span style="color: #001080">prisma</span><span style="color: #000000"> </span><span style="color: #001080">generate</span>
 <span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">push</span>
 </code></pre>
-				<p>(Optional) Legg inn fixtures:</p>
+				<p>(Optional) Add dummydata:</p>
 				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">loaddata</span>
 </code></pre>
-				<p>Da gjenstår det kun å starte serveren:</p>
+				<p>Finally starting the server:</p>
 				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">dev</span>
 </code></pre>
 			</div>

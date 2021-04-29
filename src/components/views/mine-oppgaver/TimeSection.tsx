@@ -21,7 +21,6 @@ export type TimeSectionProps = {
 const useStyles = makeStyles({
   grid: {
     display: 'grid',
-    gridGap: theme.spacing(0.5),
     gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
     alignItems: 'end',
     marginBottom: theme.spacing(1),

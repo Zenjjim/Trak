@@ -106,10 +106,10 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         </div>
       </Hidden>
       <Hidden mdDown>
-        <div>{moment(data.dueDate).format('DD.MMM')}</div>
+        <div className={classes.avatarRoot}>{moment(data.dueDate).format('DD.MMM')}</div>
       </Hidden>
       <Hidden lgDown>
-        <div>{data.task.phase.processTemplate.title}</div>
+        <div className={classes.avatarRoot}>{data.task.phase.processTemplate.title}</div>
       </Hidden>
     </>
   );

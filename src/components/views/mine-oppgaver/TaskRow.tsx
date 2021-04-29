@@ -1,5 +1,6 @@
 import { ButtonBase, Checkbox, Hidden, IconButton, makeStyles, Tooltip } from '@material-ui/core';
 import { Launch, Mail } from '@material-ui/icons';
+import classNames from 'classnames';
 import Avatar from 'components/Avatar';
 import CenteringRow from 'components/CenteringRow';
 import InfoModal from 'components/InfoModal';
@@ -87,7 +88,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
       </CenteringRow>
       <ButtonBase
-        className={classes.avatarRoot}
+        className={classNames(classes.avatarRoot, classes.onClick)}
         focusRipple
         onClick={() =>
           router.push(

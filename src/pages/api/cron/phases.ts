@@ -135,7 +135,9 @@ const employeeTaskCreator = (phases: IPhase[], employees: IEmployee[]) => {
     if (!employee.hrManagerId) {
       return;
     }
-    lopendeEmployeeTaskCreator(employee, lopendePhases, today);
+    if (!employee.terminationDate) {
+      lopendeEmployeeTaskCreator(employee, lopendePhases, today);
+    }
     if (employee.dateOfEmployment && !employeeHasProcessTask(employee, Process.ONBOARDING)) {
       onboardingEmployeeTaskCreator(phases, employee);
     }

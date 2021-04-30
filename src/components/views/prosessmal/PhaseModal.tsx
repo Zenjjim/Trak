@@ -173,7 +173,7 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
   return (
     <Modal
       buttonGroup={buttonGroup}
-      header={phase_id ? 'Oppdater prosess' : 'Lag prosess'}
+      header={phase_id ? 'Oppdater fase' : 'Lag fase'}
       onClose={closeModal}
       onSubmit={onSubmit}
       open={modalIsOpen}
@@ -185,13 +185,13 @@ const PhaseModal = ({ processTemplate, modalIsOpen, closeModal, phase_id = undef
       <div className={classes.grid}>
         <TextField
           errors={errors}
-          inputProps={{ 'aria-label': 'Skriv inn prosesstittel' }}
-          label='Prosesstittel'
+          inputProps={{ 'aria-label': 'Skriv inn fasetittel' }}
+          label='Fasetittel'
           name='title'
           register={register}
           required
           rules={{
-            required: 'Prosesstittel er påkrevd',
+            required: 'Fasetittel er påkrevd',
           }}
         />
         {(processTemplate.slug === Process.ONBOARDING || processTemplate.slug === Process.OFFBOARDING) && (

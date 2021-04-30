@@ -1,5 +1,6 @@
 import { ButtonBase, Checkbox, Hidden, IconButton, makeStyles, Tooltip } from '@material-ui/core';
 import { Launch, Mail } from '@material-ui/icons';
+import classNames from 'classnames';
 import Avatar from 'components/Avatar';
 import CenteringRow from 'components/CenteringRow';
 import InfoModal from 'components/InfoModal';
@@ -27,6 +28,7 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'start',
+    height: '100%',
   },
   onClick: {
     width: 'max-content',
@@ -86,7 +88,7 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         {modalIsOpen && <InfoModal closeModal={() => setModalIsOpen(false)} employee_task_id={data.id} modalIsOpen={modalIsOpen} />}
       </CenteringRow>
       <ButtonBase
-        className={classes.avatarRoot}
+        className={classNames(classes.avatarRoot, classes.onClick)}
         focusRipple
         onClick={() =>
           router.push(
@@ -105,10 +107,10 @@ const TaskRow = ({ data }: { data: IEmployeeTask }) => {
         </div>
       </Hidden>
       <Hidden mdDown>
-        <div>{moment(data.dueDate).format('DD.MMM')}</div>
+        <div className={classes.avatarRoot}>{moment(data.dueDate).format('DD.MMM')}</div>
       </Hidden>
       <Hidden lgDown>
-        <div>{data.task.phase.processTemplate.title}</div>
+        <div className={classes.avatarRoot}>{data.task.phase.processTemplate.title}</div>
       </Hidden>
     </>
   );

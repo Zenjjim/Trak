@@ -17,7 +17,7 @@ items:
     imageUrl: 'https://avatars.githubusercontent.com/u/23628986?v=4'
   employee9:
     firstName: 'Erlend'
-    lastName: 'Amdal'
+    lastName: 'Åmdal'
     email: 'erlend.amdal@blank.no'
     birthDate: '{{date.past}}'
     profession: '@profession3'

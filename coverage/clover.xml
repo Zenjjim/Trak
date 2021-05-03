@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1620046709859" clover="3.2.0">
-  <project timestamp="1620046709859" name="All files">
-    <metrics statements="346" coveredstatements="273" conditionals="284" coveredconditionals="129" methods="67" coveredmethods="53" elements="697" coveredelements="455" complexity="0" loc="346" ncloc="346" packages="9" files="20" classes="20"/>
+<coverage generated="1620046978301" clover="3.2.0">
+  <project timestamp="1620046978301" name="All files">
+    <metrics statements="342" coveredstatements="269" conditionals="284" coveredconditionals="129" methods="67" coveredmethods="53" elements="693" coveredelements="451" complexity="0" loc="342" ncloc="342" packages="9" files="20" classes="20"/>
     <package name="__tests__.factories">
       <metrics statements="52" coveredstatements="52" conditionals="13" coveredconditionals="13" methods="8" coveredmethods="8"/>
       <file name="employee.factory.ts" path="/github/workspace/__tests__/factories/employee.factory.ts">
@@ -119,7 +119,7 @@
       </file>
     </package>
     <package name="src.pages.api">
-      <metrics statements="48" coveredstatements="42" conditionals="16" coveredconditionals="10" methods="7" coveredmethods="5"/>
+      <metrics statements="44" coveredstatements="38" conditionals="16" coveredconditionals="10" methods="7" coveredmethods="5"/>
       <file name="employees.ts" path="/github/workspace/src/pages/api/employees.ts">
         <metrics statements="8" coveredstatements="7" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
@@ -132,31 +132,27 @@
         <line num="32" count="0" type="stmt"/>
       </file>
       <file name="phases.ts" path="/github/workspace/src/pages/api/phases.ts">
-        <metrics statements="11" coveredstatements="10" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <metrics statements="9" coveredstatements="8" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="8" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="18" count="1" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
       </file>
       <file name="professions.ts" path="/github/workspace/src/pages/api/professions.ts">
-        <metrics statements="10" coveredstatements="9" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <metrics statements="8" coveredstatements="7" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="8" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="9" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="15" count="1" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="19" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
       </file>
       <file name="tags.ts" path="/github/workspace/src/pages/api/tags.ts">
         <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
@@ -225,18 +221,18 @@
         <line num="158" count="366" type="stmt"/>
         <line num="161" count="4038" type="stmt"/>
         <line num="163" count="1101" type="cond" truecount="2" falsecount="0"/>
-        <line num="164" count="69" type="stmt"/>
-        <line num="167" count="1032" type="cond" truecount="3" falsecount="1"/>
-        <line num="168" count="843" type="stmt"/>
-        <line num="169" count="843" type="stmt"/>
-        <line num="170" count="843" type="cond" truecount="1" falsecount="1"/>
+        <line num="164" count="141" type="stmt"/>
+        <line num="167" count="960" type="cond" truecount="3" falsecount="1"/>
+        <line num="168" count="630" type="stmt"/>
+        <line num="169" count="630" type="stmt"/>
+        <line num="170" count="630" type="cond" truecount="1" falsecount="1"/>
         <line num="171" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="174" count="843" type="cond" truecount="1" falsecount="1"/>
-        <line num="176" count="1032" type="stmt"/>
-        <line num="177" count="344" type="cond" truecount="1" falsecount="1"/>
-        <line num="180" count="1032" type="cond" truecount="1" falsecount="1"/>
-        <line num="181" count="1032" type="stmt"/>
-        <line num="182" count="1032" type="stmt"/>
+        <line num="174" count="630" type="cond" truecount="1" falsecount="1"/>
+        <line num="176" count="960" type="stmt"/>
+        <line num="177" count="320" type="cond" truecount="1" falsecount="1"/>
+        <line num="180" count="960" type="cond" truecount="1" falsecount="1"/>
+        <line num="181" count="960" type="stmt"/>
+        <line num="182" count="960" type="stmt"/>
         <line num="189" count="1" type="stmt"/>
         <line num="190" count="0" type="stmt"/>
         <line num="191" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -257,13 +253,13 @@
         <line num="216" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="223" count="1" type="stmt"/>
         <line num="224" count="0" type="stmt"/>
-        <line num="229" count="1032" type="stmt"/>
-        <line num="230" count="1032" type="cond" truecount="3" falsecount="1"/>
-        <line num="231" count="1032" type="cond" truecount="1" falsecount="1"/>
+        <line num="229" count="960" type="stmt"/>
+        <line num="230" count="960" type="cond" truecount="3" falsecount="1"/>
+        <line num="231" count="960" type="cond" truecount="1" falsecount="1"/>
         <line num="232" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="233" count="0" type="stmt"/>
         <line num="235" count="0" type="stmt"/>
-        <line num="243" count="2064" type="stmt"/>
+        <line num="243" count="1920" type="stmt"/>
         <line num="248" count="1" type="stmt"/>
         <line num="249" count="367" type="stmt"/>
         <line num="250" count="367" type="stmt"/>

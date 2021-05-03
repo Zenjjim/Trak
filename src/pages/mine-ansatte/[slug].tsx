@@ -28,9 +28,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       title: true,
       slug: true,
       phases: {
-        orderBy: {
-          dueDate: 'asc',
-        },
+        orderBy: [
+          {
+            dueDate: 'asc',
+          },
+          {
+            dueDateDayOffset: 'asc',
+          },
+        ],
         select: {
           id: true,
           title: true,
